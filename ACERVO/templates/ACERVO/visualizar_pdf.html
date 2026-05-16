@@ -1,0 +1,98 @@
+{% extends "ACERVO/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ livro.nome }}</h2>
+    <div id="viewer" style="border:1px solid #ccc; text-align:center; display:flex; justify-content:center;"></div>
+    <div class="mt-2 text-center">
+        <button id="prev">Anterior</button>
+        <span id="page_num"></span> / <span id="page_count"></span>
+        <button id="next">Próxima</button>
+    </div>
+</div>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+
+<script>
+    const url = window.location.origin + "{{ livro.arquivo_pdf.url }}";
+
+    const pdfjsLib = window['pdfjsLib'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    let pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null,
+        canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d');
+
+    document.getElementById('viewer').appendChild(canvas);
+
+    function renderPage(num) {
+        pageRendering = true;
+        pdfDoc.getPage(num).then(function(page) {
+            const container = document.getElementById('viewer');
+
+            // viewport base (escala 1 = tamanho real da página)
+            const viewport = page.getViewport({ scale: 1 });
+
+            // calcula escala proporcional para caber na largura da tela
+            const scale = container.clientWidth / viewport.width;
+            const scaledViewport = page.getViewport({ scale: scale });
+
+            canvas.height = scaledViewport.height;
+            canvas.width = scaledViewport.width;
+
+            // ajusta altura do container para o tamanho exato da página renderizada
+            container.style.height = canvas.height + "px";
+
+            const renderContext = { canvasContext: ctx, viewport: scaledViewport };
+            const renderTask = page.render(renderContext);
+
+            renderTask.promise.then(function() {
+                pageRendering = false;
+                document.getElementById('page_num').textContent = num;
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            }).catch(err => {
+                console.error("Erro ao renderizar página:", err);
+            });
+        });
+    }
+
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            renderPage(num);
+        }
+    }
+
+    function onPrevPage() {
+        if (pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
+
+    function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum);
+    }
+
+    pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        document.getElementById('page_count').textContent = pdfDoc.numPages;
+        renderPage(pageNum);
+    }).catch(function(error) {
+        console.error("Erro ao carregar PDF:", error);
+        document.getElementById('viewer').innerHTML = "<p style='color:red'>Não foi possível carregar o PDF.</p>";
+    });
+
+    document.getElementById('prev').addEventListener('click', onPrevPage);
+    document.getElementById('next').addEventListener('click', onNextPage);
+</script>
+{% endblock %}

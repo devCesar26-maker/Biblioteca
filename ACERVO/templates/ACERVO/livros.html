@@ -1,0 +1,80 @@
+{% extends "ACERVO/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <!-- Cabeçalho -->
+        <div class="card-header bg-gradient bg-success text-white d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-book me-2 fs-4"></i>
+                <h4 class="mb-0">Livros Cadastrados</h4>
+            </div>
+            {% if user.is_superuser %}
+                <a href="{% url 'new_livro' %}" class="btn btn-light btn-sm shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Novo Livro
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Corpo -->
+        <div class="card-body bg-light">
+            <p class="text-muted mb-4">
+                Abaixo está a lista de livros disponíveis no acervo da biblioteca.
+            </p>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle shadow-sm">
+                    <thead class="table-success">
+                        <tr>
+                            <th scope="col"><i class="bi bi-book-half"></i> Título</th>
+                            <th scope="col"><i class="bi bi-hash"></i> ID</th>
+                            <th scope="col"><i class="bi bi-box-arrow-down"></i> Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for livro in livros %}
+                            <tr>
+                                <td>
+                                    <i class="bi bi-journal-text text-success me-2"></i>
+                                    <a href="{% url 'dados_livros' livro.id %}" class="fw-semibold text-decoration-none">
+                                        {{ livro.nome }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ livro.id }}</span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-primary btn-sm shadow-sm">
+                                        <i class="bi bi-arrow-right-circle"></i> Pegar Emprestado
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">
+                                    <i class="bi bi-exclamation-circle"></i> Nenhum livro cadastrado
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Botões extras para superusuário -->
+            {% if user.is_superuser %}
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="{% url 'new_livro_autor' %}" class="btn btn-success btn-lg shadow-sm">
+                        <i class="bi bi-link"></i> Adicionar Relação
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Rodapé -->
+        <div class="card-footer bg-dark text-white text-center">
+            <small class="fw-light">Sistema de Biblioteca • Gestão de Livros</small>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,51 @@
+{% extends "ACERVO/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-0" style="max-width: 600px; margin: auto;">
+        <!-- Cabeçalho -->
+        <div class="card-header bg-success text-dark">
+            <h4 class="mb-0">Editar autor
+            </h4>
+        </div>
+
+        <!-- Corpo -->
+        <div class="card-body p-4">
+            <p class="mb-3">
+                <a href="{% url 'autores'%}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar para a lista  de autores
+                </a>
+            </p>
+
+            <form action="{% url 'edit_autor' autor.id %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn bg-success btn-lg">
+                        <i class="bi bi-save"></i> Salvar alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Força inputs do Django a ficarem bonitos dentro do card */
+.card input, 
+.card textarea, 
+.card select {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+}
+</style>
+{% endblock content %}

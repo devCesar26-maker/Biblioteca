@@ -1,0 +1,60 @@
+{% extends "ACERVO/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <!-- Cabeçalho -->
+        <div class="card-header bg-gradient bg-success text-white d-flex align-items-center">
+            <i class="bi bi-archive me-2 fs-4"></i>
+            <h4 class="mb-0">Meus Empréstimos</h4>
+        </div>
+
+        <!-- Corpo -->
+        <div class="card-body bg-light">
+            {% if emprestimos %}
+                <div class="list-group">
+                    {% for e in emprestimos %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center shadow-sm mb-2">
+                            <div>
+                                <strong class="text-primary">{{ e.livro.nome }}</strong><br>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-event me-1"></i> Devolução até {{ e.data_devolucao }}
+                                </small>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                {% if e.livro.arquivo_pdf %}
+                                    <a href="{% url 'visualizar_pdf' e.livro.id %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-file-earmark-pdf"></i> Ler PDF
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted"><i class="bi bi-file-earmark-x"></i> PDF não disponível</span>
+                                {% endif %}
+
+                                {% if e.devolvido %}
+                                    <span class="badge bg-success"><i class="bi bi-check-circle"></i> Devolvido</span>
+                                {% else %}
+                                    <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Em aberto</span>
+                                    <a href="{% url 'renovar_emprestimo' e.livro.id %}" class="btn btn-success btn-sm">
+                                        <i class="bi bi-arrow-repeat"></i> Renovar
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center py-4">
+                    <i class="bi bi-info-circle"></i> Você não tem empréstimos ativos.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Rodapé -->
+        <div class="card-footer bg-dark text-white text-center">
+            <small class="fw-light">Sistema de Biblioteca • Gestão de Empréstimos</small>
+        </div>
+    </div>
+</div>
+{% endblock content %}

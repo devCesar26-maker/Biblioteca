@@ -1,0 +1,71 @@
+{% extends "ACERVO/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-0" style="max-width: 650px; margin: auto;">
+        <!-- Cabeçalho -->
+        <div class="card-header bg-success text-white text-center">
+            <i class="bi bi-person-plus-fill me-2"></i>
+            <h4 class="fw-bold mb-0">Faça seu registro de nome</h4>
+        </div>
+
+        <!-- Corpo -->
+        <div class="card-body p-4 bg-light">
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Erro:</strong> Verifique os campos e tente novamente.
+                </div>
+            {% endif %}
+
+            <form action="{% url 'criar_aluno' %}" method="post">
+                {% csrf_token %}
+
+                <!-- Campos do formulário -->
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+
+                <!-- Botão -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle"></i> Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="card-footer text-center bg-dark text-white">
+            <small>
+                <a href="{% url 'autores' %}" class="fw-bold text-decoration-none text-white">
+                    <i class="bi bi-arrow-left-circle me-1"></i> Voltar para lista de autores
+                </a>
+            </small>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Inputs mais elegantes e consistentes */
+.card input, 
+.card textarea, 
+.card select {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.card input:focus, 
+.card textarea:focus, 
+.card select:focus {
+    border-color: #198754; /* verde Bootstrap */
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+</style>
+{% endblock content %}

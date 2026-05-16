@@ -1,0 +1,62 @@
+{% extends "ACERVO/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <!-- Cabeçalho -->
+        <div class="card-header bg-gradient bg-success text-white d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-journal-text me-2 fs-4"></i>
+                <h4 class="mb-0">Detalhes do Livro</h4>
+            </div>
+            <a href="{% url 'livros' %}" class="btn btn-light btn-sm shadow-sm">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <!-- Corpo -->
+        <div class="card-body bg-light">
+            <h2 class="fw-bold text-primary mb-3">{{ livro.nome }}</h2>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p class="mb-2"><strong><i class="bi bi-building me-1"></i> Editora:</strong> {{ livro.editora.nome }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2"><strong><i class="bi bi-tags me-1"></i> Categoria:</strong> {{ livro.categoria.nome }}</p>
+                </div>
+            </div>
+
+            <!-- Autores -->
+            <h4 class="mt-4 mb-3"><i class="bi bi-people me-2"></i>Autores</h4>
+            <ul class="list-group list-group-flush">
+                {% for autor in autores %}
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="bi bi-person-circle text-success me-2 fs-5"></i>
+                        <span class="fw-semibold">{{ autor.nome }}</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted text-center py-3">
+                        <i class="bi bi-exclamation-circle"></i> Nenhum autor cadastrado
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- PDF -->
+            {% if livro.arquivo_pdf %}
+                <div class="mt-4">
+                    <a href="{{ livro.arquivo_pdf.url }}" class="btn btn-outline-primary btn-lg w-100 shadow-sm">
+                        <i class="bi bi-file-earmark-pdf"></i> Visualizar PDF
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Rodapé -->
+        <div class="card-footer bg-dark text-white text-center">
+            <small class="fw-light">Sistema de Biblioteca • Gestão de Livros</small>
+        </div>
+    </div>
+</div>
+{% endblock content %}

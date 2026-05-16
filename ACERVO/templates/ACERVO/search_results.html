@@ -1,0 +1,38 @@
+{% extends "ACERVO/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if query %}
+        <h4 class="mb-4">Resultados para "{{ query }}"</h4>
+        {% if resultados %}
+            <div class="row">
+                {% for livro in resultados %}
+                    <div class="col-md-4">
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ livro.nome }}</h5>
+                                <p class="card-text">
+                                    <strong>Autor(es):</strong>
+                                    {% for autor in livro.autores.all %}
+                                        {{ autor.nome }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    <br>
+                                    <strong>Categoria:</strong> {{ livro.categoria.nome }} <br>
+                                    <strong>Editora:</strong> {{ livro.editora.nome }}
+                                </p>
+                                <a href="{% url 'dados_livros' livro.id %}" class="btn btn-primary btn-sm">
+                                    Ver detalhes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning">Nenhum resultado encontrado.</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">Digite algo na busca para ver resultados.</div>
+    {% endif %}
+</div>
+{% endblock %}

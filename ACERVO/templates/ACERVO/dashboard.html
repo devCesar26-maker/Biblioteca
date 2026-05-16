@@ -1,0 +1,44 @@
+{% extends "ACERVO/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Painel de Estatísticas</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Total de Livros</h5>
+                    <h3 class="text-primary">{{ total_livros }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Total de Empréstimos</h5>
+                    <h3 class="text-success">{{ total_emprestimos }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <canvas id="graficoCategorias"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('graficoCategorias');
+    const graficoCategorias = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for c in emprestimos_por_categoria %}'{{ c.livro__categoria__nome }}',{% endfor %}],
+            datasets: [{
+                label: 'Empréstimos por Categoria',
+                data: [{% for c in emprestimos_por_categoria %}{{ c.total }},{% endfor %}],
+                backgroundColor: 'rgba(25, 135, 84, 0.7)'
+            }]
+        }
+    });
+</script>
+{% endblock %}

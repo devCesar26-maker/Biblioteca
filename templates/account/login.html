@@ -1,0 +1,65 @@
+{% extends "ACERVO/base.html" %}
+{% load socialaccount %}
+{% providers_media_js %}
+{& load bootstrap5 %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0" style="width: 100%; max-width: 420px;">
+        
+        <!-- Cabeçalho -->
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="fw-bold mb-0">Login</h3>
+        </div>
+
+        <!-- Corpo -->
+        <div class="card-body p-4">
+            <!-- Login tradicional -->
+            <form method="post" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="mb-3">
+                    {{ form.login.label_tag }}
+                    {{ form.login }}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Entrar
+                    </button>
+                </div>
+            </form>
+            {% get_providers as socialaccount_providers %}
+     
+            {% if socialaccount_providers %}
+                <h5 class="my-4 text-center">Ou entre com:</h5>
+                <div class="d-grid gap-2">
+
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger btn-lg">
+                        <i class="bi bi-google"></i> Entrar com Google
+                    </a>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">Nenhum provedor de login social disponível.</p>
+            {% endif %}
+                    </div>
+
+            <p class="text-center">
+                <a href="{% url 'account_reset_password' %}">
+                    Esqueceu a senha?
+                </a>
+            </p>
+
+        <!-- Rodapé -->
+        <div class="card-footer text-center bg-light">
+            <small class="text-muted">
+                Não possui conta?
+                <a href="{% url 'account_signup' %}" class="fw-bold text-decoration-none">Registre-se aqui</a>
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}

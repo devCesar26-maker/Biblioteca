@@ -1,0 +1,14 @@
+*.pyc
+__pycache__/
+/DJANGO/
+*.log
+*.pot
+*.py~
+*.swp
+*.env
+.DS_Store
+/staticfiles/
+/media/
+/migrations/__pycache__/
+/migrations/*.pyc
+
