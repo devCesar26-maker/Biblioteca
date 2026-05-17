@@ -12,6 +12,7 @@ django-haystack==3.3.0
 dotenv==0.9.9
 elastic-transport==9.2.1
 elasticsearch==9.3.0
+gunicorn
 idna==3.13
 packaging==26.1
 psycopg==3.3.3
