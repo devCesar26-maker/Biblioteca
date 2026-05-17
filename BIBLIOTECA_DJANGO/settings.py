@@ -38,9 +38,9 @@ SECRET_KEY=CHAVE_SECRETA
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['Cesar123.pythonanywhere.com']
-
-
+ALLOWED_HOSTS = [
+    'biblioteca-production-502.up.railway.app'
+]
 
 # Application definition
 
