@@ -41,6 +41,10 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'biblioteca-production-9d24.up.railway.app'
 ]
+CSRF_TRUSTED_ORIGINS = [
+    'https://biblioteca-production-9d24.up.railway.app'
+]
+
 
 # Application definition
 
