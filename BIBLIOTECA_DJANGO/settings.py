@@ -12,16 +12,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 
 import os
+from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
-load_dotenv()
-from pathlib import Path
-
-
-CHAVE_SECRETA=os.getenv('CHAVE_SECRETA')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Puxa o .env local apontando para a pasta raiz correta
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+CHAVE_SECRETA = os.getenv('CHAVE_SECRETA')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
