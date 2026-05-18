@@ -39,7 +39,9 @@ SECRET_KEY=CHAVE_SECRETA
 
 # SECURITY WARNING: don't run with debug turned on in production!
 ALLOWED_HOSTS = [
-    'biblioteca-production-9d24.up.railway.app'
+    'biblioteca-production-9d24.up.railway.app',
+    'localhost',
+    '127.0.0.1'
 ]
 CSRF_TRUSTED_ORIGINS = [
     'https://biblioteca-production-9d24.up.railway.app'
@@ -118,14 +120,23 @@ WSGI_APPLICATION = 'BIBLIOTECA_DJANGO.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        # O Django busca a variável DATABASE_URL do sistema
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=not os.environ.get('DEBUG', 'False') == 'True'
-    )
-}
+# Captura a variável DATABASE_URL do .env (local) ou do painel (Railway)
+url_banco = os.environ.get('DATABASE_URL')
+
+if url_banco:
+    DATABASES = {
+        'default': dj_database_url.parse(url_banco)
+    }
+    DATABASES['default']['CONN_MAX_AGE'] = 600
+    
+    # Se for a rede privada do Railway (.internal), o SSL deve ser desativado
+    if '.internal' in url_banco:
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
+    else:
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
+else:
+    # Caso nenhuma variável seja encontrada (garante que não ative o banco dummy)
+    raise ValueError("Erro Crítico: A variável DATABASE_URL não foi encontrada no ambiente ou no arquivo .env!")
 
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
