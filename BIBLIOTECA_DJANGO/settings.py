@@ -121,28 +121,18 @@ WSGI_APPLICATION = 'BIBLIOTECA_DJANGO.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Captura a variável DATABASE_URL do .env (local) ou do painel (Railway)
-url_banco = os.environ.get('DATABASE_URL')
+url_banco = os.environ.get('DATABASE_URL', 'postgresql://postgres:provisorio@localhost:5432/postgres')
 
-if url_banco:
-    DATABASES = {
-        'default': dj_database_url.parse(url_banco)
-    }
-    DATABASES['default']['CONN_MAX_AGE'] = 600
-    
-    if '.internal' in url_banco:
-        DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
-    else:
-        DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
+DATABASES = {
+    'default': dj_database_url.parse(url_banco)
+}
+DATABASES['default']['CONN_MAX_AGE'] = 600
+
+# Evita o erro de SSL interno do Railway
+if '.internal' in url_banco:
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
 else:
-    # Em vez de estourar um erro no build, criamos uma configuração temporária estável
-    # Isso impede o erro de ENGINE e permite que o Railway conclua o processo de montagem
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED=True
