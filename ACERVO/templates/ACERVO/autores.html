@@ -2,73 +2,194 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="container py-5">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 class="fw-bold mb-1 text-dark">Autores</h3>
-            <p class="text-muted mb-0">Gestão de autores disponíveis no acervo da biblioteca.</p>
-        </div>
-        {% if user.is_superuser %}
-        <div>
-            <a href="{% url 'new_autor' %}" class="btn btn-primary shadow-sm d-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i> Novo Autor
-            </a>
-        </div>
-        {% endif %}
-    </div>
+<style>
+    /* Reutilizando a paleta premium para manter a consistência */
+    :root {
+        --brand-dark: #0f172a;
+        --brand-accent: #3b82f6;
+        --brand-surface: #ffffff;
+        --brand-bg-light: #f8fafc;
+        --brand-border: #e2e8f0;
+        --brand-muted: #64748b;
+    }
 
-    <div class="card border-0 shadow-sm rounded-3">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light text-muted">
-                    <tr>
-                        <th scope="col" class="ps-4 fw-semibold border-bottom-0 py-3">Autor</th>
-                        <th scope="col" class="fw-semibold border-bottom-0 py-3">ID</th>
-                        {% if user.is_superuser %}
-                        <th scope="col" class="pe-4 text-end fw-semibold border-bottom-0 py-3">Ações</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody class="border-top-0">
-                    {% for autor in autores %}
+    /* Fundo da página */
+    .page-wrapper {
+        background-color: var(--brand-bg-light);
+        min-height: 100vh;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
+
+    /* Estilos do cabeçalho da página */
+    .page-header {
+        border-bottom: 1px solid var(--brand-border);
+        padding-bottom: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Botão Principal (Novo Autor) */
+    .btn-brand {
+        background-color: var(--brand-dark);
+        color: #ffffff;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+    }
+    
+    .btn-brand:hover {
+        background-color: #334155;
+        color: #ffffff;
+    }
+
+    /* Container da Tabela Premium */
+    .premium-table-card {
+        background-color: var(--brand-surface);
+        border: 1px solid var(--brand-border);
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        overflow: hidden; /* Garante que a tabela não vaze pelos cantos arredondados */
+    }
+
+    /* Customização da Tabela em si */
+    .premium-table {
+        margin-bottom: 0;
+    }
+
+    .premium-table thead th {
+        background-color: #f8fafc;
+        color: var(--brand-muted);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--brand-border);
+        padding: 1rem 1.5rem;
+    }
+
+    .premium-table tbody td {
+        vertical-align: middle;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--brand-border);
+        color: #334155;
+    }
+
+    .premium-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .premium-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Avatar/Ícone do Autor */
+    .author-avatar {
+        width: 42px;
+        height: 42px;
+        background-color: #f1f5f9;
+        color: var(--brand-dark);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    /* Tag de ID */
+    .badge-id {
+        background-color: #f1f5f9;
+        color: var(--brand-muted);
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    /* Botão de Ação (Editar) */
+    .btn-action {
+        color: var(--brand-muted);
+        background: transparent;
+        border: 1px solid var(--brand-border);
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+        background-color: var(--brand-dark);
+        color: #fff;
+        border-color: var(--brand-dark);
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="container">
+        
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="fw-bolder mb-1 text-dark">Autores</h3>
+                <p class="text-muted mb-0">Gerencie os autores cadastrados no acervo da biblioteca.</p>
+            </div>
+            {% if user.is_superuser %}
+            <div>
+                <a href="{% url 'new_autor' %}" class="btn btn-brand px-4 py-2 d-flex align-items-center gap-2 shadow-sm">
+                    <i class="bi bi-plus-lg"></i> Novo Autor
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="premium-table-card">
+            <div class="table-responsive">
+                <table class="table premium-table">
+                    <thead>
                         <tr>
-                            <td class="ps-4 py-3">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                        <i class="bi bi-person-fill fs-5"></i>
-                                    </div>
-                                    <span class="fw-medium text-dark">{{ autor }}</span>
-                                </div>
-                            </td>
-                            
-                            <td>
-                                <span class="badge bg-light text-secondary border px-2 py-1 fw-normal">#{{ autor.id }}</span>
-                            </td>
-                            
+                            <th scope="col" style="width: 60%;">Autor</th>
+                            <th scope="col" style="width: 20%;">ID</th>
                             {% if user.is_superuser %}
-                            <td class="pe-4 text-end">
-                                <a href="{% url 'edit_autor' autor.id %}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1">
-                                    <i class="bi bi-pencil-square"></i> Editar
-                                </a>
-                            </td>
+                            <th scope="col" class="text-end" style="width: 20%;">Ações</th>
                             {% endif %}
                         </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="{% if user.is_superuser %}3{% else %}2{% endif %}" class="text-center py-5">
-                                <div class="text-muted">
-                                    <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary opacity-50"></i>
-                                    <h6 class="fw-semibold text-dark mb-1">Nenhum autor encontrado</h6>
-                                    <p class="mb-0 small">Ainda não há autores cadastrados no sistema.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for autor in autores %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="author-avatar">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <span class="fw-semibold text-dark">{{ autor }}</span>
+                                    </div>
+                                </td>
+                                
+                                <td>
+                                    <span class="badge-id">#{{ autor.id|stringformat:"04d" }}</span>
+                                </td>
+                                
+                                {% if user.is_superuser %}
+                                <td class="text-end">
+                                    <a href="{% url 'edit_autor' autor.id %}" class="btn btn-action btn-sm px-3 py-1 d-inline-flex align-items-center gap-2">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="{% if user.is_superuser %}3{% else %}2{% endif %}" class="text-center py-5">
+                                    <div class="text-muted my-4">
+                                        <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                                        <h6 class="fw-semibold text-dark mb-1">Nenhum autor encontrado</h6>
+                                        <p class="mb-0 small">Ainda não há autores cadastrados no sistema.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+        
     </div>
-    
 </div>
 {% endblock content %}
