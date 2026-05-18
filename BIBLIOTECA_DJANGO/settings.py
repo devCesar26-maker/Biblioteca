@@ -129,15 +129,19 @@ if url_banco:
     }
     DATABASES['default']['CONN_MAX_AGE'] = 600
     
-    # Se for a rede privada do Railway (.internal), o SSL deve ser desativado
     if '.internal' in url_banco:
         DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
     else:
         DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
 else:
-    # Caso nenhuma variável seja encontrada (garante que não ative o banco dummy)
-    raise ValueError("Erro Crítico: A variável DATABASE_URL não foi encontrada no ambiente ou no arquivo .env!")
-
+    # Em vez de estourar um erro no build, criamos uma configuração temporária estável
+    # Isso impede o erro de ENGINE e permite que o Railway conclua o processo de montagem
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
