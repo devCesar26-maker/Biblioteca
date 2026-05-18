@@ -5,7 +5,7 @@ certifi==2026.4.22
 cffi==2.0.0
 charset-normalizer==3.4.7
 cryptography==47.0.0
-Django==4.2.30
+Django>=5.0,<5.3
 django-allauth==65.16.1
 django-bootstrap-v5==1.0.11
 django-haystack==3.3.0
@@ -13,7 +13,7 @@ dj-database-url==3.1.2
 dotenv==0.9.9
 elastic-transport==9.2.1
 elasticsearch==9.3.0
-gunicorn
+gunicorn==23.0.0
 idna==3.13
 packaging==26.1
 psycopg==3.3.3
