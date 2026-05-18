@@ -121,18 +121,21 @@ WSGI_APPLICATION = 'BIBLIOTECA_DJANGO.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Captura a variável DATABASE_URL do .env (local) ou do painel (Railway)
-url_banco = os.environ.get('DATABASE_URL', 'postgresql://postgres:provisorio@localhost:5432/postgres')
+
+if 'DATABASE_URL' not in os.environ:
+    raise ValueError("DATABASE_URL não configurada no ambiente!")
 
 DATABASES = {
-    'default': dj_database_url.parse(url_banco)
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
 }
 DATABASES['default']['CONN_MAX_AGE'] = 600
 
-# Evita o erro de SSL interno do Railway
-if '.internal' in url_banco:
+# Ajuste obrigatório para a rede do Railway não rejeitar a conexão
+if '.internal' in os.environ.get('DATABASE_URL', ''):
     DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
 else:
     DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
+    
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED=True
