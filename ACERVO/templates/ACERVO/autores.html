@@ -3,150 +3,179 @@
 
 {% block content %}
 <style>
-    /* Reutilizando a paleta premium para manter a consistência */
+    /* Paleta Premium Vibrante */
     :root {
-        --brand-dark: #0f172a;
-        --brand-accent: #3b82f6;
-        --brand-surface: #ffffff;
-        --brand-bg-light: #f8fafc;
-        --brand-border: #e2e8f0;
-        --brand-muted: #64748b;
+        --ctx-primary: #4f46e5;        /* Índigo Vibrante */
+        --ctx-primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        --ctx-dark: #0f172a;           /* Azul Escuro Noturno */
+        --ctx-surface: #ffffff;
+        --ctx-bg: #fafafa;             /* Fundo limpo */
+        --ctx-border: #f1f5f9;
+        --ctx-muted: #64748b;
+        --ctx-accent-soft: #eef2ff;    /* Fundo leve para o ícone */
     }
 
-    /* Fundo da página */
-    .page-wrapper {
-        background-color: var(--brand-bg-light);
+    /* Wrapper com um sutil efeito de iluminação no fundo */
+    .premium-wrapper {
+        background-color: var(--ctx-bg);
+        background-image: 
+            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
         min-height: 100vh;
-        padding-top: 2rem;
-        padding-bottom: 4rem;
+        padding-top: 3rem;
+        padding-bottom: 5rem;
     }
 
-    /* Estilos do cabeçalho da página */
-    .page-header {
-        border-bottom: 1px solid var(--brand-border);
-        padding-bottom: 1.5rem;
-        margin-bottom: 2rem;
+    /* Título e Contador */
+    .page-title {
+        color: var(--ctx-dark);
+        font-weight: 800;
+        letter-spacing: -0.025em;
     }
 
-    /* Botão Principal (Novo Autor) */
-    .btn-brand {
-        background-color: var(--brand-dark);
-        color: #ffffff;
-        border-radius: 8px;
+    .counter-badge {
+        background-color: var(--ctx-accent-soft);
+        color: var(--ctx-primary);
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        border: 1px solid rgba(79, 70, 229, 0.1);
+    }
+
+    /* Botão Principal em Degradê */
+    .btn-gradient {
+        background: var(--ctx-primary-gradient);
+        color: #ffffff !important;
+        border: none;
+        border-radius: 10px;
         font-weight: 600;
-        transition: background-color 0.2s ease;
+        padding: 0.6rem 1.5rem;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+        transition: all 0.2s ease;
     }
     
-    .btn-brand:hover {
-        background-color: #334155;
-        color: #ffffff;
+    .btn-gradient:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        opacity: 0.95;
     }
 
-    /* Container da Tabela Premium */
-    .premium-table-card {
-        background-color: var(--brand-surface);
-        border: 1px solid var(--brand-border);
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        overflow: hidden; /* Garante que a tabela não vaze pelos cantos arredondados */
+    /* Card da Tabela Elevada */
+    .table-container-card {
+        background-color: var(--ctx-surface);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+        overflow: hidden;
     }
 
-    /* Customização da Tabela em si */
-    .premium-table {
-        margin-bottom: 0;
-    }
-
-    .premium-table thead th {
+    /* Cabeçalho Customizado da Tabela */
+    .custom-table thead th {
         background-color: #f8fafc;
-        color: var(--brand-muted);
-        font-size: 0.85rem;
+        color: var(--ctx-muted);
+        font-size: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 1px solid var(--brand-border);
-        padding: 1rem 1.5rem;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
     }
 
-    .premium-table tbody td {
+    /* Linhas e Células da Tabela */
+    .custom-table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .custom-table tbody td {
+        padding: 1.2rem 1.5rem;
         vertical-align: middle;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid var(--brand-border);
-        color: #334155;
+        border-bottom: 1px solid var(--ctx-border);
     }
 
-    .premium-table tbody tr:last-child td {
+    .custom-table tbody tr:last-child td {
         border-bottom: none;
     }
 
-    .premium-table tbody tr:hover {
-        background-color: #f8fafc;
-    }
-
-    /* Avatar/Ícone do Autor */
-    .author-avatar {
-        width: 42px;
-        height: 42px;
-        background-color: #f1f5f9;
-        color: var(--brand-dark);
-        border-radius: 10px;
+    /* Avatar do Autor com Degradê Suave */
+    .author-icon-box {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+        color: var(--ctx-primary);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.2rem;
-    }
-
-    /* Tag de ID */
-    .badge-id {
-        background-color: #f1f5f9;
-        color: var(--brand-muted);
         font-weight: 600;
+    }
+
+    /* Badge ID Estilizada */
+    .id-pill {
+        background-color: #f1f5f9;
+        color: #475569;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.3rem 0.6rem;
         border-radius: 6px;
-        padding: 0.35rem 0.6rem;
-        font-size: 0.8rem;
     }
 
-    /* Botão de Ação (Editar) */
-    .btn-action {
-        color: var(--brand-muted);
-        background: transparent;
-        border: 1px solid var(--brand-border);
+    /* Botão de Ação Colorido Interativo */
+    .btn-action-edit {
+        color: var(--ctx-primary);
+        background-color: var(--ctx-accent-soft);
+        border: 1px solid rgba(79, 70, 229, 0.1);
         border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.2s;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+        transition: all 0.2s ease;
     }
 
-    .btn-action:hover {
-        background-color: var(--brand-dark);
-        color: #fff;
-        border-color: var(--brand-dark);
+    .btn-action-edit:hover {
+        background: var(--ctx-primary-gradient);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        border-color: transparent;
     }
 </style>
 
-<div class="page-wrapper">
+<div class="premium-wrapper">
     <div class="container">
         
-        <div class="page-header d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5">
             <div>
-                <h3 class="fw-bolder mb-1 text-dark">Autores</h3>
-                <p class="text-muted mb-0">Gerencie os autores cadastrados no acervo da biblioteca.</p>
+                <div class="d-flex align-items-center gap-3 mb-1">
+                    <h2 class="page-title mb-0">Autores</h2>
+                    <span class="counter-badge">{{ autores|length }} Cadastrados</span>
+                </div>
+                <p class="text-muted mb-0 fs-6">Diretório e controle de escritores vinculados às obras do acervo.</p>
             </div>
+            
             {% if user.is_superuser %}
             <div>
-                <a href="{% url 'new_autor' %}" class="btn btn-brand px-4 py-2 d-flex align-items-center gap-2 shadow-sm">
-                    <i class="bi bi-plus-lg"></i> Novo Autor
+                <a href="{% url 'new_autor' %}" class="btn btn-gradient d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Criar Novo Autor
                 </a>
             </div>
             {% endif %}
         </div>
 
-        <div class="premium-table-card">
+        <div class="table-container-card">
             <div class="table-responsive">
-                <table class="table premium-table">
+                <table class="table custom-table mb-0">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 60%;">Autor</th>
-                            <th scope="col" style="width: 20%;">ID</th>
+                            <th scope="col" style="width: 55%;">Nome do Autor</th>
+                            <th scope="col" style="width: 25%;">Código Identificador</th>
                             {% if user.is_superuser %}
-                            <th scope="col" class="text-end" style="width: 20%;">Ações</th>
+                            <th scope="col" class="text-end" style="width: 20%;">Gerenciar</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -155,20 +184,22 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="author-avatar">
-                                            <i class="bi bi-person-fill"></i>
+                                        <div class="author-icon-box shadow-sm">
+                                            <i class="bi bi-vector-pen"></i>
                                         </div>
-                                        <span class="fw-semibold text-dark">{{ autor }}</span>
+                                        <div>
+                                            <span class="fw-bold text-dark d-block mb-0 fs-6">{{ autor }}</span>
+                                        </div>
                                     </div>
                                 </td>
                                 
                                 <td>
-                                    <span class="badge-id">#{{ autor.id|stringformat:"04d" }}</span>
+                                    <span class="id-pill">ID_{{ autor.id|stringformat:"03d" }}</span>
                                 </td>
                                 
                                 {% if user.is_superuser %}
                                 <td class="text-end">
-                                    <a href="{% url 'edit_autor' autor.id %}" class="btn btn-action btn-sm px-3 py-1 d-inline-flex align-items-center gap-2">
+                                    <a href="{% url 'edit_autor' autor.id %}" class="btn btn-action-edit d-inline-flex align-items-center gap-2">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </a>
                                 </td>
@@ -177,10 +208,12 @@
                         {% empty %}
                             <tr>
                                 <td colspan="{% if user.is_superuser %}3{% else %}2{% endif %}" class="text-center py-5">
-                                    <div class="text-muted my-4">
-                                        <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
-                                        <h6 class="fw-semibold text-dark mb-1">Nenhum autor encontrado</h6>
-                                        <p class="mb-0 small">Ainda não há autores cadastrados no sistema.</p>
+                                    <div class="my-4">
+                                        <div class="mx-auto bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                            <i class="bi bi-folder2-open text-muted fs-2"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-1">Nenhum registro encontrado</h5>
+                                        <p class="text-muted small mb-0">Até o momento, nenhum autor foi inserido no banco de dados.</p>
                                     </div>
                                 </td>
                             </tr>
