@@ -9,7 +9,6 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     <style>
-        /* Faz o rodapé sempre ficar no fundo */
         body {
             display: flex;
             flex-direction: column;
@@ -29,13 +28,19 @@
                 <i class="bi bi-journal-code"></i> César
             </a>
 
-            <!-- Botões alinhados à direita -->
+            <!-- Botão toggler para celular -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Itens do menu -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         {% if not user.first_name %}
                             <li class="nav-item me-2">
-                                <a class="btn btn-outline-light btn-sm" href="{% url 'criar_aluno' %}">
+                                <a class="btn btn-outline-light btn-sm w-100 mb-2" href="{% url 'criar_aluno' %}">
                                     <i class="bi bi-pencil-square"></i> Criar Aluno
                                 </a>
                             </li>
@@ -46,18 +51,18 @@
                             </span>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-light btn-sm" href="{% url 'account_logout' %}">
+                            <a class="btn btn-outline-light btn-sm w-100 mb-2" href="{% url 'account_logout' %}">
                                 <i class="bi bi-box-arrow-right"></i> Sair
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-light btn-sm" href="{% url 'account_signup' %}">
+                            <a class="btn btn-outline-light btn-sm w-100 mb-2" href="{% url 'account_signup' %}">
                                 <i class="bi bi-pencil-square"></i> Registrar
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary btn-sm" href="{% url 'account_login' %}">
+                            <a class="btn btn-primary btn-sm w-100 mb-2" href="{% url 'account_login' %}">
                                 <i class="bi bi-box-arrow-in-right"></i> Entrar
                             </a>
                         </li>
