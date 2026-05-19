@@ -36,6 +36,7 @@ def licenca_valida(view_func):
     return _wrapped_view
 
 
+
 # Página da licença expirada
 def licenca_expirada(request):
     return render(request, "ACERVO/licenca_expirada.html")
@@ -206,6 +207,20 @@ def meus_emprestimos(request):
 def fazer_emprestimo(request, livro_id):
     livro = get_object_or_404(Livro, id=livro_id)
     aluno = get_object_or_404(Aluno, user=request.user)
+    
+    # 1. Checa se o aluno já tem esse livro ativo
+    emprestimo_ativo = Emprestimo.objects.filter(
+        aluno=aluno,
+        livro=livro,
+        devolvido=False,
+        data_devolucao__gte=timezone.localdate()
+    ).exists()
+    
+    if emprestimo_ativo:
+        messages.error(request, "Você tem um empréstimo ativo com esse livro.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('meus_emprestimos')))
+
+    # 2. Segue para a criação do empréstimo se não houver duplicidade
     if request.method != 'POST':
         form = EmprestimoForm()
     else:
@@ -214,14 +229,20 @@ def fazer_emprestimo(request, livro_id):
             emprestimo = form.save(commit=False)
             emprestimo.aluno = aluno
             emprestimo.livro = livro
-            emprestimo.data_emprestimo = timezone.localdate()
+            
+            # --- CÁLCULO AUTOMÁTICO DAS DATAS ---
+            hoje = timezone.localdate()
+            emprestimo.data_emprestimo = hoje
+            emprestimo.data_devolucao = hoje + timedelta(days=7) # Define o prazo automático de 7 dias
+            # ------------------------------------
+            
             emprestimo.save()
 
             messages.success(request, f"Empréstimo do '{livro.nome}' realizado com sucesso!")
             return HttpResponseRedirect(reverse('meus_emprestimos'))
+            
     context = {'form': form, 'livro': livro}
     return render(request, 'ACERVO/new_emprestimo.html', context)
-
 
 @login_required
 def renovar_emprestimo(request, livro_id):

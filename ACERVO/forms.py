@@ -44,9 +44,8 @@ class LivroAutorForm(forms.ModelForm):
 class EmprestimoForm(forms.ModelForm):
     class Meta:
         model=Emprestimo
-        fields=['data_devolucao', 'valor', 'devolvido']
+        fields=['valor', 'devolvido']
         labels={
-            'data_devolucao':'Data de Devolucão',
             'valor':'Valor',
             'devolvido':'Preencha se devolveu'
         }
