@@ -2,59 +2,186 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="card shadow-lg border-0">
-        <!-- Cabeçalho -->
-        <div class="card-header bg-gradient bg-success text-white d-flex align-items-center">
-            <i class="bi bi-archive me-2 fs-4"></i>
-            <h4 class="mb-0">Meus Empréstimos</h4>
-        </div>
+<style>
+    body {
+        background-color: #f8fafc;
+    }
 
-        <!-- Corpo -->
-        <div class="card-body bg-light">
+    .page-header {
+        padding: 2.5rem 0 1.5rem 0;
+    }
+
+    .badge-count {
+        background-color: #eff6ff;
+        color: #2563eb;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+    }
+
+    .loan-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        padding: 1.25rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .loan-card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .book-icon-box {
+        width: 40px;
+        height: 40px;
+        background-color: #f1f5f9;
+        color: #475569;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .book-title {
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .status-badge {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .status-open {
+        background-color: #fef2f2;
+        color: #dc2626;
+    }
+
+    .status-done {
+        background-color: #f0fdf4;
+        color: #16a34a;
+    }
+
+    .btn-action-loan {
+        font-weight: 500;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.85rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-decoration: none;
+    }
+
+    .btn-pdf {
+        color: #2563eb;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+    }
+
+    .btn-pdf:hover {
+        background-color: #f8fafc;
+        border-color: #94a3b8;
+        color: #1d4ed8;
+    }
+
+    .btn-renew {
+        color: #ffffff;
+        background-color: #16a34a;
+        border: 1px solid #16a34a;
+    }
+
+    .btn-renew:hover {
+        background-color: #15803d;
+        border-color: #15803d;
+    }
+
+    .no-pdf-text {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+</style>
+
+<div class="container pb-5">
+    
+    <div class="page-header mb-4">
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <h2 class="fw-bold text-dark mb-0 h3">Meus Empréstimos</h2>
             {% if emprestimos %}
-                <div class="list-group">
-                    {% for e in emprestimos %}
-                        <div class="list-group-item d-flex justify-content-between align-items-center shadow-sm mb-2">
-                            <div>
-                                <strong class="text-primary">{{ e.livro.nome }}</strong><br>
-                                <small class="text-muted">
-                                    <i class="bi bi-calendar-event me-1"></i> Devolução até {{ e.data_devolucao }}
-                                </small>
-                            </div>
-
-                            <div class="d-flex align-items-center gap-2">
-                                {% if e.livro.arquivo_pdf %}
-                                    <a href="{% url 'visualizar_pdf' e.livro.id %}" class="btn btn-outline-primary btn-sm">
-                                        <i class="bi bi-file-earmark-pdf"></i> Ler PDF
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted"><i class="bi bi-file-earmark-x"></i> PDF não disponível</span>
-                                {% endif %}
-
-                                {% if e.devolvido %}
-                                    <span class="badge bg-success"><i class="bi bi-check-circle"></i> Devolvido</span>
-                                {% else %}
-                                    <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Em aberto</span>
-                                    <a href="{% url 'renovar_emprestimo' e.livro.id %}" class="btn btn-success btn-sm">
-                                        <i class="bi bi-arrow-repeat"></i> Renovar
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="alert alert-info text-center py-4">
-                    <i class="bi bi-info-circle"></i> Você não tem empréstimos ativos.
-                </div>
+                <span class="badge-count">{{ emprestimos|length }} no total</span>
             {% endif %}
         </div>
-
-        <!-- Rodapé -->
-        <div class="card-footer bg-dark text-white text-center">
-            <small class="fw-light">Sistema de Biblioteca • Gestão de Empréstimos</small>
-        </div>
+        <p class="text-muted mb-0">Histórico e controle de livros retirados ou disponíveis para leitura.</p>
     </div>
+
+    {% if emprestimos %}
+        <div class="d-flex flex-column gap-3">
+            {% for e in emprestimos %}
+                <div class="loan-card">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="book-icon-box">
+                                <i class="bi bi-bookmark-dash"></i>
+                            </div>
+                            <div>
+                                <h4 class="book-title">{{ e.livro.nome }}</h4>
+                                <div class="d-flex flex-wrap align-items-center gap-2 text-muted small">
+                                    <span><i class="bi bi-calendar3"></i> Devolução: {{ e.data_devolucao }}</span>
+                                    <span class="d-none d-sm-inline">•</span>
+                                    {% if e.devolvido %}
+                                        <span class="status-badge status-done"><i class="bi bi-check-sm"></i> Devolvido</span>
+                                    {% else %}
+                                        <span class="status-badge status-open"><i class="bi bi-clock"></i> Em aberto</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap align-items-center gap-2 w-100 w-md-auto justify-content-start justify-content-md-end pt-2 pt-md-0 border-top border-md-0 border-light">
+                            
+                            {% if e.livro.arquivo_pdf %}
+                                <a href="{% url 'visualizar_pdf' e.livro.id %}" class="btn-action-loan btn-pdf">
+                                    <i class="bi bi-file-earmark-pdf"></i> Ler PDF
+                                </a>
+                            {% else %}
+                                <span class="no-pdf-text me-2"><i class="bi bi-file-earmark-x"></i> Sem PDF</span>
+                            {% endif %}
+
+                            {% if not e.devolvido %}
+                                <a href="{% url 'renovar_emprestimo' e.livro.id %}" class="btn-action-loan btn-renew">
+                                    <i class="bi bi-arrow-repeat"></i> Renovar
+                                </a>
+                            {% endif %}
+                            
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="table-card p-5 text-center text-muted">
+            <i class="bi bi-archive fs-1 d-block mb-2 text-secondary"></i>
+            <p class="fw-medium mb-1">Você não tem empréstimos ativos</p>
+            <p class="small mb-0">Suas locações de livros e leituras salvas aparecerão listadas nesta página.</p>
+        </div>
+    {% endif %}
+    
 </div>
 {% endblock content %}

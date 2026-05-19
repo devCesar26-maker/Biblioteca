@@ -13,57 +13,102 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            background-color: #f8fafc;
+            /* Compensação para o conteúdo não ficar escondido debaixo do menu fixo */
+            padding-top: 70px; 
         }
+        
+        /* Menu Fixo e Modernizado */
+        .navbar-custom {
+            background-color: #0f172a !important; /* Azul escuro noturno profissional */
+            border-bottom: 1px solid #1e293b;
+            backdrop-filter: blur(8px); /* Efeito sutil de vidro caso queira usar opacidade futuramente */
+        }
+
+        .navbar-brand {
+            font-size: 1.15rem;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-user-text {
+            color: #94a3b8 !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
         main {
             flex: 1;
+        }
+
+        /* Ajuste fino dos botões do menu */
+        .navbar-nav .btn-sm {
+            padding: 0.4rem 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+
+        .btn-login-custom {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff !important;
+        }
+
+        .btn-login-custom:hover {
+            background-color: #4338ca;
+            border-color: #4338ca;
+        }
+
+        /* Rodapé sutil, menos chamativo que o cabeçalho */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-    <!-- Barra de navegação -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container-fluid">
-            <!-- Logo / Marca -->
-            <a class="navbar-brand fw-bold" href="{% url 'index' %}">
-                <i class="bi bi-journal-code"></i> César
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top shadow-sm py-2.5">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'index' %}">
+                <i class="bi bi-journal-bookmark-fill text-indigo" style="color: #818cf8;"></i>
+                <span>Sistema de Biblioteca</span>
             </a>
 
-            <!-- Botão toggler para celular -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Itens do menu -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-lg-center gap-2 mt-3 mt-lg-0">
                     {% if user.is_authenticated %}
                         {% if not user.first_name %}
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-light btn-sm w-100 mb-2" href="{% url 'criar_aluno' %}">
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light btn-sm w-100" href="{% url 'criar_aluno' %}">
                                     <i class="bi bi-pencil-square"></i> Criar Aluno
                                 </a>
                             </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <span class="navbar-text me-3">
-                                <i class="bi bi-person-circle"></i> Olá, {{ user.username }}
+                        <li class="nav-item px-2 py-1 py-lg-0">
+                            <span class="nav-user-text d-inline-flex align-items-center gap-1.5">
+                                <i class="bi bi-person"></i> {{ user.username }}
                             </span>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-light btn-sm w-100 mb-2" href="{% url 'account_logout' %}">
+                            <a class="btn btn-outline-danger btn-sm w-100" href="{% url 'account_logout' %}">
                                 <i class="bi bi-box-arrow-right"></i> Sair
                             </a>
                         </li>
                     {% else %}
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-light btn-sm w-100 mb-2" href="{% url 'account_signup' %}">
-                                <i class="bi bi-pencil-square"></i> Registrar
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light btn-sm w-100" href="{% url 'account_signup' %}">
+                                Registrar
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary btn-sm w-100 mb-2" href="{% url 'account_login' %}">
-                                <i class="bi bi-box-arrow-in-right"></i> Entrar
+                            <a class="btn btn-login-custom btn-sm w-100" href="{% url 'account_login' %}">
+                                Entrar
                             </a>
                         </li>
                     {% endif %}
@@ -72,16 +117,10 @@
         </div>
     </nav>
 
-    <!-- Conteúdo principal -->
-    <main class="container mt-4">
-        {% block content %}{% endblock content %}
-    </main>
-
-    <!-- Mensagens -->
     {% if messages %}
-    <div class="container mt-3">
+    <div class="container" style="margin-top: 1rem;">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -89,9 +128,12 @@
     </div>
     {% endif %}
 
-    <!-- Rodapé fixo -->
-    <footer class="bg-dark text-white text-center py-3 mt-auto">
-        <p class="mb-0">© 2026 Sistema de Biblioteca</p>
+    <main class="container">
+        {% block content %}{% endblock content %}
+    </main>
+
+    <footer class="text-center py-3 mt-auto">
+        <p class="mb-0">© 2026 Sistema de Biblioteca • Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>
