@@ -127,6 +127,16 @@
         border-color: #94a3b8;
         color: #1e293b;
     }
+
+    /* CSS para a versão mobile baseada em Cards */
+    .mobile-book-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+    }
 </style>
 
 <div class="container pb-5">
@@ -142,63 +152,83 @@
         
         {% if user.is_superuser %}
         <div class="d-flex gap-2">
-            <a href="{% url 'new_livro_autor' %}" class="btn btn-secondary-custom d-inline-flex align-items-center gap-2">
+            <a href="{% url 'new_livro_autor' %}" class="btn btn-secondary-custom d-inline-flex align-items-center gap-2 flex-grow-1 flex-sm-grow-0 justify-content-center">
                 <i class="bi bi-link-45deg"></i> Vincular Autor
             </a>
-            <a href="{% url 'new_livro' %}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i> Novo Livro
+            <a href="{% url 'new_livro' %}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2 flex-grow-1 flex-sm-grow-0 justify-content-center">
+                <i class="bi bi-plus-lg"></i> Novo
             </a>
         </div>
         {% endif %}
     </div>
 
-    <div class="table-card">
-        <div class="table-responsive">
-            <table class="table table-custom align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col" style="width: 50%;">Título da Obra</th>
-                        <th scope="col" style="width: 25%;">ID do Sistema</th>
-                        <th scope="col" class="text-end" style="width: 25%;">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for livro in livros %}
+    {% if livros %}
+        <div class="table-card d-none d-md-block">
+            <div class="table-responsive">
+                <table class="table table-custom align-middle mb-0">
+                    <thead>
                         <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="book-avatar">
-                                        <i class="bi bi-book"></i>
+                            <th scope="col" style="width: 50%;">Título da Obra</th>
+                            <th scope="col" style="width: 25%;">ID do Sistema</th>
+                            <th scope="col" class="text-end" style="width: 25%;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for livro in livros %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="book-avatar">
+                                            <i class="bi bi-book"></i>
+                                        </div>
+                                        <a href="{% url 'dados_livros' livro.id %}" class="book-link">
+                                            {{ livro.nome }}
+                                        </a>
                                     </div>
-                                    <a href="{% url 'dados_livros' livro.id %}" class="book-link">
-                                        {{ livro.nome }}
+                                </td>
+                                <td>
+                                    <span class="id-badge">#{{ livro.id }}</span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-action d-inline-flex align-items-center gap-2">
+                                        Empréstimo <i class="bi bi-arrow-right"></i>
                                     </a>
-                                </div>
-                            </td>
-                            
-                            <td>
-                                <span class="id-badge">#{{ livro.id }}</span>
-                            </td>
-                            
-                            <td class="text-end">
-                                <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-action d-inline-flex align-items-center gap-2">
-                                    Empréstimo <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="3" class="text-center py-5 text-muted">
-                                <i class="bi bi-journal-x fs-1 d-block mb-2 text-secondary"></i>
-                                <p class="fw-medium mb-1">Nenhum livro encontrado</p>
-                                <p class="small mb-0">O catálogo da biblioteca está vazio no momento.</p>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+
+        <div class="d-block d-md-none">
+            {% for livro in livros %}
+                <div class="mobile-book-card">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="book-avatar flex-shrink-0">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <a href="{% url 'dados_livros' livro.id %}" class="book-link d-block text-truncate mb-1" style="max-width: 220px;">
+                                {{ livro.nome }}
+                            </a>
+                            <span class="id-badge">#{{ livro.id }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-action w-100 d-flex align-items-center justify-content-center gap-2 py-2">
+                        Realizar Empréstimo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="table-card p-5 text-center text-muted">
+            <i class="bi bi-journal-x fs-1 d-block mb-2 text-secondary"></i>
+            <p class="fw-medium mb-1">Nenhum livro encontrado</p>
+            <p class="small mb-0">O catálogo da biblioteca está vazio no momento.</p>
+        </div>
+    {% endif %}
     
 </div>
 {% endblock content %}
