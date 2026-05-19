@@ -1,38 +1,204 @@
 {% extends "ACERVO/base.html" %}
+{% load bootstrap5 %}
 
 {% block content %}
-<div class="container mt-4">
+<style>
+    body {
+        background-color: #f8fafc; /* Fundo padrão cinza claro moderno */
+    }
+
+    .search-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .search-title {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 1.75rem;
+        letter-spacing: -0.025em;
+    }
+
+    .search-title span {
+        color: #4f46e5; /* Destaca o termo buscado em Indigo */
+    }
+
+    /* Grid responsivo e fluido */
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Card com efeito de elevação moderno */
+    .book-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 220px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .book-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        border-color: #cbd5e1;
+    }
+
+    .book-title {
+        color: #0f172a;
+        font-weight: 600;
+        font-size: 1.15rem;
+        line-height: 1.4;
+        margin-bottom: 0.5rem;
+        /* Limita o título a duas linhas para manter o grid alinhado */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .book-authors {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .book-metadata {
+        font-size: 0.825rem;
+        color: #475569;
+        border-top: 1px dashed #e2e8f0;
+        padding-top: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Badges minimalistas */
+    .badge-category {
+        background-color: #eef2ff;
+        color: #4f46e5;
+        font-weight: 500;
+        padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Botão elegante */
+    .btn-details {
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+    }
+
+    .btn-details:hover {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+        color: #ffffff;
+    }
+
+    /* Estados Vazios (Empty States) elegantes */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #ffffff;
+        border: 1px dashed #cbd5e1;
+        border-radius: 16px;
+        max-width: 500px;
+        margin: 2rem auto;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #94a3b8;
+        margin-bottom: 1.25rem;
+    }
+
+    .empty-state h5 {
+        color: #1e293b;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        font-size: 0.925rem;
+    }
+</style>
+
+<div class="container mt-5">
     {% if query %}
-        <h4 class="mb-4">Resultados para "{{ query }}"</h4>
+        <div class="search-header">
+            <h2 class="search-title">
+                Resultados para <span>"{{ query }}"</span>
+            </h2>
+            <p class="text-muted small">Encontramos {{ resultados|length }} livro(s) correspondente(s).</p>
+        </div>
+
         {% if resultados %}
-            <div class="row">
+            <div class="books-grid">
                 {% for livro in resultados %}
-                    <div class="col-md-4">
-                        <div class="card mb-3 shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ livro.nome }}</h5>
-                                <p class="card-text">
-                                    <strong>Autor(es):</strong>
-                                    {% for autor in livro.autores.all %}
-                                        {{ autor.nome }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                    <br>
-                                    <strong>Categoria:</strong> {{ livro.categoria.nome }} <br>
-                                    <strong>Editora:</strong> {{ livro.editora.nome }}
-                                </p>
-                                <a href="{% url 'dados_livros' livro.id %}" class="btn btn-primary btn-sm">
-                                    Ver detalhes
-                                </a>
+                    <div class="book-card">
+                        <div>
+                            <span class="badge-category">
+                                <i class="bi bi-tag-fill me-1"></i> {{ livro.categoria.nome }}
+                            </span>
+                            
+                            <h3 class="book-title" title="{{ livro.nome }}">{{ livro.nome }}</h3>
+                            
+                            <div class="book-authors">
+                                <i class="bi bi-person me-1"></i>
+                                {% for autor in livro.autores.all %}
+                                    {{ autor.nome }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
                             </div>
+                        </div>
+
+                        <div>
+                            <div class="book-metadata">
+                                <span class="text-muted">Editora:</span> <strong class="text-dark">{{ livro.editora.nome }}</strong>
+                            </div>
+
+                            <a href="{% url 'dados_livros' livro.id %}" class="btn-details">
+                                Ver detalhes <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <div class="alert alert-warning">Nenhum resultado encontrado.</div>
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="bi bi-search-heart"></i>
+                </div>
+                <h5>Nenhum livro encontrado</h5>
+                <p>Não encontramos títulos correspondentes a "{{ query }}". Verifique a ortografia ou tente termos mais abrangentes.</p>
+                <a href="{% url 'livros' %}" class="btn btn-sm btn-outline-primary mt-2">
+                    Ver acervo completo
+                </a>
+            </div>
         {% endif %}
     {% else %}
-        <div class="alert alert-info">Digite algo na busca para ver resultados.</div>
+        <div class="empty-state">
+            <div class="empty-state-icon" style="color: #4f46e5;">
+                <i class="bi bi-compass"></i>
+            </div>
+            <h5>O que você quer ler hoje?</h5>
+            <p>Digite o nome de um livro, autor, editora ou categoria na barra de pesquisa para começar a explorar o acervo.</p>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

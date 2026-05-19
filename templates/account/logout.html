@@ -3,33 +3,170 @@
 {% load socialaccount %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
-    <div class="card shadow-lg border-0 p-4 text-center" style="max-width: 420px; width: 100%;">
+<style>
+    body {
+        background-color: #f8fafc; /* Mantém o fundo cinza claro padrão */
+    }
+
+    .logout-container {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem; /* Margem de segurança para telas pequenas */
+    }
+
+    .logout-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 400px; /* Largura ideal para não esticar em desktops */
+        overflow: hidden;
+    }
+
+    .logout-header {
+        padding: 2.5rem 2rem 1.5rem 2rem;
+        text-align: center;
+    }
+
+    .logout-icon {
+        font-size: 2.5rem;
+        color: #ef4444; /* Vermelho sutil (estilo Tailwind) apenas no ícone */
+        background-color: #fee2e2;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 1.25rem auto;
+    }
+
+    .logout-header h2 {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: -0.025em;
+        margin-bottom: 0.5rem;
+    }
+
+    .logout-body {
+        padding: 0 2rem 2rem 2rem;
+        text-align: center;
+    }
+
+    .logout-text {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Grupo de botões lado a lado e responsivos */
+    .button-group {
+        display: flex;
+        flex-direction: column; /* Empilha em telas muito pequenas */
+        gap: 0.75rem;
+    }
+
+    @media (min-width: 400px) {
+        .button-group {
+            flex-direction: row; /* Fica lado a lado em telas normais */
+        }
+        .button-group > * {
+            flex: 1; /* Divide o espaço igualmente */
+        }
+    }
+
+    .btn-logout {
+        background-color: #ef4444;
+        border-color: #ef4444;
+        color: #ffffff;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.65rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+        background-color: #dc2626;
+        border-color: #dc2626;
+        color: #ffffff;
+    }
+
+    .btn-cancel {
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.65rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-cancel:hover {
+        background-color: #f8fafc;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    .logout-footer {
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 1.25rem 2rem;
+        text-align: center;
+    }
+
+    .link-accent {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .link-accent:hover {
+        color: #4338ca;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="logout-container">
+    <div class="logout-card">
         
-        <!-- Cabeçalho -->
-        <div class="card-header bg-danger text-white">
-            <h3 class="fw-bold mb-0">Sair da Conta</h3>
+        <div class="logout-header">
+            <div class="logout-icon">
+                <i class="bi bi-box-arrow-right" style="margin-left: 4px;"></i>
+            </div>
+            <h2>Sair da Conta</h2>
         </div>
 
-        <!-- Corpo -->
-        <div class="card-body">
-            <p class="mb-4">Tem certeza que deseja sair?</p>
+        <div class="logout-body">
+            <p class="logout-text">Tem certeza que deseja encerrar sua sessão atual no acervo?</p>
+            
             <form method="post" action="{% url 'account_logout' %}">
                 {% csrf_token %}
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-danger btn-lg">
-                        <i class="bi bi-box-arrow-right"></i> Logout
+                
+                <div class="button-group">
+                    <a href="{% url 'index' %}" class="btn btn-cancel">
+                        Cancelar
+                    </a>
+                    
+                    <button type="submit" class="btn btn-logout">
+                        Confirmar Sair
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- Rodapé -->
-        <div class="card-footer bg-light">
-            <small class="text-muted">
-                Deseja entrar novamente?
-                <a href="{% url 'account_login' %}" class="fw-bold text-decoration-none">Clique aqui</a>
-            </small>
+        <div class="logout-footer text-muted small">
+            Mudou de ideia? 
+            <a href="{% url 'account_login' %}" class="link-accent">Fazer Login</a>
         </div>
     </div>
 </div>

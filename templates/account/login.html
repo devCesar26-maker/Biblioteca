@@ -4,61 +4,223 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-lg border-0" style="width: 100%; max-width: 420px;">
+<style>
+    body {
+        background-color: #f8fafc; /* Fundo cinza bem claro e moderno */
+    }
+
+    .login-container {
+        min-height: 85vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem;
+    }
+
+    .login-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 420px;
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .login-header {
+        padding: 2.5rem 2rem 1.5rem 2rem;
+        text-align: center;
+    }
+
+    .login-header h2 {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 1.75rem;
+        letter-spacing: -0.025em;
+    }
+
+    .login-body {
+        padding: 0 2rem 2rem 2rem;
+    }
+
+    /* Estilização cirúrgica para os inputs do Allauth */
+    .login-body p {
+        margin-bottom: 1.25rem;
+    }
+
+    .login-body label {
+        display: block;
+        color: #475569;
+        font-weight: 500;
+        font-size: 0.875rem;
+        margin-bottom: 0.375rem;
+    }
+
+    .login-body input[type="text"],
+    .login-body input[type="email"],
+    .login-body input[type="password"] {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #1e293b;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .login-body input:focus {
+        border-color: #4f46e5;
+        outline: 0;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    /* Checkbox de "Lembrar-me" se o allauth injetar */
+    .login-body input[type="checkbox"] {
+        border-radius: 4px;
+        border-color: #cbd5e1;
+        margin-right: 0.5rem;
+    }
+
+    /* Botões */
+    .btn-custom-primary {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+        color: #ffffff;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+    }
+
+    .btn-custom-primary:hover {
+        background-color: #4338ca;
+        border-color: #4338ca;
+        color: #ffffff;
+    }
+
+    .btn-google {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-google:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: #0f172a;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.85rem;
+        margin: 1.75rem 0;
+    }
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .divider:not(:empty)::before { margin-right: .75rem; }
+    .divider:not(:empty)::after { margin-left: .75rem; }
+
+    .login-footer {
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 1.25rem 2rem;
+        text-align: center;
+    }
+
+    .link-accent {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .link-accent:hover {
+        color: #4338ca;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
         
-        <!-- Cabeçalho -->
-        <div class="card-header bg-primary text-white text-center">
-            <h3 class="fw-bold mb-0">Login</h3>
+        <div class="login-header">
+            <div class="mb-2 text-primary" style="font-size: 2rem;">
+                <i class="bi bi-journal-bookmark-fill" style="color: #4f46e5;"></i>
+            </div>
+            <h2>Acesse sua Conta</h2>
+            <p class="text-muted small mb-0">Bem-vindo de volta! Por favor, insira seus dados.</p>
         </div>
 
-        <!-- Corpo -->
-        <div class="card-body p-4">
-            <!-- Login tradicional -->
+        <div class="login-body">
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger p-2 small mb-3 rounded-3" role="alert">
+                    {% for error in form.non_field_errors %}
+                        <i class="bi bi-exclamation-circle-fill me-1"></i> {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <form method="post" action="{% url 'account_login' %}">
                 {% csrf_token %}
-                {{ form.non_field_errors }}
-                <div class="mb-3">
-                    {{ form.login.label_tag }}
-                    {{ form.login }}
+                
+                <div class="form-fields-wrapper">
+                    {{ form.as_p }}
                 </div>
-                <div class="mb-3">
-                    {{ form.password.label_tag }}
-                    {{ form.password }}
+                
+                <div class="text-end mb-3" style="margin-top: -0.5rem;">
+                    <a href="{% url 'account_reset_password' %}" class="small text-muted text-decoration-none hover-underline">
+                        Esqueceu a senha?
+                    </a>
                 </div>
-                <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-box-arrow-in-right"></i> Entrar
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom-primary">
+                        Entrar <i class="bi bi-arrow-right ms-1"></i>
                     </button>
                 </div>
             </form>
-            {% get_providers as socialaccount_providers %}
-     
-            {% if socialaccount_providers %}
-                <h5 class="my-4 text-center">Ou entre com:</h5>
-                <div class="d-grid gap-2">
 
-                    <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger btn-lg">
-                        <i class="bi bi-google"></i> Entrar com Google
+            {% get_providers as socialaccount_providers %}
+            {% if socialaccount_providers %}
+                <div class="divider">ou continue com</div>
+                
+                <div class="d-grid">
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-google">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google text-danger" viewBox="0 0 16 16">
+                            <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0c2.244 0 4.179.81 5.648 2.389l-1.414 1.414C11.103 2.665 9.697 2 8 2a6 6 0 1 0 0 12c1.47 0 2.704-.543 3.518-1.424.962-.888 1.545-2.228 1.545-3.991z"/>
+                        </svg>
+                        Google
                     </a>
                 </div>
-            {% else %}
-                <p class="text-center text-muted">Nenhum provedor de login social disponível.</p>
             {% endif %}
-                    </div>
+        </div>
 
-            <p class="text-center">
-                <a href="{% url 'account_reset_password' %}">
-                    Esqueceu a senha?
-                </a>
-            </p>
-
-        <!-- Rodapé -->
-        <div class="card-footer text-center bg-light">
-            <small class="text-muted">
-                Não possui conta?
-                <a href="{% url 'account_signup' %}" class="fw-bold text-decoration-none">Registre-se aqui</a>
-            </small>
+        <div class="login-footer text-muted small">
+            Não possui uma conta? 
+            <a href="{% url 'account_signup' %}" class="link-accent">Registre-se aqui</a>
         </div>
     </div>
 </div>
