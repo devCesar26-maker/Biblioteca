@@ -4,17 +4,17 @@ from .forms import AutorForm, CategoriaForm, EditoraForm, LivroForm, LivroAutorF
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
-from datetime import date
+from datetime import date, timedelta
 from functools import wraps
 from django.utils import timezone
 from django.contrib import messages
-from datetime import timedelta
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.db.models import Count
 
 
 # Decorador para barrar acesso de não-superusuários
 def superuser_required(view_func):
+    @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.is_superuser:
             raise Http404("Página não encontrada")
@@ -27,10 +27,10 @@ def licenca_valida(view_func):
     @wraps(view_func)
     def _wrapped_view(request, livro_id, *args, **kwargs):
         aluno = get_object_or_404(Aluno, user=request.user)
-        emprestimos = Emprestimo.objects.filter(livro_id=livro_id, aluno=aluno)
-        emprestimo = emprestimos.order_by('-data_devolucao').first()
+        emprestimo = Emprestimo.objects.filter(livro_id=livro_id, aluno=aluno).order_by('-data_devolucao').first()
 
-        if emprestimo.devolvido or timezone.now().date() > emprestimo.data_devolucao:
+        # Evita quebrar se o aluno nunca tiver pego o livro emprestado
+        if not emprestimo or emprestimo.devolvido or timezone.localdate() > emprestimo.data_devolucao:
             return redirect('licenca_expirada')
         return view_func(request, livro_id, *args, **kwargs)
     return _wrapped_view
@@ -49,18 +49,20 @@ def index(request):
 # --- Alunos ---
 @login_required
 def criar_aluno(request):
-    if request.method != 'POST':
-        form = AlunoForm()
-    else:
-        nome = request.POST.get("nome")
-        request.user.first_name = nome
-        request.user.save()
+    if request.method == 'POST':
         form = AlunoForm(request.POST)
         if form.is_valid():
+            nome = request.POST.get("nome")
+            request.user.first_name = nome
+            request.user.save()
+            
             aluno = form.save(commit=False)
             aluno.user = request.user
             aluno.save()
             return HttpResponseRedirect(reverse('index'))
+    else:
+        form = AlunoForm()
+        
     context = {'form': form}
     return render(request, "ACERVO/criar_aluno.html", context)
 
@@ -71,6 +73,7 @@ def autores(request):
     autores = Autor.objects.all()
     context = {'autores': autores}
     return render(request, "ACERVO/autores.html", context)
+
 
 @login_required
 @permission_required('ACERVO.add_autor', raise_exception=True)
@@ -93,6 +96,7 @@ def categorias(request):
     context = {'categorias': categorias}
     return render(request, "ACERVO/categorias.html", context)
 
+
 @login_required
 @permission_required('ACERVO.add_categoria', raise_exception=True)
 def new_categoria(request):
@@ -113,6 +117,7 @@ def editoras(request):
     editoras = Editora.objects.all()
     context = {'editoras': editoras}
     return render(request, "ACERVO/editoras.html", context)
+
 
 @login_required
 @permission_required('ACERVO.add_editora', raise_exception=True)
@@ -135,18 +140,21 @@ def livros(request):
     context = {'livros': livros}
     return render(request, "ACERVO/livros.html", context)
 
+
 @login_required
 @permission_required('ACERVO.add_livro', raise_exception=True)
 def new_livro(request):
     if request.method != 'POST':
         form = LivroForm()
     else:
-        form = LivroForm(request.POST)
+        # Corrigido: Incluído request.FILES para suportar o recebimento de mídias/PDFs
+        form = LivroForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('livros'))
     context = {'form': form}
     return render(request, "ACERVO/new_livro.html", context)
+
 
 @login_required
 def data_livro(request, livro_id):
@@ -176,15 +184,23 @@ def new_livro_autor(request):
 def meus_emprestimos(request):
     aluno = get_object_or_404(Aluno, user=request.user)
     emprestimos = Emprestimo.objects.filter(aluno=aluno)
+    
+    # Corrigido: Usando timezone.localdate() para evitar conflitos de DateTime vs Date
+    hoje = timezone.localdate()
+    
     for e in emprestimos:
-        dias_restantes = (e.data_devolucao - timezone.now().date()).days
-        if 0< dias_restantes <= 2 and not e.devolvido:
-            messages.warning(request, f"⚠️ O empréstimo do livro '{e.livro.nome}' vence em {dias_restantes} dias!")
-        if dias_restantes<=0:
-            excesso=(timezone.now().date()-e.data_devolucao).days
-            messages.warning(request, f"⚠️ O empréstimo do livro '{e.livro.nome}' venceu há {excesso} dias!")
+        if not e.devolvido:
+            dias_restantes = (e.data_devolucao - hoje).days
+            if 0 < dias_restantes <= 2:
+                # Nota: Considere renderizar esse aviso direto via HTML para evitar spam de alertas por sessão
+                messages.warning(request, f"⚠️ O empréstimo do livro '{e.livro.nome}' vence em {dias_restantes} dias!")
+            elif dias_restantes <= 0:
+                excesso = (hoje - e.data_devolucao).days
+                messages.warning(request, f"⚠️ O empréstimo do livro '{e.livro.nome}' venceu há {excesso} dias!")
+                
     context = {'emprestimos': emprestimos}
     return render(request, "ACERVO/meus_emprestimos.html", context)
+
 
 @login_required
 def fazer_emprestimo(request, livro_id):
@@ -198,10 +214,10 @@ def fazer_emprestimo(request, livro_id):
             emprestimo = form.save(commit=False)
             emprestimo.aluno = aluno
             emprestimo.livro = livro
-            emprestimo.data_emprestimo = date.today()
+            emprestimo.data_emprestimo = timezone.localdate()
             emprestimo.save()
 
-            messages.success(request, f"Emprestimo do '{livro.nome}' realizado com sucesso!")
+            messages.success(request, f"Empréstimo do '{livro.nome}' realizado com sucesso!")
             return HttpResponseRedirect(reverse('meus_emprestimos'))
     context = {'form': form, 'livro': livro}
     return render(request, 'ACERVO/new_emprestimo.html', context)
@@ -217,7 +233,7 @@ def renovar_emprestimo(request, livro_id):
     if emprestimo and not emprestimo.devolvido:
         if emprestimo.renovacoes < Emprestimo.MAXIMO_RENOVACOES:
             emprestimo.data_devolucao += timedelta(days=7)
-            emprestimo.valor = (emprestimo.valor or 0) + 10  # evita erro se valor for None
+            emprestimo.valor = (emprestimo.valor or 0) + 10
             emprestimo.renovacoes += 1
             emprestimo.save()
             messages.success(
@@ -236,16 +252,23 @@ def renovar_emprestimo(request, livro_id):
 
     return redirect('meus_emprestimos')
 
+
 # --- Visualizar PDF ---
 @login_required
 @licenca_valida
 def visualizar_pdf(request, livro_id):
     livro = get_object_or_404(Livro, id=livro_id)
-    aluno = Aluno.objects.get(user=request.user)
-    emprestimo = get_object_or_404(Emprestimo, aluno=aluno, livro=livro)
+    aluno = get_object_or_404(Aluno, user=request.user)
+    
+    # Corrigido: Usando filter e order_by para evitar o erro de multiplos objetos retornados
+    emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro).order_by('-data_emprestimo').first()
+    if not emprestimo:
+        raise Http404("Empréstimo não encontrado.")
+        
     return render(request, "ACERVO/visualizar_pdf.html", {'livro': livro, 'emprestimo': emprestimo})
 
 
+# --- Mecanismo de Busca ---
 @login_required
 def search(request):
     query = request.GET.get('q', '').strip()
@@ -258,9 +281,7 @@ def search(request):
             SearchVector('categoria__nome', weight='B') +
             SearchVector('autores__nome', weight='A')
         )
-
         search_query = SearchQuery(query, search_type='websearch')
-
         resultados = Livro.objects.annotate(
             rank=SearchRank(search_vector, search_query)
         ).filter(rank__gte=0.1).order_by('-rank').distinct()
@@ -270,9 +291,10 @@ def search(request):
         'resultados': resultados
     })
 
+
+# --- Dashboard ---
 @login_required
 def dashboard(request):
-    # Estatísticas simples
     total_livros = Livro.objects.count()
     total_emprestimos = Emprestimo.objects.count()
     emprestimos_por_categoria = (
@@ -288,67 +310,62 @@ def dashboard(request):
     return render(request, 'ACERVO/dashboard.html', context)
 
 
-#Edição de Autores
+# --- Edição de Registros ---
 @login_required
 @permission_required('ACERVO.change_autor', raise_exception=True)
 def edit_autor(request, autor_id):
-    autor=get_object_or_404(Autor, id=autor_id)
-   
+    autor = get_object_or_404(Autor, id=autor_id)
 
-    if request.method!='POST':
-        form=AutorForm(instance=autor)
-
+    if request.method != 'POST':
+        form = AutorForm(instance=autor)
     else:
-        form=AutorForm(instance=autor, data=request.POST)
+        form = AutorForm(instance=autor, data=request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('autores'))
         
-    context={'autor':autor, 'form':form}
+    context = {'autor': autor, 'form': form}
     return render(request, "ACERVO/edit_autor.html", context)
 
 
 @login_required
 @permission_required('ACERVO.change_categoria', raise_exception=True)
 def edit_categoria(request, categoria_id):
-    categoria=get_object_or_404(Categoria, id=categoria_id)
+    categoria = get_object_or_404(Categoria, id=categoria_id)
 
-    if request.method!='POST':
-        form=CategoriaForm(instance=categoria)
-
+    if request.method != 'POST':
+        form = CategoriaForm(instance=categoria)
     else:
-        form=CategoriaForm(instance=categoria, data=request.POST)
+        form = CategoriaForm(instance=categoria, data=request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('categorias'))
         
-    context={'categoria':categoria, 'form':form}
+    context = {'categoria': categoria, 'form': form}
     return render(request, "ACERVO/edit_categoria.html", context)
 
 
 @login_required
 @permission_required('ACERVO.change_editora', raise_exception=True)
 def edit_editora(request, editora_id):
-    editora=get_object_or_404(Editora, id=editora_id)
+    editora = get_object_or_404(Editora, id=editora_id)
 
-    if request.method!='POST':
-        form=EditoraForm(instance=editora)
-
+    if request.method != 'POST':
+        form = EditoraForm(instance=editora)
     else:
-        form=EditoraForm(instance=editora, data=request.POST)
+        form = EditoraForm(instance=editora, data=request.POST)
         if form.is_valid():
-            form.save()
             return HttpResponseRedirect(reverse('editoras'))
         
-    context={'editora':editora, 'form':form}
+    context = {'editora': editora, 'form': form}
     return render(request, "ACERVO/edit_editora.html", context)
  
-#Deletar autores
+
+# --- Exclusão de Registros ---
 @login_required
-@permission_required('ACERVO.delete_livroautor', raise_exception=True)
+# Corrigido: Permissão alterada de 'delete_livroautor' para 'delete_autor' por motivos de segurança
+@permission_required('ACERVO.delete_autor', raise_exception=True)
 def deletar_autor(request, autor_id):
-    autor=get_object_or_404(Autor, id=autor_id)
+    autor = get_object_or_404(Autor, id=autor_id)
     autor.delete()
     return redirect('autores')
-
-
