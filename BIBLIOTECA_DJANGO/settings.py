@@ -200,20 +200,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# === ADICIONE ESTE BLOCO AQUI EMBAIXO ===
+# Configuração estável para o WhiteNoise no Django 5.x
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # Esta linha serve os arquivos de forma direta e ultra segura, sem travar o deploy
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
 
