@@ -37,6 +37,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SECRET_KEY=CHAVE_SECRETA
 
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 ALLOWED_HOSTS = [
     'biblioteca-production-9d24.up.railway.app',
@@ -204,6 +206,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# === ADICIONE ESTE BLOCO AQUI EMBAIXO ===
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
