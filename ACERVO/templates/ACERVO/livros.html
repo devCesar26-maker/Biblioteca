@@ -2,79 +2,203 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow-lg border-0">
-        <!-- Cabeçalho -->
-        <div class="card-header bg-gradient bg-success text-white d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-book me-2 fs-4"></i>
-                <h4 class="mb-0">Livros Cadastrados</h4>
+<style>
+    body {
+        background-color: #f8fafc;
+    }
+
+    .page-header {
+        padding: 2.5rem 0 1.5rem 0;
+    }
+
+    .badge-count {
+        background-color: #dcfce7;
+        color: #15803d;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+    }
+
+    .btn-primary-custom {
+        background-color: #16a34a;
+        border-color: #16a34a;
+        color: #ffffff;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #15803d;
+        border-color: #15803d;
+        color: #ffffff;
+    }
+
+    .table-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .table-custom th {
+        background-color: #f1f5f9;
+        color: #475569;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        padding: 1rem 1.5rem;
+    }
+
+    .table-custom td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        color: #334155;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .book-avatar {
+        width: 38px;
+        height: 38px;
+        background-color: #f0fdf4;
+        color: #16a34a;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .book-link {
+        color: #1e293b;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.15s;
+    }
+
+    .book-link:hover {
+        color: #16a34a;
+    }
+
+    .id-badge {
+        background-color: #f1f5f9;
+        color: #64748b;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .btn-action {
+        color: #2563eb;
+        background-color: #eff6ff;
+        border: 1px solid rgba(37, 99, 235, 0.1);
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.85rem;
+        transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+        background-color: #2563eb;
+        color: #ffffff;
+    }
+
+    .btn-secondary-custom {
+        color: #475569;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        font-weight: 500;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s;
+    }
+
+    .btn-secondary-custom:hover {
+        background-color: #f8fafc;
+        border-color: #94a3b8;
+        color: #1e293b;
+    }
+</style>
+
+<div class="container pb-5">
+    
+    <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <h2 class="fw-bold text-dark mb-0 h3">Livros</h2>
+                <span class="badge-count">{{ livros|length }} no acervo</span>
             </div>
-            {% if user.is_superuser %}
-                <a href="{% url 'new_livro' %}" class="btn btn-light btn-sm shadow-sm">
-                    <i class="bi bi-plus-circle"></i> Novo Livro
-                </a>
-            {% endif %}
+            <p class="text-muted mb-0">Listagem de obras disponíveis para consulta e empréstimo.</p>
         </div>
+        
+        {% if user.is_superuser %}
+        <div class="d-flex gap-2">
+            <a href="{% url 'new_livro_autor' %}" class="btn btn-secondary-custom d-inline-flex align-items-center gap-2">
+                <i class="bi bi-link-45deg"></i> Vincular Autor
+            </a>
+            <a href="{% url 'new_livro' %}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i> Novo Livro
+            </a>
+        </div>
+        {% endif %}
+    </div>
 
-        <!-- Corpo -->
-        <div class="card-body bg-light">
-            <p class="text-muted mb-4">
-                Abaixo está a lista de livros disponíveis no acervo da biblioteca.
-            </p>
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle shadow-sm">
-                    <thead class="table-success">
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table table-custom align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 50%;">Título da Obra</th>
+                        <th scope="col" style="width: 25%;">ID do Sistema</th>
+                        <th scope="col" class="text-end" style="width: 25%;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for livro in livros %}
                         <tr>
-                            <th scope="col"><i class="bi bi-book-half"></i> Título</th>
-                            <th scope="col"><i class="bi bi-hash"></i> ID</th>
-                            <th scope="col"><i class="bi bi-box-arrow-down"></i> Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for livro in livros %}
-                            <tr>
-                                <td>
-                                    <i class="bi bi-journal-text text-success me-2"></i>
-                                    <a href="{% url 'dados_livros' livro.id %}" class="fw-semibold text-decoration-none">
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="book-avatar">
+                                        <i class="bi bi-book"></i>
+                                    </div>
+                                    <a href="{% url 'dados_livros' livro.id %}" class="book-link">
                                         {{ livro.nome }}
                                     </a>
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary">{{ livro.id }}</span>
-                                </td>
-                                <td>
-                                    <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-primary btn-sm shadow-sm">
-                                        <i class="bi bi-arrow-right-circle"></i> Pegar Emprestado
-                                    </a>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="3" class="text-center text-muted py-4">
-                                    <i class="bi bi-exclamation-circle"></i> Nenhum livro cadastrado
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Botões extras para superusuário -->
-            {% if user.is_superuser %}
-                <div class="d-flex justify-content-center gap-3 mt-4">
-                    <a href="{% url 'new_livro_autor' %}" class="btn btn-success btn-lg shadow-sm">
-                        <i class="bi bi-link"></i> Adicionar Relação
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- Rodapé -->
-        <div class="card-footer bg-dark text-white text-center">
-            <small class="fw-light">Sistema de Biblioteca • Gestão de Livros</small>
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <span class="id-badge">#{{ livro.id }}</span>
+                            </td>
+                            
+                            <td class="text-end">
+                                <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-action d-inline-flex align-items-center gap-2">
+                                    Empréstimo <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="bi bi-journal-x fs-1 d-block mb-2 text-secondary"></i>
+                                <p class="fw-medium mb-1">Nenhum livro encontrado</p>
+                                <p class="small mb-0">O catálogo da biblioteca está vazio no momento.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+    
 </div>
 {% endblock content %}

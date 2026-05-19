@@ -3,225 +3,174 @@
 
 {% block content %}
 <style>
-    /* Mantendo a Paleta Premium para Consistência Visual */
-    :root {
-        --ctx-primary: #4f46e5;        /* Índigo Vibrante */
-        --ctx-primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        --ctx-dark: #0f172a;           /* Azul Escuro Noturno */
-        --ctx-surface: #ffffff;
-        --ctx-bg: #fafafa;
-        --ctx-border: #f1f5f9;
-        --ctx-muted: #64748b;
-        --ctx-accent-soft: #eef2ff;
+    body {
+        background-color: #f8fafc;
     }
 
-    /* Wrapper com efeito de iluminação sutil */
-    .premium-wrapper {
-        background-color: var(--ctx-bg);
-        background-image: 
-            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-            radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
-        min-height: 100vh;
-        padding-top: 3rem;
-        padding-bottom: 5rem;
+    .page-header {
+        padding: 2.5rem 0 1.5rem 0;
     }
 
-    /* Título e Contador */
-    .page-title {
-        color: var(--ctx-dark);
-        font-weight: 800;
-        letter-spacing: -0.025em;
-    }
-
-    .counter-badge {
-        background-color: var(--ctx-accent-soft);
-        color: var(--ctx-primary);
+    .badge-count {
+        background-color: #f5f3ff;
+        color: #6d28d9;
         font-size: 0.85rem;
-        font-weight: 700;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        border: 1px solid rgba(79, 70, 229, 0.1);
-    }
-
-    /* Botão Principal em Degradê */
-    .btn-gradient {
-        background: var(--ctx-primary-gradient);
-        color: #ffffff !important;
-        border: none;
-        border-radius: 10px;
         font-weight: 600;
-        padding: 0.6rem 1.5rem;
-        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
-        transition: all 0.2s ease;
-    }
-    
-    .btn-gradient:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
-        opacity: 0.95;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
     }
 
-    /* Card da Tabela Elevada */
-    .table-container-card {
-        background-color: var(--ctx-surface);
-        border: 1px solid rgba(226, 232, 240, 0.8);
-        border-radius: 20px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+    .btn-primary-custom {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+        color: #ffffff;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #4338ca;
+        border-color: #4338ca;
+        color: #ffffff;
+    }
+
+    .table-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
         overflow: hidden;
     }
 
-    /* Cabeçalho Customizado da Tabela */
-    .custom-table thead th {
-        background-color: #f8fafc;
-        color: var(--ctx-muted);
-        font-size: 0.8rem;
+    .table-custom th {
+        background-color: #f1f5f9;
+        color: #475569;
+        font-size: 0.85rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 700;
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
+        letter-spacing: 0.03em;
+        padding: 1rem 1.5rem;
     }
 
-    /* Linhas da Tabela */
-    .custom-table tbody tr {
-        transition: all 0.2s ease;
+    .table-custom td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        color: #334155;
     }
 
-    .custom-table tbody tr:hover {
+    .table-custom tbody tr:hover {
         background-color: #f8fafc;
     }
 
-    .custom-table tbody td {
-        padding: 1.2rem 1.5rem;
-        vertical-align: middle;
-        border-bottom: 1px solid var(--ctx-border);
-    }
-
-    .custom-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Icon Box Temático para Categorias */
-    .category-icon-box {
-        width: 44px;
-        height: 44px;
-        background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-        color: var(--ctx-primary);
-        border-radius: 12px;
+    .category-avatar {
+        width: 38px;
+        height: 38px;
+        background-color: #f5f3ff;
+        color: #7c3aed;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.1rem;
     }
 
-    /* Badge ID Estilizada */
-    .id-pill {
+    .id-badge {
         background-color: #f1f5f9;
-        color: #475569;
-        font-family: 'Courier New', Courier, monospace;
-        font-weight: 700;
+        color: #64748b;
         font-size: 0.85rem;
-        padding: 0.3rem 0.6rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .btn-edit {
+        color: #4f46e5;
+        background-color: transparent;
+        border: 1px solid #e2e8f0;
         border-radius: 6px;
-    }
-
-    /* Botão Editar */
-    .btn-action-edit {
-        color: var(--ctx-primary);
-        background-color: var(--ctx-accent-soft);
-        border: 1px solid rgba(79, 70, 229, 0.1);
-        border-radius: 8px;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 0.9rem;
-        padding: 0.4rem 1rem;
-        transition: all 0.2s ease;
+        padding: 0.35rem 0.75rem;
+        transition: all 0.2s;
     }
 
-    .btn-action-edit:hover {
-        background: var(--ctx-primary-gradient);
-        color: #ffffff;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-        border-color: transparent;
+    .btn-edit:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: #4338ca;
     }
 </style>
 
-<div class="premium-wrapper">
-    <div class="container">
-        
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5">
-            <div>
-                <div class="d-flex align-items-center gap-3 mb-1">
-                    <h2 class="page-title mb-0">Categorias</h2>
-                    <span class="counter-badge">{{ categorias|length }} Ativas</span>
-                </div>
-                <p class="text-muted mb-0 fs-6">Organização e segmentação temática das obras do acervo.</p>
+<div class="container pb-5">
+    
+    <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <h2 class="fw-bold text-dark mb-0 h3">Categorias</h2>
+                <span class="badge-count">{{ categorias|length }} ativas</span>
             </div>
-            
-            {% if user.is_superuser %}
-            <div>
-                <a href="{% url 'new_categoria' %}" class="btn btn-gradient d-inline-flex align-items-center gap-2">
-                    <i class="bi bi-plus-lg"></i> Nova Categoria
-                </a>
-            </div>
-            {% endif %}
+            <p class="text-muted mb-0">Organização e segmentação temática das obras do acervo.</p>
         </div>
+        
+        {% if user.is_superuser %}
+        <div>
+            <a href="{% url 'new_categoria' %}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i> Nova Categoria
+            </a>
+        </div>
+        {% endif %}
+    </div>
 
-        <div class="table-container-card">
-            <div class="table-responsive">
-                <table class="table custom-table mb-0">
-                    <thead>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table table-custom align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 50%;">Nome da Categoria</th>
+                        <th scope="col" style="width: 30%;">ID do Sistema</th>
+                        {% if user.is_superuser %}
+                        <th scope="col" class="text-end" style="width: 20%;">Ações</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categoria in categorias %}
                         <tr>
-                            <th scope="col" style="width: 55%;">Nome da Categoria</th>
-                            <th scope="col" style="width: 25%;">Código Identificador</th>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="category-avatar">
+                                        <i class="bi bi-tag"></i>
+                                    </div>
+                                    <span class="fw-semibold text-dark">{{ categoria }}</span>
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <span class="id-badge">#{{ categoria.id }}</span>
+                            </td>
+                            
                             {% if user.is_superuser %}
-                            <th scope="col" class="text-end" style="width: 20%;">Gerenciar</th>
+                            <td class="text-end">
+                                <a href="{% url 'edit_categoria' categoria.id %}" class="btn btn-edit d-inline-flex align-items-center gap-2">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                            </td>
                             {% endif %}
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for categoria in categorias %}
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="category-icon-box shadow-sm">
-                                            <i class="bi bi-tags-fill"></i>
-                                        </div>
-                                        <div>
-                                            <span class="fw-bold text-dark d-block mb-0 fs-6">{{ categoria }}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                
-                                <td>
-                                    <span class="id-pill">CAT_{{ categoria.id|stringformat:"03d" }}</span>
-                                </td>
-                                
-                                {% if user.is_superuser %}
-                                <td class="text-end">
-                                    <a href="{% url 'edit_categoria' categoria.id %}" class="btn btn-action-edit d-inline-flex align-items-center gap-2">
-                                        <i class="bi bi-pencil-square"></i> Editar
-                                    </a>
-                                </td>
-                                {% endif %}
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="{% if user.is_superuser %}3{% else %}2{% endif %}" class="text-center py-5">
-                                    <div class="my-4">
-                                        <div class="mx-auto bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                                            <i class="bi bi-tags text-muted fs-2"></i>
-                                        </div>
-                                        <h5 class="fw-bold text-dark mb-1">Nenhuma categoria encontrada</h5>
-                                        <p class="text-muted small mb-0">Nenhum setor temático foi cadastrado até o momento.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% empty %}
+                        <tr>
+                            <td colspan="{% if user.is_superuser %}3{% else %}2{% endif %}" class="text-center py-5 text-muted">
+                                <i class="bi bi-tags fs-1 d-block mb-2 text-secondary"></i>
+                                <p class="fw-medium mb-1">Nenhuma categoria cadastrada</p>
+                                <p class="small mb-0">Os setores temáticos adicionados aparecerão aqui.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        
     </div>
+    
 </div>
 {% endblock content %}
