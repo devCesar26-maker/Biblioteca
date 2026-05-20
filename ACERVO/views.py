@@ -53,13 +53,19 @@ def criar_aluno(request):
     if request.method == 'POST':
         form = AlunoForm(request.POST)
         if form.is_valid():
-            nome = request.POST.get("nome")
+            # BOA PRÁTICA: Pegar o nome já limpo e validado pelo formulário
+            nome = form.cleaned_data.get("nome")
+            
+            # Atualiza o primeiro nome no usuário do Django
             request.user.first_name = nome
             request.user.save()
             
+            # Associa o Aluno ao Usuário e salva no banco
             aluno = form.save(commit=False)
             aluno.user = request.user
             aluno.save()
+            
+            messages.success(request, f"Perfil criado com sucesso, bem-vindo(a) {nome}!")
             return HttpResponseRedirect(reverse('index'))
     else:
         form = AlunoForm()
@@ -183,47 +189,51 @@ def new_livro_autor(request):
 # --- Empréstimos ---
 @login_required
 def meus_emprestimos(request):
-    aluno = get_object_or_404(Aluno, user=request.user)
+    # Proteção para o fluxo Allauth: se o usuário logado não tiver Aluno criado, manda criar
+    aluno = Aluno.objects.filter(user=request.user).first()
+    if not aluno:
+        messages.warning(request, "Por favor, crie seu perfil de aluno primeiro.")
+        return redirect('criar_aluno')
+        
     emprestimos = Emprestimo.objects.filter(aluno=aluno)
-    
-    # Corrigido: Usando timezone.localdate() para evitar conflitos de DateTime vs Date
     hoje = timezone.localdate()
     
+    # Criamos variáveis dinâmicas no Python para você usar no HTML,
+    # evitando que a tela fique cheia de alertas repetidos a cada "F5"
     for e in emprestimos:
         if not e.devolvido:
-            dias_restantes = (e.data_devolucao - hoje).days
-            if 0 < dias_restantes <= 2:
-                # Nota: Considere renderizar esse aviso direto via HTML para evitar spam de alertas por sessão
-                messages.warning(request, f"⚠️ O empréstimo do livro '{e.livro.nome}' vence em {dias_restantes} dias!")
-            elif dias_restantes <= 0:
-                excesso = (hoje - e.data_devolucao).days
-                messages.warning(request, f"⚠️ O empréstimo do livro '{e.livro.nome}' venceu há {excesso} dias!")
+            e.dias_restantes = (e.data_devolucao - hoje).days
+            e.atrasado = e.dias_restantes < 0
+            if e.atrasado:
+                e.dias_excesso = abs(e.dias_restantes)
                 
-    context = {'emprestimos': emprestimos}
+    context = {'emprestimos': emprestimos, 'hoje': hoje}
     return render(request, "ACERVO/meus_emprestimos.html", context)
 
 
 @login_required
 def fazer_emprestimo(request, livro_id):
     livro = get_object_or_404(Livro, id=livro_id)
-    aluno = get_object_or_404(Aluno, user=request.user)
     
-    # 1. Checa se o aluno já tem esse livro ativo
+    # Proteção: Verifica com .first() se o usuário já criou o perfil de Aluno
+    aluno = Aluno.objects.filter(user=request.user).first()
+    if not aluno:
+        messages.error(request, "Você precisa preencher seu nome completo primeiro!")
+        return redirect('criar_aluno')
+
+    # 1. Checa se o aluno já tem ESSE livro em aberto (independente de data de vencimento)
     emprestimo_ativo = Emprestimo.objects.filter(
         aluno=aluno,
         livro=livro,
-        devolvido=False,
-        data_devolucao__gte=timezone.localdate()
+        devolvido=False
     ).exists()
     
     if emprestimo_ativo:
-        messages.error(request, "Você tem um empréstimo ativo com esse livro.")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('meus_emprestimos')))
+        messages.error(request, "Você já tem um empréstimo ativo com esse livro.")
+        return redirect('meus_emprestimos')
 
-    # 2. Segue para a criação do empréstimo se não houver duplicidade
-    if request.method != 'POST':
-        form = EmprestimoForm()
-    else:
+    # 2. Processa o formulário de empréstimo
+    if request.method == 'POST':
         form = EmprestimoForm(request.POST)
         if form.is_valid():
             emprestimo = form.save(commit=False)
@@ -233,25 +243,33 @@ def fazer_emprestimo(request, livro_id):
             # --- CÁLCULO AUTOMÁTICO DAS DATAS ---
             hoje = timezone.localdate()
             emprestimo.data_emprestimo = hoje
-            emprestimo.data_devolucao = hoje + timedelta(days=7) # Define o prazo automático de 7 dias
+            emprestimo.data_devolucao = hoje + timedelta(days=7) # Prazo automático de 7 dias
+            emprestimo.devolvido = False
             # ------------------------------------
             
             emprestimo.save()
 
             messages.success(request, f"Empréstimo do '{livro.nome}' realizado com sucesso!")
-            return HttpResponseRedirect(reverse('meus_emprestimos'))
+            return redirect('meus_emprestimos')
+    else:
+        form = EmprestimoForm()
             
     context = {'form': form, 'livro': livro}
     return render(request, 'ACERVO/new_emprestimo.html', context)
 
+
 @login_required
 def renovar_emprestimo(request, livro_id):
-    aluno = get_object_or_404(Aluno, user=request.user)
+    aluno = Aluno.objects.filter(user=request.user).first()
+    if not aluno:
+        return redirect('criar_aluno')
+        
     livro = get_object_or_404(Livro, id=livro_id)
 
-    emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro).order_by('-data_devolucao').first()
+    # CORREÇÃO: Busca estritamente o empréstimo que NÃO foi devolvido ainda
+    emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).first()
 
-    if emprestimo and not emprestimo.devolvido:
+    if emprestimo:
         if emprestimo.renovacoes < Emprestimo.MAXIMO_RENOVACOES:
             emprestimo.data_devolucao += timedelta(days=7)
             emprestimo.valor = (emprestimo.valor or 0) + 10
@@ -260,36 +278,36 @@ def renovar_emprestimo(request, livro_id):
             messages.success(
                 request,
                 f"O empréstimo do livro '{livro.nome}' foi renovado por mais 7 dias! "
-                f"(Renovações: {emprestimo.renovacoes}/{Emprestimo.MAXIMO_RENOVACOES})"
+                f"({emprestimo.renovacoes}/{Emprestimo.MAXIMO_RENOVACOES})"
             )
         else:
             messages.error(
                 request,
-                "❌ Você já atingiu o limite máximo de renovações. "
-                "Caso queira ler novamente, faça um novo empréstimo."
+                f"❌ Você já atingiu o limite máximo de {Emprestimo.MAXIMO_RENOVACOES} renovações para este livro."
             )
     else:
-        messages.error(request, "Não foi possível renovar este empréstimo.")
+        messages.error(request, "Você não possui um empréstimo ativo deste livro para renovar.")
 
     return redirect('meus_emprestimos')
 
 
-# --- Visualizar PDF ---
 @login_required
 @licenca_valida
 def visualizar_pdf(request, livro_id):
-    livro = get_object_or_404(Livro, id=livro_id)
-    aluno = get_object_or_404(Aluno, user=request.user)
-    
-    # Corrigido: Usando filter e order_by para evitar o erro de multiplos objetos retornados
-    emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro).order_by('-data_emprestimo').first()
-    if not emprestimo:
-        raise Http404("Empréstimo não encontrado.")
+    aluno = Aluno.objects.filter(user=request.user).first()
+    if not aluno:
+        raise Http404("Perfil de aluno não encontrado.")
         
-    return render(request, "ACERVO/visualizar_pdf.html", {'livro': livro, 'emprestimo': emprestimo})
-
-
-# --- Mecanismo de Busca ---
+    livro = get_object_or_404(Livro, id=livro_id)
+    
+    # CORREÇÃO: Só permite ler o PDF se ele tiver o empréstimo ATIVO (não devolvido)
+    emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).first()
+    
+    if not emprestimo:
+        messages.error(request, "Você precisa ter um empréstimo ativo para visualizar este livro.")
+        return redirect('meus_emprestimos')
+        
+    return render(request, "ACERVO/visualizar_pdf.html", {'livro': livro, 'emprestimo': emprestimo})# --- Mecanismo de Busca ---
 @login_required
 def search(request):
     query = request.GET.get('q', '').strip()
