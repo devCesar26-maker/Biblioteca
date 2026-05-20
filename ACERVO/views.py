@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, Categoria, Editora, Livro, Aluno, Emprestimo
 from .forms import AutorForm, CategoriaForm, EditoraForm, LivroForm, LivroAutorForm, EmprestimoForm, AlunoForm
-from django.http import HttpResponseRedirect, Http404
-from django.urls import reverse
+from django.http import Http404
 from django.contrib.auth.decorators import login_required, permission_required
 from datetime import date, timedelta
 from functools import wraps
@@ -36,7 +35,6 @@ def licenca_valida(view_func):
     return _wrapped_view
 
 
-
 # Página da licença expirada
 def licenca_expirada(request):
     return render(request, "ACERVO/licenca_expirada.html")
@@ -53,7 +51,6 @@ def criar_aluno(request):
     if request.method == 'POST':
         form = AlunoForm(request.POST)
         if form.is_valid():
-            # BOA PRÁTICA: Pegar o nome já limpo e validado pelo formulário
             nome = form.cleaned_data.get("nome")
             
             # Atualiza o primeiro nome no usuário do Django
@@ -66,7 +63,7 @@ def criar_aluno(request):
             aluno.save()
             
             messages.success(request, f"Perfil criado com sucesso, bem-vindo(a) {nome}!")
-            return HttpResponseRedirect(reverse('index'))
+            return redirect('index')
     else:
         form = AlunoForm()
         
@@ -91,7 +88,7 @@ def new_autor(request):
         form = AutorForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('autores'))
+            return redirect('autores')
     context = {'form': form}
     return render(request, "ACERVO/new_autor.html", context)
 
@@ -113,7 +110,7 @@ def new_categoria(request):
         form = CategoriaForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('categorias'))
+            return redirect('categorias')
     context = {'form': form}
     return render(request, "ACERVO/new_categoria.html", context)
 
@@ -135,7 +132,7 @@ def new_editora(request):
         form = EditoraForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('editoras'))
+            return redirect('editoras')
     context = {'form': form}
     return render(request, "ACERVO/new_editora.html", context)
 
@@ -154,11 +151,10 @@ def new_livro(request):
     if request.method != 'POST':
         form = LivroForm()
     else:
-        # Corrigido: Incluído request.FILES para suportar o recebimento de mídias/PDFs
         form = LivroForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('livros'))
+            return redirect('livros')
     context = {'form': form}
     return render(request, "ACERVO/new_livro.html", context)
 
@@ -181,7 +177,7 @@ def new_livro_autor(request):
         form = LivroAutorForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('livros'))
+            return redirect('livros')
     context = {'form': form}
     return render(request, "ACERVO/new_livro_autor.html", context)
 
@@ -189,7 +185,6 @@ def new_livro_autor(request):
 # --- Empréstimos ---
 @login_required
 def meus_emprestimos(request):
-    # Proteção para o fluxo Allauth: se o usuário logado não tiver Aluno criado, manda criar
     aluno = Aluno.objects.filter(user=request.user).first()
     if not aluno:
         messages.warning(request, "Por favor, crie seu perfil de aluno primeiro.")
@@ -198,8 +193,6 @@ def meus_emprestimos(request):
     emprestimos = Emprestimo.objects.filter(aluno=aluno)
     hoje = timezone.localdate()
     
-    # Criamos variáveis dinâmicas no Python para você usar no HTML,
-    # evitando que a tela fique cheia de alertas repetidos a cada "F5"
     for e in emprestimos:
         if not e.devolvido:
             e.dias_restantes = (e.data_devolucao - hoje).days
@@ -215,24 +208,17 @@ def meus_emprestimos(request):
 def fazer_emprestimo(request, livro_id):
     livro = get_object_or_404(Livro, id=livro_id)
     
-    # Proteção: Verifica com .first() se o usuário já criou o perfil de Aluno
     aluno = Aluno.objects.filter(user=request.user).first()
     if not aluno:
         messages.error(request, "Você precisa preencher seu nome completo primeiro!")
         return redirect('criar_aluno')
 
-    # 1. Checa se o aluno já tem ESSE livro em aberto (independente de data de vencimento)
-    emprestimo_ativo = Emprestimo.objects.filter(
-        aluno=aluno,
-        livro=livro,
-        devolvido=False
-    ).exists()
+    emprestimo_ativo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).exists()
     
     if emprestimo_ativo:
         messages.error(request, "Você já tem um empréstimo ativo com esse livro.")
         return redirect('meus_emprestimos')
 
-    # 2. Processa o formulário de empréstimo
     if request.method == 'POST':
         form = EmprestimoForm(request.POST)
         if form.is_valid():
@@ -240,12 +226,10 @@ def fazer_emprestimo(request, livro_id):
             emprestimo.aluno = aluno
             emprestimo.livro = livro
             
-            # --- CÁLCULO AUTOMÁTICO DAS DATAS ---
             hoje = timezone.localdate()
             emprestimo.data_emprestimo = hoje
-            emprestimo.data_devolucao = hoje + timedelta(days=7) # Prazo automático de 7 dias
+            emprestimo.data_devolucao = hoje + timedelta(days=7)
             emprestimo.devolvido = False
-            # ------------------------------------
             
             emprestimo.save()
 
@@ -265,8 +249,6 @@ def renovar_emprestimo(request, livro_id):
         return redirect('criar_aluno')
         
     livro = get_object_or_404(Livro, id=livro_id)
-
-    # CORREÇÃO: Busca estritamente o empréstimo que NÃO foi devolvido ainda
     emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).first()
 
     if emprestimo:
@@ -299,15 +281,16 @@ def visualizar_pdf(request, livro_id):
         raise Http404("Perfil de aluno não encontrado.")
         
     livro = get_object_or_404(Livro, id=livro_id)
-    
-    # CORREÇÃO: Só permite ler o PDF se ele tiver o empréstimo ATIVO (não devolvido)
     emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).first()
     
     if not emprestimo:
         messages.error(request, "Você precisa ter um empréstimo ativo para visualizar este livro.")
         return redirect('meus_emprestimos')
         
-    return render(request, "ACERVO/visualizar_pdf.html", {'livro': livro, 'emprestimo': emprestimo})# --- Mecanismo de Busca ---
+    return render(request, "ACERVO/visualizar_pdf.html", {'livro': livro, 'emprestimo': emprestimo})
+
+
+# --- Mecanismo de Busca ---
 @login_required
 def search(request):
     query = request.GET.get('q', '').strip()
@@ -361,7 +344,7 @@ def edit_autor(request, autor_id):
         form = AutorForm(instance=autor, data=request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('autores'))
+            return redirect('autores')
         
     context = {'autor': autor, 'form': form}
     return render(request, "ACERVO/edit_autor.html", context)
@@ -378,7 +361,7 @@ def edit_categoria(request, categoria_id):
         form = CategoriaForm(instance=categoria, data=request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('categorias'))
+            return redirect('categorias')
         
     context = {'categoria': categoria, 'form': form}
     return render(request, "ACERVO/edit_categoria.html", context)
@@ -394,7 +377,8 @@ def edit_editora(request, editora_id):
     else:
         form = EditoraForm(instance=editora, data=request.POST)
         if form.is_valid():
-            return HttpResponseRedirect(reverse('editoras'))
+            form.save()  # CORREÇÃO: Agora o formulário salva a edição!
+            return redirect('editoras')
         
     context = {'editora': editora, 'form': form}
     return render(request, "ACERVO/edit_editora.html", context)
@@ -402,7 +386,6 @@ def edit_editora(request, editora_id):
 
 # --- Exclusão de Registros ---
 @login_required
-# Corrigido: Permissão alterada de 'delete_livroautor' para 'delete_autor' por motivos de segurança
 @permission_required('ACERVO.delete_autor', raise_exception=True)
 def deletar_autor(request, autor_id):
     autor = get_object_or_404(Autor, id=autor_id)
