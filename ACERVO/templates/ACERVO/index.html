@@ -3,126 +3,244 @@
 
 {% block content %}
 <style>
-    /* Paleta de Cores e Estilos Profissionais */
+    /* Paleta de Cores de Alta Costura Digital */
     :root {
-        --brand-dark: #0f172a;      /* Azul noturno escuro */
-        --brand-accent: #3b82f6;    /* Azul vibrante para detalhes sutis */
+        --brand-dark: #090d16;        /* Obsidian profundo */
         --brand-surface: #ffffff;
-        --brand-bg-light: #f8fafc;  /* Cinza quase branco para fundos */
-        --brand-border: #e2e8f0;
+        --brand-bg-light: #f4f6fa;   /* Cinza ultra-limpo com toque frio */
+        --brand-border: #e6e9f0;
         --brand-muted: #64748b;
+        --accent-primary: #4f46e5;  /* Indigo moderno */
+        --accent-secondary: #06b6d4;/* Ciano elétrico para detalhes */
+        --gradient-hero: linear-gradient(135deg, #0f172a 0%, #090d16 100%);
+        --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Redefinindo o fundo da área de conteúdo (opcional, dependendo do seu base.html) */
+    /* Wrapper Principal */
     .dashboard-wrapper {
         background-color: var(--brand-bg-light);
         min-height: 100vh;
-        padding-top: 2rem;
-        padding-bottom: 4rem;
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
-    /* Seção Hero - Destaque Escuro */
+    /* Seção Hero - Estilo Ambient Glow */
     .hero-section {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        border-radius: 16px;
+        background: var(--gradient-hero);
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
         color: #ffffff;
-        box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.5);
+        padding: 4.5rem 2rem !important;
+        box-shadow: 0 20px 40px -15px rgba(9, 13, 22, 0.3);
+    }
+
+    /* Detalhe de luz difusa de fundo no Hero */
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -20%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, transparent 70%);
+        pointer-events: none;
     }
 
     .hero-text-muted {
         color: #94a3b8;
+        font-weight: 400;
+        max-width: 600px;
+        margin: 0 auto;
     }
 
-    /* Barra de Busca Premium */
+    /* Barra de Busca Premium Redesenhada */
     .search-bar-premium {
-        background: var(--brand-surface);
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
         padding: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: var(--transition-smooth);
+    }
+    
+    .search-bar-premium:focus-within {
+        background: var(--brand-surface);
+        border-color: var(--accent-primary);
+        box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.3);
     }
     
     .search-bar-premium input {
         border: none !important;
         box-shadow: none !important;
-        font-size: 1.1rem;
-        color: var(--brand-dark);
+        font-size: 1.05rem;
+        color: #ffffff;
+        background: transparent;
     }
 
+    .search-bar-premium psychology:focus-within input,
+    .search-bar-premium input:focus {
+        color: var(--brand-dark) !important;
+    }
+
+    .search-bar-premium:focus-within .bi-search {
+        color: var(--accent-primary) !important;
+    }
+
+    /* Botões Dinâmicos */
     .btn-brand {
-        background-color: var(--brand-dark);
+        background: var(--accent-primary);
         color: #ffffff;
-        border-radius: 8px;
+        border-radius: 12px;
         font-weight: 600;
-        transition: background-color 0.2s ease;
+        letter-spacing: 0.3px;
+        padding: 0.75rem 2rem;
+        transition: var(--transition-smooth);
+        border: none;
     }
     
     .btn-brand:hover {
-        background-color: #334155;
+        background: #4338ca;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
         color: #ffffff;
     }
 
-    /* Cards de Navegação */
+    /* Cards de Navegação (Bento Style) */
     .premium-card {
         background-color: var(--brand-surface);
         border: 1px solid var(--brand-border);
-        border-radius: 16px;
-        transition: all 0.3s ease;
+        border-radius: 20px;
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        opacity: 0;
+        transition: var(--transition-smooth);
     }
 
     .premium-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.12);
-        border-color: #cbd5e1;
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px -10px rgba(9, 13, 22, 0.08);
+        border-color: transparent;
     }
 
+    .premium-card:hover::before {
+        opacity: 1;
+    }
+
+    /* Box de Ícones Minimalista */
     .icon-box {
-        width: 56px;
-        height: 56px;
+        width: 60px;
+        height: 60px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 12px;
-        background-color: #f1f5f9;
+        border-radius: 16px;
+        background-color: #f8fafc;
         color: var(--brand-dark);
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
+        margin-bottom: 1.25rem;
+        transition: var(--transition-smooth);
+        border: 1px solid #f1f5f9;
     }
 
     .premium-card:hover .icon-box {
-        background-color: var(--brand-dark);
-        color: #ffffff;
+        background: rgba(79, 70, 229, 0.08);
+        color: var(--accent-primary);
+        transform: scale(1.05);
     }
 
-    /* Títulos de Seção */
+    /* Títulos de Seção de Linhas Finas */
     .section-title {
         color: var(--brand-dark);
         font-weight: 700;
-        letter-spacing: -0.5px;
+        font-size: 1.25rem;
+        letter-spacing: -0.3px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        color: var(--brand-muted);
+    }
+
+    /* Cards de Gestão Estilo Horizontal Pleno */
+    .management-card {
+        border-radius: 20px;
+        background: var(--brand-surface);
+        border: 1px solid var(--brand-border);
+        transition: var(--transition-smooth);
+    }
+
+    .management-card:hover {
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.05);
+        border-color: #cbd5e1;
+    }
+
+    .btn-action-pill {
+        border-radius: 100px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-action-pill:hover {
+        transform: translateX(3px);
+    }
+
+    /* Links de Atalhos Populares (Abaixo da busca) */
+    .trending-tags a {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        transition: var(--transition-smooth);
+    }
+    .trending-tags a:hover {
+        color: #ffffff;
     }
 </style>
 
 <div class="dashboard-wrapper">
     <div class="container">
         
-        <div class="hero-section p-5 text-center mb-5">
-            <h1 class="fw-bolder mb-3">Acervo Digital</h1>
-            <p class="hero-text-muted fs-5 mb-5 px-md-5">Consulte rapidamente títulos, autores e obras disponíveis em nossa biblioteca.</p>
+        <div class="hero-section text-center mb-5">
+            <h1 class="display-5 fw-black mb-2 text-white">Acervo Digital</h1>
+            <p class="hero-text-muted fs-5 mb-4">Consulte e explore títulos, autores e obras disponíveis em tempo real.</p>
             
             <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
+                <div class="col-lg-7 col-md-9">
                     <form method="get" action="{% url 'search' %}" class="search-bar-premium d-flex align-items-center">
-                        <span class="ps-3 text-muted fs-5">
-                            <i class="bi bi-search"></i>
+                        <span class="ps-3 text-muted fs-5 d-flex align-items-center">
+                            <i class="bi bi-search" style="color: rgba(255,255,255,0.4); transition: var(--transition-smooth);"></i>
                         </span>
                         <input class="form-control px-3" type="search" name="q"
-                               placeholder="Buscar por título, autor, categoria ou editora..." aria-label="Search">
-                        <button class="btn btn-brand px-4 py-2" type="submit">Buscar</button>
+                               placeholder="Buscar por título, autor, categoria..." aria-label="Search">
+                        <button class="btn btn-brand" type="submit">Buscar</button>
                     </form>
+                    
+                    <div class="trending-tags mt-3 text-center d-none d-sm-block">
+                        <span style="color: #64748b; font-size: 0.85rem;">Sugestões:</span>
+                        <a href="?q=Tecnologia" class="text-decoration-none ms-2">Tecnologia</a>
+                        <a href="?q=Literatura" class="text-decoration-none ms-2">Literatura</a>
+                        <a href="?q=História" class="text-decoration-none ms-2">História</a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <h4 class="section-title mb-4">Explorar Diretório</h4>
+        <div class="d-flex align-items-center mb-4">
+            <h4 class="section-title mb-0">Explorar Diretório</h4>
+            <div class="flex-grow-1 ms-3 border-bottom opacity-25" style="border-color: var(--brand-border)"></div>
+        </div>
+
         <div class="row g-4 mb-5 text-center">
             <div class="col-md-3 col-sm-6">
                 <a href="{% url 'livros' %}" class="text-decoration-none">
@@ -130,7 +248,7 @@
                         <div class="icon-box">
                             <i class="bi bi-book fs-3"></i>
                         </div>
-                        <h5 class="text-dark fw-bold mb-0">Livros</h5>
+                        <h6 class="text-dark fw-bold mb-0">Livros</h6>
                     </div>
                 </a>
             </div>
@@ -140,7 +258,7 @@
                         <div class="icon-box">
                             <i class="bi bi-person fs-3"></i>
                         </div>
-                        <h5 class="text-dark fw-bold mb-0">Autores</h5>
+                        <h6 class="text-dark fw-bold mb-0">Autores</h6>
                     </div>
                 </a>
             </div>
@@ -150,7 +268,7 @@
                         <div class="icon-box">
                             <i class="bi bi-tags fs-3"></i>
                         </div>
-                        <h5 class="text-dark fw-bold mb-0">Categorias</h5>
+                        <h6 class="text-dark fw-bold mb-0">Categorias</h6>
                     </div>
                 </a>
             </div>
@@ -160,36 +278,40 @@
                         <div class="icon-box">
                             <i class="bi bi-building fs-3"></i>
                         </div>
-                        <h5 class="text-dark fw-bold mb-0">Editoras</h5>
+                        <h6 class="text-dark fw-bold mb-0">Editoras</h6>
                     </div>
                 </a>
             </div>
         </div>
 
-        <h4 class="section-title mb-4">Gestão e Relatórios</h4>
+        <div class="d-flex align-items-center mb-4">
+            <h4 class="section-title mb-0">Gestão e Relatórios</h4>
+            <div class="flex-grow-1 ms-3 border-bottom opacity-25" style="border-color: var(--brand-border)"></div>
+        </div>
+
         <div class="row g-4">
             <div class="col-md-6">
-                <div class="premium-card h-100 text-start p-4 d-flex align-items-center">
-                    <div class="icon-box mb-0 me-4 flex-shrink-0" style="width: 64px; height: 64px;">
-                        <i class="bi bi-archive fs-2"></i>
+                <div class="management-card h-100 text-start p-4 d-flex align-items-center">
+                    <div class="icon-box mb-0 me-4 flex-shrink-0" style="width: 64px; height: 64px; background: rgba(79, 70, 229, 0.04); color: var(--accent-primary);">
+                        <i class="bi bi-archive fs-3"></i>
                     </div>
-                    <div>
-                        <h5 class="fw-bold text-dark mb-1">Meus Empréstimos</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.9rem;">Gerencie suas devoluções e consulte o histórico de leituras.</p>
-                        <a href="{% url 'meus_emprestimos' %}" class="btn btn-outline-dark btn-sm px-4 fw-semibold rounded-pill">Visualizar</a>
+                    <div class="flex-grow-1">
+                        <h5 class="fw-bold text-dark mb-1 fs-5">Meus Empréstimos</h5>
+                        <p class="text-muted mb-3" style="font-size: 0.9rem; max-width: 340px;">Gerencie suas devoluções e consulte o histórico de leituras.</p>
+                        <a href="{% url 'meus_emprestimos' %}" class="btn btn-outline-dark btn-action-pill px-4">Visualizar</a>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <div class="premium-card h-100 text-start p-4 d-flex align-items-center">
-                    <div class="icon-box mb-0 me-4 flex-shrink-0" style="width: 64px; height: 64px;">
-                        <i class="bi bi-bar-chart-line fs-2"></i>
+                <div class="management-card h-100 text-start p-4 d-flex align-items-center">
+                    <div class="icon-box mb-0 me-4 flex-shrink-0" style="width: 64px; height: 64px; background: rgba(6, 182, 212, 0.04); color: var(--accent-secondary);">
+                        <i class="bi bi-bar-chart-line fs-3"></i>
                     </div>
-                    <div>
-                        <h5 class="fw-bold text-dark mb-1">Visão Geral</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.9rem;">Acompanhe o desempenho, métricas e estatísticas do acervo.</p>
-                        <a href="{% url 'dashboard' %}" class="btn btn-dark btn-sm px-4 fw-semibold rounded-pill">Acessar Painel</a>
+                    <div class="flex-grow-1">
+                        <h5 class="fw-bold text-dark mb-1 fs-5">Visão Geral</h5>
+                        <p class="text-muted mb-3" style="font-size: 0.9rem; max-width: 340px;">Acompanhe o desempenho, métricas e estatísticas do acervo.</p>
+                        <a href="{% url 'dashboard' %}" class="btn btn-dark btn-action-pill px-4" style="background-color: var(--brand-dark);">Acessar Painel</a>
                     </div>
                 </div>
             </div>
