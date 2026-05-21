@@ -142,8 +142,8 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED=True
 
-# Username será obrigatório
-ACCOUNT_USERNAME_REQUIRED = True
+
+ACCOUNT_USERNAME_REQUIRED = False
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -158,6 +158,10 @@ ACCOUNT_UNIQUE_EMAIL = True
 SOCIALACCOUNT_STORE_TOKENS = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 
+# ATENÇÃO: Substitua 'seu_app' pelo nome real da pasta do seu aplicativo
+ACCOUNT_FORMS = {
+    'signup': 'ACERVO.forms.CustomSignupForm',
+}
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -192,7 +196,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 

@@ -15,7 +15,6 @@ urlpatterns = [
     path('meus_emprestimos', views.meus_emprestimos, name='meus_emprestimos'), 
     path('livros/new_emprestimo/<int:livro_id>', views.fazer_emprestimo, name='fazer_emprestimo'), 
     path('meus_emprestimos/<livro_id>', views.visualizar_pdf, name='visualizar_pdf'), 
-    path('criar_aluno', views.criar_aluno, name='criar_aluno'), 
     path('licenca_expirada', views.licenca_expirada, name='licenca_expirada'), 
     path('livros/renovar/<livro_id>', views.renovar_emprestimo, name='renovar_emprestimo'), 
     path('buscar', views.search, name='search'), 

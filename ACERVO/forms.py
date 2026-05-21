@@ -1,5 +1,26 @@
 from django import forms
 from .models import Autor, Categoria, Editora, Livro, LivroAutor, Emprestimo, Aluno
+from allauth.account.forms import SignupForm
+
+class CustomSignupForm(SignupForm):
+    # O campo de texto que aparecerá na mesma tela
+    nome = forms.CharField(
+        max_length=50, 
+        label="Nome do Aluno", 
+        widget=forms.TextInput(attrs={'placeholder': 'Digite seu nome completo'})
+    )
+
+    def save(self, request):
+        # 1. Salva o User padrão do Allauth primeiro (gerando o username automático)
+        user = super(CustomSignupForm, self).save(request)
+        
+        # 2. Pega o nome que o aluno digitou
+        nome_digitado = self.cleaned_data['nome']
+        
+        # 3. Cria o registro na sua tabela Aluno vinculando ao User
+        Aluno.objects.create(user=user, nome=nome_digitado)
+        
+        return user
 
 class AutorForm(forms.ModelForm):
     class Meta:
@@ -54,10 +75,5 @@ class EmprestimoForm(forms.ModelForm):
         widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'form-control', 'placeholder': 'dd/mm/aaaa'})
         )
 
-class AlunoForm(forms.ModelForm):
-    class Meta:
-        model=Aluno
-        fields=['nome']
-        labels={'nome':'Digite seu nome: '}
 
 

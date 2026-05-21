@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Autor, Categoria, Editora, Livro, Aluno, Emprestimo
-from .forms import AutorForm, CategoriaForm, EditoraForm, LivroForm, LivroAutorForm, EmprestimoForm, AlunoForm
+from .forms import AutorForm, CategoriaForm, EditoraForm, LivroForm, LivroAutorForm, EmprestimoForm
 from django.http import Http404
 from django.contrib.auth.decorators import login_required, permission_required
 from datetime import date, timedelta
@@ -43,32 +43,6 @@ def licenca_expirada(request):
 # Página principal
 def index(request):
     return render(request, 'ACERVO/index.html')
-
-
-# --- Alunos ---
-@login_required
-def criar_aluno(request):
-    if request.method == 'POST':
-        form = AlunoForm(request.POST)
-        if form.is_valid():
-            nome = form.cleaned_data.get("nome")
-            
-            # Atualiza o primeiro nome no usuário do Django
-            request.user.first_name = nome
-            request.user.save()
-            
-            # Associa o Aluno ao Usuário e salva no banco
-            aluno = form.save(commit=False)
-            aluno.user = request.user
-            aluno.save()
-            
-            messages.success(request, f"Perfil criado com sucesso, bem-vindo(a) {nome}!")
-            return redirect('index')
-    else:
-        form = AlunoForm()
-        
-    context = {'form': form}
-    return render(request, "ACERVO/criar_aluno.html", context)
 
 
 # --- Autores ---
