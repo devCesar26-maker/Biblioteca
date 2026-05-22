@@ -8,29 +8,26 @@
 
 <style>
   :root {
-    --radius: 12px; /* Cantos levemente mais orgânicos e suaves */
-    --background: #f4efe6; /* Um tom de marfim sutilmente mais quente */
-    --foreground: #112216; /* Nanquim profundo para maior contraste de leitura */
+    --radius: 12px;
+    --background: #f4efe6;
+    --foreground: #112216;
     --card: #ffffff;
-    --primary: #053e2f; /* Verde floresta ligeiramente mais denso e aristocrático */
+    --primary: #053e2f;
     --primary-foreground: #faf8f5;
-    --secondary: #eae3d5; /* Cor de transição mais suave */
+    --secondary: #eae3d5;
     --muted-foreground: #526356;
-    --accent: #bd963a; /* Ouro velho com mais presença visual */
+    --accent: #bd963a;
     --accent-foreground: #112216;
-    --border: #dad3c5; /* Linhas de grade mais finas e integradas ao papel */
+    --border: #dad3c5;
     
-    /* Upgrade: Sombras físicas em camadas (sofisticação invisível) */
     --shadow-sm: 0 2px 4px rgba(17, 34, 22, 0.02), 0 4px 12px rgba(17, 34, 22, 0.03);
     --shadow-md: 0 8px 16px rgba(17, 34, 22, 0.04), 0 16px 32px rgba(17, 34, 22, 0.04);
     --shadow-hero: 0 20px 40px rgba(5, 62, 47, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
     
-    /* Upgrade: Curva de transição elástica (sensação magnética ao tocar) */
     --easing: cubic-bezier(0.25, 1, 0.33, 1);
     --transition: all 0.4s var(--easing);
   }
 
-  /* Wrapper Principal com efeito sutil de textura de grão de papel */
   .dashboard-container-fluid {
     background-color: var(--background);
     position: relative;
@@ -41,7 +38,6 @@
     padding-bottom: 5rem;
   }
   
-  /* Micro-textura analógica simulando papel de algodão */
   .dashboard-container-fluid::before {
     content: "";
     position: absolute;
@@ -67,20 +63,25 @@
     color: inherit;
   }
 
-  /* ========== Hero Otimizado (Contraste e Foco) ========== */
+  /* ========== Hero Responsivo ========== */
   .hero {
     position: relative;
     overflow: hidden;
     background-color: var(--primary);
     color: var(--primary-foreground);
     border: 1px solid rgba(255,255,255,0.03);
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding: 3rem 1.5rem; /* Menor em telas pequenas */
     border-radius: var(--radius);
     box-shadow: var(--shadow-hero);
   }
 
-  /* Marca d'água sutil no fundo do Hero que remete a uma prensa antiga */
+  @media (min-width: 768px) {
+    .hero {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+  }
+
   .hero::before {
     content: "";
     position: absolute;
@@ -110,11 +111,19 @@
     font-weight: 500;
   }
 
+  /* Tamanho de fonte fluido para o título */
   .hero h2 {
-    margin-top: 1.75rem;
-    font-size: 3.25rem;
-    line-height: 1.15;
+    margin-top: 1.5rem;
+    font-size: 2rem;
+    line-height: 1.2;
     font-weight: 400;
+  }
+
+  @media (min-width: 768px) {
+    .hero h2 {
+      font-size: 3.25rem;
+      line-height: 1.15;
+    }
   }
 
   .hero h2 em {
@@ -124,128 +133,164 @@
   }
 
   .hero p {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     max-width: 520px;
     margin-left: auto;
     margin-right: auto;
-    font-size: 1.05rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.5;
     color: rgba(250, 248, 245, 0.8);
   }
 
-  /* ========== Barra de Busca (Sensível ao Toque) ========== */
+  @media (min-width: 768px) {
+    .hero p {
+      font-size: 1.05rem;
+      margin-top: 1.5rem;
+    }
+  }
+
+  /* ========== Barra de Busca Otimizada para Mobile ========== */
   .search-box {
     position: relative;
-    margin-top: 3rem;
+    margin-top: 2rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
     transition: var(--transition);
   }
 
+  @media (min-width: 768px) {
+    .search-box {
+      margin-top: 3rem;
+    }
+  }
+
+  .search-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 576px) {
+    .search-box form {
+      flex-direction: row;
+      gap: 0;
+      position: relative;
+    }
+  }
+
   .search-box svg {
     position: absolute;
-    left: 1.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1.35rem;
-    height: 1.35rem;
+    left: 1.25rem;
+    top: 1.3rem; /* Focado para o mobile */
+    width: 1.25rem;
+    height: 1.25rem;
     color: var(--muted-foreground);
     pointer-events: none;
     transition: var(--transition);
+    z-index: 2;
+  }
+
+  @media (min-width: 576px) {
+    .search-box svg {
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 
   .search-input {
     width: 100%;
-    height: 4.25rem;
-    padding-left: 3.75rem;
-    padding-right: 9rem;
-    font-size: 1.05rem;
+    height: 3.5rem;
+    padding-left: 3.25rem;
+    padding-right: 1.25rem;
+    font-size: 1rem;
     color: var(--foreground);
     background-color: var(--card);
     border: 1px solid transparent;
-    border-radius: 6px; /* Bordas levemente mais retas dão ar institucional chique */
-    box-shadow: 0 20px 40px -15px rgba(5, 62, 47, 0.25);
+    border-radius: 6px;
+    box-shadow: 0 10px 25px -5px rgba(5, 62, 47, 0.15);
     outline: none;
     transition: var(--transition);
+  }
+
+  @media (min-width: 576px) {
+    .search-input {
+      height: 4.25rem;
+      padding-left: 3.75rem;
+      padding-right: 9rem;
+      box-shadow: 0 20px 40px -15px rgba(5, 62, 47, 0.25);
+    }
   }
 
   .search-input::placeholder {
     color: #8fa093;
   }
 
-  /* Iluminação ao focar na busca */
   .search-box:focus-within .search-input {
-    box-shadow: 0 25px 50px -12px rgba(5, 62, 47, 0.35);
     border-color: var(--accent);
-    transform: scale(1.01);
   }
 
-  .search-box:focus-within svg {
-    color: var(--primary);
+  @media (min-width: 576px) {
+    .search-box:focus-within .search-input {
+      box-shadow: 0 25px 50px -12px rgba(5, 62, 47, 0.35);
+      transform: scale(1.01);
+    }
   }
 
   .search-btn {
-    position: absolute;
-    right: 0.625rem;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 3rem;
-    padding: 0 1.75rem;
+    width: 100%;
+    height: 3.25rem;
     background-color: var(--accent);
     color: var(--accent-foreground);
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-family: "IBM Plex Sans", system-ui, sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
     cursor: pointer;
     transition: var(--transition);
   }
 
+  @media (min-width: 576px) {
+    .search-btn {
+      position: absolute;
+      right: 0.625rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: auto;
+      height: 3rem;
+      padding: 0 1.75rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+  }
+
   .search-btn:hover {
     background-color: #a8832e;
-    box-shadow: 0 4px 12px rgba(189, 150, 58, 0.2);
-  }
-
-  .suggestions {
-    margin-top: 1.25rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0 1.75rem;
-    font-size: 0.8rem;
-    color: rgba(250, 248, 245, 0.65);
-  }
-
-  .suggestions a {
-    transition: var(--transition);
-    border-bottom: 1px dotted rgba(250, 248, 245, 0.3);
-  }
-
-  .suggestions a:hover {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
   }
 
   /* ========== Seções Dinâmicas ========== */
   .main-content {
-    padding-top: 5rem;
+    padding-top: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .main-content {
+      padding-top: 5rem;
+    }
   }
 
   .section-header {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.75rem;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 1.25rem;
+    padding-bottom: 1rem;
   }
 
   .section-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.25em;
     color: var(--muted-foreground);
@@ -253,25 +298,29 @@
   }
 
   .section-title {
-    margin-top: 0.35rem;
-    font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 1.65rem;
+    margin-top: 0.25rem;
+    font-size: 1.35rem;
     color: var(--primary);
   }
 
-  /* ========== Grid do Diretório (Com Efeito de Elevação Tátil) ========== */
+  @media (min-width: 768px) {
+    .section-title {
+      font-size: 1.65rem;
+    }
+  }
+
+  /* ========== Grid Flexível (1 col mobile, 2 col tablet, 4 col desktop) ========== */
   .category-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: 1.25rem; /* Separamos os cards em vez de colá-los, dando respiro visual */
-    background: transparent;
+    gap: 1rem;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 576px) {
     .category-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 992px) {
     .category-grid { grid-template-columns: repeat(4, 1fr); }
   }
 
@@ -279,30 +328,33 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 2rem;
+    padding: 1.5rem;
     background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    cursor: pointer;
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     height: 100%;
   }
 
+  @media (min-width: 768px) {
+    .category-card {
+      padding: 2rem;
+    }
+  }
+
   .category-card:hover {
-    background-color: var(--card);
     border-color: var(--accent);
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
   }
 
   .category-icon {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f0edf5;
     background-color: rgba(5, 62, 47, 0.04);
     color: var(--primary);
     border-radius: 6px;
@@ -315,63 +367,54 @@
   }
 
   .category-icon svg {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   .category-card h4 {
-    margin-top: 1.75rem;
-    font-size: 1.3rem;
+    margin-top: 1.25rem;
+    font-size: 1.15rem;
     color: var(--primary);
   }
 
   .category-card p {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
     color: var(--muted-foreground);
   }
 
-  .category-link {
-    margin-top: 2.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    transform: translateX(-5px);
-    opacity: 0;
-    transition: var(--transition);
-  }
-
-  .category-card:hover .category-link {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  /* ========== Painel de Gestão e Blocos de Informação ========== */
+  /* ========== Blocos de Informação de Gestão ========== */
   .info-grid {
-    margin-top: 5rem;
+    margin-top: 3rem;
     display: grid;
-    gap: 2rem;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
   }
 
-  @media (min-width: 1024px) {
-    .info-grid { grid-template-columns: 1fr 1fr; }
+  @media (min-width: 992px) {
+    .info-grid { 
+      margin-top: 5rem;
+      grid-template-columns: 1fr 1fr; 
+      gap: 2rem;
+    }
   }
 
   .info-card {
     background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 2.5rem;
+    padding: 1.5rem;
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: var(--transition);
+  }
+
+  @media (min-width: 768px) {
+    .info-card {
+      padding: 2.5rem;
+    }
   }
   
   .info-card:hover {
@@ -380,8 +423,8 @@
   }
 
   .info-card-icon {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -391,26 +434,33 @@
   }
 
   .info-card h3 {
-    margin-top: 1.75rem;
-    font-size: 1.6rem;
+    margin-top: 1.25rem;
+    font-size: 1.35rem;
     color: var(--primary);
   }
 
-  .info-card p {
-    margin-top: 1rem;
-    font-size: 0.95rem;
-    color: var(--muted-foreground);
-    line-height: 1.6;
+  @media (min-width: 768px) {
+    .info-card h3 {
+      margin-top: 1.75rem;
+      font-size: 1.6rem;
+    }
   }
 
-  /* Botão Clássico / Estilo Encadernação Manual */
+  .info-card p {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+
+  /* Botões adaptados para cliques em telas menores */
   .info-btn {
-    margin-top: 2.5rem;
+    margin-top: 1.75rem;
     display: inline-flex;
     align-items: center;
-    align-self: flex-start;
+    justify-content: center;
     gap: 0.75rem;
-    padding: 0.85rem 1.75rem;
+    padding: 0.75rem 1.5rem;
     background-color: var(--primary);
     color: var(--primary-foreground);
     border: 1px solid transparent;
@@ -418,9 +468,17 @@
     font-family: "IBM Plex Sans", system-ui, sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
     cursor: pointer;
     transition: var(--transition);
+    width: 100%; /* Ocupa tudo no mobile */
+  }
+
+  @media (min-width: 576px) {
+    .info-btn {
+      width: auto; /* Volta ao normal se couber */
+      margin-top: 2.5rem;
+      padding: 0.85rem 1.75rem;
+    }
   }
 
   .info-btn:hover {
@@ -432,25 +490,25 @@
   .info-btn svg {
     width: 0.9rem;
     height: 0.9rem;
-    transition: var(--transition);
   }
 
-  .info-btn:hover {
-    padding-left: 2rem;
-    padding-right: 1.5rem;
+  /* Painel de Estatísticas Otimizado */
+  .stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
   }
 
-  /* Painel de Métricas / Gráfica Limpa */
   .stats-header svg {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
     color: var(--accent);
   }
 
   .stats-grid {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* 1 coluna no mobile para não amassar */
     gap: 1px;
     overflow: hidden;
     border: 1px solid var(--border);
@@ -458,26 +516,34 @@
     background-color: var(--border);
   }
 
-  .stat-item {
-    background-color: var(--card);
-    padding: 1.5rem;
-    transition: var(--transition);
+  @media (min-width: 400px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 colunas apenas se tiver largura aceitável */
+    }
   }
 
-  .stat-item:hover {
-    background-color: var(--background);
+  .stat-item {
+    background-color: var(--card);
+    padding: 1.25rem;
+    transition: var(--transition);
   }
 
   .stat-value {
     font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 1.75rem;
+    font-size: 1.35rem;
     color: var(--primary);
     font-weight: 700;
   }
 
+  @media (min-width: 768px) {
+    .stat-value {
+      font-size: 1.75rem;
+    }
+  }
+
   .stat-label {
-    margin-top: 0.35rem;
-    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--muted-foreground);
@@ -486,10 +552,10 @@
 </style>
 
 <div class="dashboard-container-fluid">
-  <div class="container pt-5">
+  <div class="container pt-3 pt-md-5 px-3 px-sm-0">
     
     <section class="hero">
-      <div class="container">
+      <div class="container-fluid p-0">
         <div class="hero-inner">
           <span class="hero-label">Consulta ao Acervo</span>
           <h2>O conhecimento começa <br><em>por uma boa busca.</em></h2>
@@ -498,12 +564,10 @@
           <div class="search-box">
             <form method="get" action="{% url 'search' %}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              <input type="search" name="q" class="search-input" placeholder="Livro, autor, categoria ou palavra-chave...">
+              <input type="search" name="q" class="search-input" placeholder="Livro, autor, categoria...">
               <button type="submit" class="search-btn">Pesquisar</button>
             </form>
           </div>
-          
-          
         </div>
       </div>
     </section>
@@ -584,9 +648,8 @@
                 <p class="section-label">Painel</p>
                 <h3>Visão Geral do Acervo</h3>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
             </div>
-            <p style="font-size: 0.95rem;" class="text-muted mb-2">Acompanhe o desempenho, métricas globais e estatísticas operacionais do sistema.</p>
+            <p class="text-muted mb-2">Acompanhe o desempenho, métricas globais e estatísticas operacionais do sistema.</p>
             
             <div class="stats-grid">
               <div class="stat-item">
