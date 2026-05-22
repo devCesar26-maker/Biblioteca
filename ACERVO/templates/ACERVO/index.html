@@ -2,321 +2,612 @@
 {% load bootstrap5 %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    /* Paleta de Cores de Alta Costura Digital */
-    :root {
-        --brand-dark: #090d16;        /* Obsidian profundo */
-        --brand-surface: #ffffff;
-        --brand-bg-light: #f4f6fa;   /* Cinza ultra-limpo com toque frio */
-        --brand-border: #e6e9f0;
-        --brand-muted: #64748b;
-        --accent-primary: #4f46e5;  /* Indigo moderno */
-        --accent-secondary: #06b6d4;/* Ciano elétrico para detalhes */
-        --gradient-hero: linear-gradient(135deg, #0f172a 0%, #090d16 100%);
-        --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Wrapper Principal */
-    .dashboard-wrapper {
-        background-color: var(--brand-bg-light);
-        min-height: 100vh;
-        padding-top: 3rem;
-        padding-bottom: 5rem;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
-
-    /* Seção Hero - Estilo Ambient Glow */
-    .hero-section {
-        background: var(--gradient-hero);
-        position: relative;
-        overflow: hidden;
-        border-radius: 24px;
-        color: #ffffff;
-        padding: 4.5rem 2rem !important;
-        box-shadow: 0 20px 40px -15px rgba(9, 13, 22, 0.3);
-    }
-
-    /* Detalhe de luz difusa de fundo no Hero */
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -20%;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, transparent 70%);
-        pointer-events: none;
-    }
-
-    .hero-text-muted {
-        color: #94a3b8;
-        font-weight: 400;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    /* Barra de Busca Premium Redesenhada */
-    .search-bar-premium {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 16px;
-        padding: 0.5rem;
-        transition: var(--transition-smooth);
-    }
+  :root {
+    --radius: 12px; /* Cantos levemente mais orgânicos e suaves */
+    --background: #f4efe6; /* Um tom de marfim sutilmente mais quente */
+    --foreground: #112216; /* Nanquim profundo para maior contraste de leitura */
+    --card: #ffffff;
+    --primary: #053e2f; /* Verde floresta ligeiramente mais denso e aristocrático */
+    --primary-foreground: #faf8f5;
+    --secondary: #eae3d5; /* Cor de transição mais suave */
+    --muted-foreground: #526356;
+    --accent: #bd963a; /* Ouro velho com mais presença visual */
+    --accent-foreground: #112216;
+    --border: #dad3c5; /* Linhas de grade mais finas e integradas ao papel */
     
-    .search-bar-premium:focus-within {
-        background: var(--brand-surface);
-        border-color: var(--accent-primary);
-        box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.3);
-    }
+    /* Upgrade: Sombras físicas em camadas (sofisticação invisível) */
+    --shadow-sm: 0 2px 4px rgba(17, 34, 22, 0.02), 0 4px 12px rgba(17, 34, 22, 0.03);
+    --shadow-md: 0 8px 16px rgba(17, 34, 22, 0.04), 0 16px 32px rgba(17, 34, 22, 0.04);
+    --shadow-hero: 0 20px 40px rgba(5, 62, 47, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
     
-    .search-bar-premium input {
-        border: none !important;
-        box-shadow: none !important;
-        font-size: 1.05rem;
-        color: #ffffff;
-        background: transparent;
-    }
+    /* Upgrade: Curva de transição elástica (sensação magnética ao tocar) */
+    --easing: cubic-bezier(0.25, 1, 0.33, 1);
+    --transition: all 0.4s var(--easing);
+  }
 
-    .search-bar-premium psychology:focus-within input,
-    .search-bar-premium input:focus {
-        color: var(--brand-dark) !important;
-    }
+  /* Wrapper Principal com efeito sutil de textura de grão de papel */
+  .dashboard-container-fluid {
+    background-color: var(--background);
+    position: relative;
+    color: var(--foreground);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 5rem;
+  }
+  
+  /* Micro-textura analógica simulando papel de algodão */
+  .dashboard-container-fluid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.15;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3ctfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3c/svg%3e");
+  }
 
-    .search-bar-premium:focus-within .bi-search {
-        color: var(--accent-primary) !important;
-    }
+  .dashboard-container-fluid h1, 
+  .dashboard-container-fluid h2, 
+  .dashboard-container-fluid h3, 
+  .dashboard-container-fluid h4, 
+  .dashboard-container-fluid .font-serif {
+    font-family: "Libre Baskerville", Georgia, serif;
+    letter-spacing: -0.02em;
+  }
 
-    /* Botões Dinâmicos */
-    .btn-brand {
-        background: var(--accent-primary);
-        color: #ffffff;
-        border-radius: 12px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        padding: 0.75rem 2rem;
-        transition: var(--transition-smooth);
-        border: none;
-    }
-    
-    .btn-brand:hover {
-        background: #4338ca;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
-        color: #ffffff;
-    }
+  .dashboard-container-fluid a {
+    text-decoration: none;
+    color: inherit;
+  }
 
-    /* Cards de Navegação (Bento Style) */
-    .premium-card {
-        background-color: var(--brand-surface);
-        border: 1px solid var(--brand-border);
-        border-radius: 20px;
-        transition: var(--transition-smooth);
-        position: relative;
-        overflow: hidden;
-    }
+  /* ========== Hero Otimizado (Contraste e Foco) ========== */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: 1px solid rgba(255,255,255,0.03);
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hero);
+  }
 
-    .premium-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-        opacity: 0;
-        transition: var(--transition-smooth);
-    }
+  /* Marca d'água sutil no fundo do Hero que remete a uma prensa antiga */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    background-image: radial-gradient(circle at 1px 1px, #f4efe6 1px, transparent 0);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
 
-    .premium-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 35px -10px rgba(9, 13, 22, 0.08);
-        border-color: transparent;
-    }
+  .hero-inner {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-    .premium-card:hover::before {
-        opacity: 1;
-    }
+  .hero-label {
+    display: inline-block;
+    border-top: 1px solid rgba(189, 150, 58, 0.4);
+    border-bottom: 1px solid rgba(189, 150, 58, 0.4);
+    padding: 0.35rem 1.25rem;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    font-weight: 500;
+  }
 
-    /* Box de Ícones Minimalista */
-    .icon-box {
-        width: 60px;
-        height: 60px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 16px;
-        background-color: #f8fafc;
-        color: var(--brand-dark);
-        margin-bottom: 1.25rem;
-        transition: var(--transition-smooth);
-        border: 1px solid #f1f5f9;
-    }
+  .hero h2 {
+    margin-top: 1.75rem;
+    font-size: 3.25rem;
+    line-height: 1.15;
+    font-weight: 400;
+  }
 
-    .premium-card:hover .icon-box {
-        background: rgba(79, 70, 229, 0.08);
-        color: var(--accent-primary);
-        transform: scale(1.05);
-    }
+  .hero h2 em {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 400;
+  }
 
-    /* Títulos de Seção de Linhas Finas */
-    .section-title {
-        color: var(--brand-dark);
-        font-weight: 700;
-        font-size: 1.25rem;
-        letter-spacing: -0.3px;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        color: var(--brand-muted);
-    }
+  .hero p {
+    margin-top: 1.5rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(250, 248, 245, 0.8);
+  }
 
-    /* Cards de Gestão Estilo Horizontal Pleno */
-    .management-card {
-        border-radius: 20px;
-        background: var(--brand-surface);
-        border: 1px solid var(--brand-border);
-        transition: var(--transition-smooth);
-    }
+  /* ========== Barra de Busca (Sensível ao Toque) ========== */
+  .search-box {
+    position: relative;
+    margin-top: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: var(--transition);
+  }
 
-    .management-card:hover {
-        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.05);
-        border-color: #cbd5e1;
-    }
+  .search-box svg {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.35rem;
+    height: 1.35rem;
+    color: var(--muted-foreground);
+    pointer-events: none;
+    transition: var(--transition);
+  }
 
-    .btn-action-pill {
-        border-radius: 100px;
-        padding: 0.5rem 1.5rem;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: var(--transition-smooth);
-    }
+  .search-input {
+    width: 100%;
+    height: 4.25rem;
+    padding-left: 3.75rem;
+    padding-right: 9rem;
+    font-size: 1.05rem;
+    color: var(--foreground);
+    background-color: var(--card);
+    border: 1px solid transparent;
+    border-radius: 6px; /* Bordas levemente mais retas dão ar institucional chique */
+    box-shadow: 0 20px 40px -15px rgba(5, 62, 47, 0.25);
+    outline: none;
+    transition: var(--transition);
+  }
 
-    .btn-action-pill:hover {
-        transform: translateX(3px);
-    }
+  .search-input::placeholder {
+    color: #8fa093;
+  }
 
-    /* Links de Atalhos Populares (Abaixo da busca) */
-    .trending-tags a {
-        color: #94a3b8;
-        font-size: 0.85rem;
-        transition: var(--transition-smooth);
-    }
-    .trending-tags a:hover {
-        color: #ffffff;
-    }
+  /* Iluminação ao focar na busca */
+  .search-box:focus-within .search-input {
+    box-shadow: 0 25px 50px -12px rgba(5, 62, 47, 0.35);
+    border-color: var(--accent);
+    transform: scale(1.01);
+  }
+
+  .search-box:focus-within svg {
+    color: var(--primary);
+  }
+
+  .search-btn {
+    position: absolute;
+    right: 0.625rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 3rem;
+    padding: 0 1.75rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    border: none;
+    border-radius: 4px;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .search-btn:hover {
+    background-color: #a8832e;
+    box-shadow: 0 4px 12px rgba(189, 150, 58, 0.2);
+  }
+
+  .suggestions {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0 1.75rem;
+    font-size: 0.8rem;
+    color: rgba(250, 248, 245, 0.65);
+  }
+
+  .suggestions a {
+    transition: var(--transition);
+    border-bottom: 1px dotted rgba(250, 248, 245, 0.3);
+  }
+
+  .suggestions a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ========== Seções Dinâmicas ========== */
+  .main-content {
+    padding-top: 5rem;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.25rem;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--muted-foreground);
+    font-weight: 600;
+  }
+
+  .section-title {
+    margin-top: 0.35rem;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 1.65rem;
+    color: var(--primary);
+  }
+
+  /* ========== Grid do Diretório (Com Efeito de Elevação Tátil) ========== */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.25rem; /* Separamos os cards em vez de colá-los, dando respiro visual */
+    background: transparent;
+  }
+
+  @media (min-width: 640px) {
+    .category-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .category-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    height: 100%;
+  }
+
+  .category-card:hover {
+    background-color: var(--card);
+    border-color: var(--accent);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .category-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0edf5;
+    background-color: rgba(5, 62, 47, 0.04);
+    color: var(--primary);
+    border-radius: 6px;
+    transition: var(--transition);
+  }
+
+  .category-card:hover .category-icon {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .category-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .category-card h4 {
+    margin-top: 1.75rem;
+    font-size: 1.3rem;
+    color: var(--primary);
+  }
+
+  .category-card p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+  }
+
+  .category-link {
+    margin-top: 2.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    transform: translateX(-5px);
+    opacity: 0;
+    transition: var(--transition);
+  }
+
+  .category-card:hover .category-link {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ========== Painel de Gestão e Blocos de Informação ========== */
+  .info-grid {
+    margin-top: 5rem;
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    .info-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .info-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+  }
+  
+  .info-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(189, 150, 58, 0.3);
+  }
+
+  .info-card-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+  }
+
+  .info-card h3 {
+    margin-top: 1.75rem;
+    font-size: 1.6rem;
+    color: var(--primary);
+  }
+
+  .info-card p {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+  }
+
+  /* Botão Clássico / Estilo Encadernação Manual */
+  .info-btn {
+    margin-top: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1.75rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .info-btn:hover {
+    background-color: transparent;
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .info-btn svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    transition: var(--transition);
+  }
+
+  .info-btn:hover {
+    padding-left: 2rem;
+    padding-right: 1.5rem;
+  }
+
+  /* Painel de Métricas / Gráfica Limpa */
+  .stats-header svg {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--accent);
+  }
+
+  .stats-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--border);
+  }
+
+  .stat-item {
+    background-color: var(--card);
+    padding: 1.5rem;
+    transition: var(--transition);
+  }
+
+  .stat-item:hover {
+    background-color: var(--background);
+  }
+
+  .stat-value {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 1.75rem;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .stat-label {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+    font-weight: 500;
+  }
 </style>
 
-<div class="dashboard-wrapper">
-    <div class="container">
-        
-        <div class="hero-section text-center mb-5">
-            <h1 class="display-5 fw-black mb-2 text-white">Acervo Digital</h1>
-            <p class="hero-text-muted fs-5 mb-4">Consulte e explore títulos, autores e obras disponíveis em tempo real.</p>
+<div class="dashboard-container-fluid">
+  <div class="container pt-5">
+    
+    <section class="hero">
+      <div class="container">
+        <div class="hero-inner">
+          <span class="hero-label">Consulta ao Acervo</span>
+          <h2>O conhecimento começa <br><em>por uma boa busca.</em></h2>
+          <p>Pesquise livros, autores, categorias e editoras em todo o acervo institucional.</p>
+          
+          <div class="search-box">
+            <form method="get" action="{% url 'search' %}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="search" name="q" class="search-input" placeholder="Livro, autor, categoria ou palavra-chave...">
+              <button type="submit" class="search-btn">Pesquisar</button>
+            </form>
+          </div>
+          
+          
+        </div>
+      </div>
+    </section>
+
+    <main class="main-content">
+
+      <section>
+        <div class="section-header">
+          <div>
+            <p class="section-label">Navegação</p>
+            <h3 class="section-title">Explore o acervo</h3>
+          </div>
+          <span class="section-count d-none d-sm-block">4 áreas de consulta</span>
+        </div>
+
+        <div class="category-grid">
+          <a href="{% url 'livros' %}" class="category-card">
+            <div>
+              <div class="category-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+              </div>
+              <h4>Livros</h4>
+              <p>Acervo completo de obras</p>
+            </div>
+          </a>
+
+          <a href="{% url 'autores' %}" class="category-card">
+            <div>
+              <div class="category-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <h4>Autores</h4>
+              <p>Índice biográfico</p>
+            </div>
+          </a>
+
+          <a href="{% url 'categorias' %}" class="category-card">
+            <div>
+              <div class="category-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+              </div>
+              <h4>Categorias</h4>
+              <p>Classificação temática</p>
+            </div>
+          </a>
+
+          <a href="{% url 'editoras' %}" class="category-card">
+            <div>
+              <div class="category-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M12 6a4 4 0 0 1 4 4v7a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a4 4 0 0 1 4-4z"/><path d="M9 22v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+              </div>
+              <h4>Editoras</h4>
+              <p>Selos e publicadoras</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <section class="info-grid">
+        <div class="info-card">
+          <div>
+            <div class="info-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            </div>
+            <h3>Meus Empréstimos</h3>
+            <p>Acompanhe todos os livros que você já retirou, datas de devolução, renovações disponíveis e realize a gestão das suas leituras.</p>
+          </div>
+          <a href="{% url 'meus_emprestimos' %}" class="info-btn">
+            Visualizar Histórico
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="info-card">
+          <div>
+            <div class="stats-header">
+              <div>
+                <p class="section-label">Painel</p>
+                <h3>Visão Geral do Acervo</h3>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            </div>
+            <p style="font-size: 0.95rem;" class="text-muted mb-2">Acompanhe o desempenho, métricas globais e estatísticas operacionais do sistema.</p>
             
-            <div class="row justify-content-center">
-                <div class="col-lg-7 col-md-9">
-                    <form method="get" action="{% url 'search' %}" class="search-bar-premium d-flex align-items-center">
-                        <span class="ps-3 text-muted fs-5 d-flex align-items-center">
-                            <i class="bi bi-search" style="color: rgba(255,255,255,0.4); transition: var(--transition-smooth);"></i>
-                        </span>
-                        <input class="form-control px-3" type="search" name="q"
-                               placeholder="Buscar por título, autor, categoria..." aria-label="Search">
-                        <button class="btn btn-brand" type="submit">Buscar</button>
-                    </form>
-                    
-                    <div class="trending-tags mt-3 text-center d-none d-sm-block">
-                        <span style="color: #64748b; font-size: 0.85rem;">Sugestões:</span>
-                        <a href="?q=Tecnologia" class="text-decoration-none ms-2">Tecnologia</a>
-                        <a href="?q=Literatura" class="text-decoration-none ms-2">Literatura</a>
-                        <a href="?q=História" class="text-decoration-none ms-2">História</a>
-                    </div>
-                </div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">Acervo</div>
+                <div class="stat-label">Catálogo Completo</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">Métricas</div>
+                <div class="stat-label">Gráficos Ativos</div>
+              </div>
             </div>
+          </div>
+          <a href="{% url 'dashboard' %}" class="info-btn">
+            Acessar Painel
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
         </div>
+      </section>
+      
+    </main>
 
-        <div class="d-flex align-items-center mb-4">
-            <h4 class="section-title mb-0">Explorar Diretório</h4>
-            <div class="flex-grow-1 ms-3 border-bottom opacity-25" style="border-color: var(--brand-border)"></div>
-        </div>
-
-        <div class="row g-4 mb-5 text-center">
-            <div class="col-md-3 col-sm-6">
-                <a href="{% url 'livros' %}" class="text-decoration-none">
-                    <div class="premium-card h-100 p-4">
-                        <div class="icon-box">
-                            <i class="bi bi-book fs-3"></i>
-                        </div>
-                        <h6 class="text-dark fw-bold mb-0">Livros</h6>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <a href="{% url 'autores' %}" class="text-decoration-none">
-                    <div class="premium-card h-100 p-4">
-                        <div class="icon-box">
-                            <i class="bi bi-person fs-3"></i>
-                        </div>
-                        <h6 class="text-dark fw-bold mb-0">Autores</h6>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <a href="{% url 'categorias' %}" class="text-decoration-none">
-                    <div class="premium-card h-100 p-4">
-                        <div class="icon-box">
-                            <i class="bi bi-tags fs-3"></i>
-                        </div>
-                        <h6 class="text-dark fw-bold mb-0">Categorias</h6>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <a href="{% url 'editoras' %}" class="text-decoration-none">
-                    <div class="premium-card h-100 p-4">
-                        <div class="icon-box">
-                            <i class="bi bi-building fs-3"></i>
-                        </div>
-                        <h6 class="text-dark fw-bold mb-0">Editoras</h6>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <div class="d-flex align-items-center mb-4">
-            <h4 class="section-title mb-0">Gestão e Relatórios</h4>
-            <div class="flex-grow-1 ms-3 border-bottom opacity-25" style="border-color: var(--brand-border)"></div>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="management-card h-100 text-start p-4 d-flex align-items-center">
-                    <div class="icon-box mb-0 me-4 flex-shrink-0" style="width: 64px; height: 64px; background: rgba(79, 70, 229, 0.04); color: var(--accent-primary);">
-                        <i class="bi bi-archive fs-3"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h5 class="fw-bold text-dark mb-1 fs-5">Meus Empréstimos</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.9rem; max-width: 340px;">Gerencie suas devoluções e consulte o histórico de leituras.</p>
-                        <a href="{% url 'meus_emprestimos' %}" class="btn btn-outline-dark btn-action-pill px-4">Visualizar</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="management-card h-100 text-start p-4 d-flex align-items-center">
-                    <div class="icon-box mb-0 me-4 flex-shrink-0" style="width: 64px; height: 64px; background: rgba(6, 182, 212, 0.04); color: var(--accent-secondary);">
-                        <i class="bi bi-bar-chart-line fs-3"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h5 class="fw-bold text-dark mb-1 fs-5">Visão Geral</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.9rem; max-width: 340px;">Acompanhe o desempenho, métricas e estatísticas do acervo.</p>
-                        <a href="{% url 'dashboard' %}" class="btn btn-dark btn-action-pill px-4" style="background-color: var(--brand-dark);">Acessar Painel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+  </div>
 </div>
 {% endblock content %}

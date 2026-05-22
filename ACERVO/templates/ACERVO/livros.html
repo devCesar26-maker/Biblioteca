@@ -2,233 +2,476 @@
 {% load bootstrap5 %}
 
 {% block content %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        background-color: #f8fafc;
-    }
+:root{
+    --radius: 16px;
+    --background: #f4efe6;
+    --foreground: #112216;
+    --card: #fffdf8;
+    --primary: #053e2f;
+    --primary-foreground: #faf8f5;
+    --secondary: #eae3d5;
+    --muted-foreground: #526356;
+    --accent: #bd963a;
+    --accent-foreground: #112216;
+    --border: #dad3c5;
+    --shadow-sm: 0 4px 10px rgba(17,34,22,.03), 0 10px 28px rgba(17,34,22,.04);
+    --shadow-md: 0 14px 30px rgba(17,34,22,.05), 0 24px 48px rgba(17,34,22,.06);
+    --transition: all .35s cubic-bezier(.25,1,.33,1);
+}
 
-    .page-header {
-        padding: 2.5rem 0 1.5rem 0;
-    }
+/* BASE */
+.catalog-wrapper{
+    background: linear-gradient(to bottom, #f5f0e8 0%, #efe7d8 100%);
+    min-height: 100vh;
+    padding-bottom: 5rem;
+    color: var(--foreground);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    position: relative;
+}
 
-    .badge-count {
-        background-color: #dcfce7;
-        color: #15803d;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 0.35rem 0.75rem;
-        border-radius: 50px;
-    }
+.catalog-wrapper::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-    .btn-primary-custom {
-        background-color: #16a34a;
-        border-color: #16a34a;
-        color: #ffffff;
-        font-weight: 500;
-        border-radius: 6px;
-        transition: all 0.2s;
-    }
+/* HEADER */
+.page-header{
+    padding: 3rem 0 2rem 0;
+    border-bottom: 1px solid var(--border);
+}
 
-    .btn-primary-custom:hover {
-        background-color: #15803d;
-        border-color: #15803d;
-        color: #ffffff;
-    }
+.page-title{
+    font-family: "Libre Baskerville", serif;
+    color: var(--foreground);
+    font-size: 2rem;
+}
 
-    .table-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
+.badge-count{
+    background: rgba(5,62,47,.06);
+    color: var(--primary);
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: .45rem .9rem;
+    border: 1px solid rgba(5,62,47,.10);
+    border-radius: 999px;
+}
 
-    .table-custom th {
-        background-color: #f1f5f9;
-        color: #475569;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        padding: 1rem 1.5rem;
-    }
+/* BUTTONS */
+.btn-primary-custom{
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    color: var(--primary-foreground);
+    font-size: .82rem;
+    font-weight: 700;
+    padding: .75rem .13rem;
+    border-radius: 8px;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+    transition: var(--transition);
+}
 
-    .table-custom td {
-        padding: 1rem 1.5rem;
-        vertical-align: middle;
-        color: #334155;
-    }
+.btn-primary-custom:hover{
+    background: transparent;
+    color: var(--primary);
+}
 
-    .table-custom tbody tr:hover {
-        background-color: #f8fafc;
-    }
+.btn-secondary-custom{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    font-size: .82rem;
+    font-weight: 700;
+    padding: .75rem .13rem;
+    border-radius: 8px;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+    transition: var(--transition);
+}
 
-    .book-avatar {
-        width: 38px;
-        height: 38px;
-        background-color: #f0fdf4;
-        color: #16a34a;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-    }
+.btn-secondary-custom:hover{
+    background: var(--secondary);
+}
 
-    .book-link {
-        color: #1e293b;
-        font-weight: 600;
-        text-decoration: none;
-        transition: color 0.15s;
-    }
+/* SECTION */
+.section-title{
+    font-family: "Libre Baskerville", serif;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
 
-    .book-link:hover {
-        color: #16a34a;
-    }
+/* CAROUSEL ENHANCED */
+.carousel-shell{
+    position: relative;
+    margin-top: 2rem;
+}
 
-    .id-badge {
-        background-color: #f1f5f9;
-        color: #64748b;
-        font-size: 0.85rem;
-        font-weight: 500;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-    }
+.carousel-wrapper{
+    position: relative;
+    width: 100%;
+}
 
-    .btn-action {
-        color: #2563eb;
-        background-color: #eff6ff;
-        border: 1px solid rgba(37, 99, 235, 0.1);
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 0.9rem;
-        padding: 0.4rem 0.85rem;
-        transition: all 0.2s;
-    }
+.carousel-scroll{
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    /* Melhora o deslize nativo em Touch e Trackpads */
+    scroll-snap-type: x mandatory; 
+    padding: 1.5rem 0.5rem; /* Ajustado para não cortar a sombra do hover */
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
 
-    .btn-action:hover {
-        background-color: #2563eb;
-        color: #ffffff;
-    }
+.carousel-scroll::-webkit-scrollbar{
+    display: none;
+}
 
-    .btn-secondary-custom {
-        color: #475569;
-        background-color: #ffffff;
-        border: 1px solid #cbd5e1;
-        font-weight: 500;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        transition: all 0.2s;
-    }
+/* 3 LIVROS POR TELA */
+.book-card{
+    flex: 0 0 calc((100% - 3rem) / 3);
+    max-width: calc((100% - 3rem) / 3);
+    scroll-snap-align: start; /* Alinha o card perfeitamente ao scrollar */
+    background: linear-gradient(180deg, #fffdfa 0%, #f7f0e4 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
 
-    .btn-secondary-custom:hover {
-        background-color: #f8fafc;
-        border-color: #94a3b8;
-        color: #1e293b;
-    }
+.book-card:hover{
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: #cbbba1;
+}
 
-    /* CSS para a versão mobile baseada em Cards */
-    .mobile-book-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+/* BOTÕES DINÂMICOS */
+.carousel-btn{
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(6px);
+    color: var(--primary);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.carousel-btn:hover:not(:disabled){
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Estado desativado suave */
+.carousel-btn:disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.carousel-btn-left{
+    left: -25px;
+}
+
+.carousel-btn-right{
+    right: -25px;
+}
+
+/* CAPA */
+.book-cover{
+    width: 100%;
+    height: 340px;
+    background: var(--secondary);
+    overflow: hidden;
+    position: relative;
+}
+
+.book-cover img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+
+.book-card:hover .book-cover img{
+    transform: scale(1.04);
+}
+
+.book-placeholder{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    font-size: 3rem;
+}
+
+/* CONTENT */
+.book-content{
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.book-link{
+    font-family: "Libre Baskerville", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition);
+    margin-bottom: .8rem;
+}
+
+.book-link:hover{
+    color: var(--accent);
+}
+
+.book-id{
+    display: inline-flex;
+    width: fit-content;
+    background: var(--secondary);
+    color: var(--foreground);
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .35rem .6rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+}
+
+.book-price{
+    font-size: .82rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* BOTÃO EMPRÉSTIMO */
+.btn-loan{
+    margin-top: auto;
+    background: var(--accent);
+    color: var(--accent-foreground);
+    border: none;
+    border-radius: 10px;
+    padding: .8rem 1rem;
+    font-size: .82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    transition: var(--transition);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+.btn-loan:hover{
+    background: #a8832e;
+    transform: translateY(-1px);
+    color: var(--accent-foreground);
+}
+
+/* EMPTY */
+.empty-state{
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.empty-state i{
+    font-size: 3rem;
+    color: #c3b8a7;
+}
+
+/* RESPONSIVO */
+@media(max-width:992px){
+    .book-card{
+        flex: 0 0 calc((100% - 1.5rem) / 2);
+        max-width: calc((100% - 1.5rem) / 2);
     }
+    .carousel-btn-left{ left: -15px; }
+    .carousel-btn-right{ right: -15px; }
+}
+
+@media(max-width:768px){
+    .book-card{
+        flex: 0 0 85%;
+        max-width: 85%;
+    }
+    .carousel-scroll{
+        padding-inline: 1rem;
+    }
+    .carousel-btn{
+        display: none;
+    }
+    .book-cover{
+        height: 280px;
+    }
+    .page-title{
+        font-size: 1.7rem;
+    }
+}
 </style>
 
-<div class="container pb-5">
-    
-    <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
-        <div>
-            <div class="d-flex align-items-center gap-2 mb-1">
-                <h2 class="fw-bold text-dark mb-0 h3">Livros</h2>
-                <span class="badge-count">{{ livros|length }} no acervo</span>
+<div class="catalog-wrapper">
+    <div class="container">
+        <div class="page-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <h2 class="page-title mb-0">Catálogo de Obras</h2>
+                    <span class="badge-count">{{ livros|length }} volumes</span>
+                </div>
+                <p class="text-muted mb-0">Explore o acervo oficial da biblioteca digital.</p>
             </div>
-            <p class="text-muted mb-0">Listagem de obras disponíveis para consulta e empréstimo.</p>
+
+            {% if user.is_superuser %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'new_livro_autor' %}" class="btn btn-secondary-custom d-flex align-items-center gap-2">
+                    <i class="bi bi-link-45deg"></i> Vincular Autor
+                </a>
+                <a href="{% url 'new_livro' %}" class="btn btn-primary-custom d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Inserir Obra
+                </a>
+            </div>
+            {% endif %}
         </div>
-        
-        {% if user.is_superuser %}
-        <div class="d-flex gap-2">
-            <a href="{% url 'new_livro_autor' %}" class="btn btn-secondary-custom d-inline-flex align-items-center gap-2 flex-grow-1 flex-sm-grow-0 justify-content-center">
-                <i class="bi bi-link-45deg"></i> Vincular Autor
-            </a>
-            <a href="{% url 'new_livro' %}" class="btn btn-primary-custom d-inline-flex align-items-center gap-2 flex-grow-1 flex-sm-grow-0 justify-content-center">
-                <i class="bi bi-plus-lg"></i> Novo
-            </a>
+
+        {% if livros %}
+        <div class="carousel-shell">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h4 class="section-title mb-0">Obras Disponíveis</h4>
+                <small class="text-muted">Acervo disponível para empréstimo</small>
+            </div>
+
+            <div class="carousel-wrapper">
+                <button class="carousel-btn carousel-btn-left" onclick="scrollCarousel(-1)" type="button" id="btnLeft" disabled>
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <div class="carousel-scroll" id="bookCarousel">
+                    {% for livro in livros %}
+                    <div class="book-card">
+                        <div class="book-cover">
+                            {% if livro.capa %}
+                                <img src="{{ livro.capa.url }}" alt="Capa de {{ livro.nome }}">
+                            {% else %}
+                                <div class="book-placeholder">
+                                    <i class="bi bi-journal-bookmark"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="book-content">
+                            <a href="{% url 'dados_livros' livro.id %}" class="book-link">{{ livro.nome }}</a>
+                            <span class="book-id">REG-{{ livro.id }}</span>
+
+                            {% if livro.valor > 0 %}
+                            <div class="book-price">Valor referência: R$ {{ livro.valor }}</div>
+                            {% endif %}
+
+                            
+                            <form action="{% url 'fazer_emprestimo' livro.id %}" method="POST" class="w-100 mt-auto">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-loan w-100" style="border: none;">
+                                    Solicitar Empréstimo
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-btn carousel-btn-right" onclick="scrollCarousel(1)" type="button" id="btnRight">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-journal-x d-block mb-3"></i>
+            <h4 class="mb-2" style="font-family: 'Libre Baskerville', serif; color: var(--primary);">Nenhum exemplar catalogado</h4>
+            <p class="text-muted mb-0">O acervo encontra-se sem registros no momento.</p>
         </div>
         {% endif %}
     </div>
-
-    {% if livros %}
-        <div class="table-card d-none d-md-block">
-            <div class="table-responsive">
-                <table class="table table-custom align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th scope="col" style="width: 50%;">Título da Obra</th>
-                            <th scope="col" style="width: 25%;">ID do Sistema</th>
-                            <th scope="col" class="text-end" style="width: 25%;">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for livro in livros %}
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="book-avatar">
-                                            <i class="bi bi-book"></i>
-                                        </div>
-                                        <a href="{% url 'dados_livros' livro.id %}" class="book-link">
-                                            {{ livro.nome }}
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="id-badge">#{{ livro.id }}</span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-action d-inline-flex align-items-center gap-2">
-                                        Empréstimo <i class="bi bi-arrow-right"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="d-block d-md-none">
-            {% for livro in livros %}
-                <div class="mobile-book-card">
-                    <div class="d-flex align-items-start gap-3 mb-3">
-                        <div class="book-avatar flex-shrink-0">
-                            <i class="bi bi-book"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <a href="{% url 'dados_livros' livro.id %}" class="book-link d-block text-truncate mb-1" style="max-width: 220px;">
-                                {{ livro.nome }}
-                            </a>
-                            <span class="id-badge">#{{ livro.id }}</span>
-                        </div>
-                    </div>
-                    <a href="{% url 'fazer_emprestimo' livro.id %}" class="btn btn-action w-100 d-flex align-items-center justify-content-center gap-2 py-2">
-                        Realizar Empréstimo <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
-
-    {% else %}
-        <div class="table-card p-5 text-center text-muted">
-            <i class="bi bi-journal-x fs-1 d-block mb-2 text-secondary"></i>
-            <p class="fw-medium mb-1">Nenhum livro encontrado</p>
-            <p class="small mb-0">O catálogo da biblioteca está vazio no momento.</p>
-        </div>
-    {% endif %}
-    
 </div>
+
+<script>
+const carousel = document.getElementById('bookCarousel');
+const btnLeft = document.getElementById('btnLeft');
+const btnRight = document.getElementById('btnRight');
+
+function updateButtonVisibility() {
+    if (!carousel || !btnLeft || !btnRight) return;
+    
+    // Mostra/Esconde botão esquerdo
+    if (carousel.scrollLeft <= 5) {
+        btnLeft.setAttribute('disabled', 'true');
+    } else {
+        btnLeft.removeAttribute('disabled');
+    }
+
+    // Mostra/Esconde botão direito
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    if (carousel.scrollLeft >= maxScroll - 5) {
+        btnRight.setAttribute('disabled', 'true');
+    } else {
+        btnRight.removeAttribute('disabled');
+    }
+}
+
+// Monitora eventos de rolagem e redimensionamento para atualizar os botões
+if (carousel) {
+    carousel.addEventListener('scroll', updateButtonVisibility);
+    window.addEventListener('resize', updateButtonVisibility);
+    // Executa uma vez no início para checar o estado inicial
+    window.addEventListener('DOMContentLoaded', updateButtonVisibility);
+}
+
+function scrollCarousel(direction){
+    const card = carousel.querySelector('.book-card');
+    if(!card) return;
+
+    const gap = 24;
+    // Rolagem baseada no tamanho dinâmico do card + gap
+    const scrollAmount = (card.offsetWidth + gap) * direction;
+
+    carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+}
+</script>
+
 {% endblock content %}

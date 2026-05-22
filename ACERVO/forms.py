@@ -43,12 +43,14 @@ class EditoraForm(forms.ModelForm):
 class LivroForm(forms.ModelForm):
     class Meta:
         model=Livro
-        fields=['nome', 'editora', 'categoria', 'autores', 'arquivo_pdf']
+        fields=['nome', 'editora', 'categoria', 'autores', 'capa', 'valor', 'arquivo_pdf']
         labels = {
             'nome': 'Nome do Livro',
             'editora': 'Editora',
             'categoria': 'Categoria',
             'autores': 'Autor(es)', 
+            'valor':'Valor',
+            'capa':'Adicionar capa', 
             'arquivo_pdf': 'Adicionar PDF'
         }
 
@@ -60,20 +62,6 @@ class LivroAutorForm(forms.ModelForm):
             'livro':'Nome do Livro', 
             'autor':'Autor(es)'
         }
-
-
-class EmprestimoForm(forms.ModelForm):
-    class Meta:
-        model=Emprestimo
-        fields=['valor', 'devolvido']
-        labels={
-            'valor':'Valor',
-            'devolvido':'Preencha se devolveu'
-        }
-        data_devolucao = forms.DateField(
-        input_formats=['%d/%m/%Y'],
-        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'form-control', 'placeholder': 'dd/mm/aaaa'})
-        )
 
 
 
