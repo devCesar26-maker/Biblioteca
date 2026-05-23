@@ -2,66 +2,97 @@
 {% load bootstrap5 %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        background-color: #f8fafc;
+    :root {
+        --radius: 12px;
+        --background: #f4efe6;
+        --foreground: #112216;
+        --card: #ffffff;
+        --primary: #053e2f;
+        --primary-foreground: #faf8f5;
+        --muted-foreground: #526356;
+        --accent: #bd963a;
+        --accent-foreground: #112216;
+        --border: #dad3c5;
+        --shadow-sm: 0 4px 10px rgba(17,34,22,.03);
+    }
+
+    .details-wrapper {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background-color: var(--background);
+        min-height: 100vh;
+        color: var(--foreground);
     }
 
     .page-header {
-        padding: 2.5rem 0 1.5rem 0;
+        padding: 3rem 0 1.5rem 0;
+        border-bottom: 1px solid rgba(5, 62, 47, 0.1);
+    }
+
+    .font-serif {
+        font-family: "Libre Baskerville", Georgia, serif;
+        color: var(--primary);
     }
 
     .btn-back {
-        color: #64748b;
-        background-color: #ffffff;
-        border: 1px solid #cbd5e1;
-        font-weight: 500;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        padding: 0.4rem 0.85rem;
-        transition: all 0.2s;
+        color: var(--primary);
+        background-color: transparent;
+        border: 1px solid rgba(5, 62, 47, 0.2);
+        font-weight: 600;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.2s ease-in-out;
     }
 
     .btn-back:hover {
-        background-color: #f8fafc;
-        border-color: #94a3b8;
-        color: #1e293b;
+        background-color: rgba(5, 62, 47, 0.05);
+        color: var(--primary);
     }
 
     .details-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-        padding: 2rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        padding: 3rem;
+        margin-top: 2rem;
     }
 
     .book-title-detail {
-        color: #0f172a;
+        font-family: "Libre Baskerville", serif;
+        color: var(--primary);
         font-weight: 700;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.01em;
     }
 
     .meta-label {
-        font-size: 0.85rem;
-        color: #64748b;
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        margin-bottom: 0.35rem;
     }
 
     .meta-value {
-        color: #1e293b;
+        color: var(--foreground);
         font-weight: 500;
         font-size: 1.05rem;
     }
 
     .section-title {
-        color: #334155;
+        color: var(--primary);
+        font-family: "Libre Baskerville", serif;
         font-size: 1.1rem;
-        font-weight: 600;
-        border-bottom: 2px solid #f1f5f9;
+        font-weight: 700;
+        border-bottom: 1px solid var(--border);
         padding-bottom: 0.5rem;
     }
 
@@ -69,95 +100,100 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        background-color: #f1f5f9;
-        color: #334155;
-        padding: 0.4rem 0.85rem;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        font-weight: 500;
+        background-color: rgba(5, 62, 47, 0.04);
+        border: 1px solid rgba(5, 62, 47, 0.08);
+        color: var(--primary);
+        padding: 0.4rem 0.9rem;
+        border-radius: 4px;
+        font-size: 0.88rem;
+        font-weight: 600;
     }
 
     .btn-pdf-view {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: #ffffff;
-        font-weight: 500;
-        border-radius: 6px;
-        padding: 0.6rem 1.25rem;
-        transition: all 0.2s;
+        background-color: var(--primary);
+        border: 1px solid var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 4px;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.2s ease-in-out;
     }
 
     .btn-pdf-view:hover {
-        background-color: #4338ca;
-        border-color: #4338ca;
-        color: #ffffff;
+        background-color: transparent;
+        color: var(--primary);
     }
 </style>
 
-<div class="container pb-5">
-    
-    <div class="page-header d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark mb-0 h4">Ficha da Obra</h2>
-        <a href="{% url 'livros' %}" class="btn btn-back d-inline-flex align-items-center gap-2">
-            <i class="bi bi-arrow-left"></i> Voltar ao catálogo
-        </a>
-    </div>
-
-    <div class="details-card">
-        <div class="row g-4">
-            
-            <div class="col-md-8">
-                <h1 class="book-title-detail mb-4">{{ livro.nome }}</h1>
-                
-                <div class="row g-4 mb-5">
-                    <div class="col-sm-6">
-                        <div class="meta-label">Editora</div>
-                        <div class="meta-value d-flex align-items-center gap-2">
-                            <i class="bi bi-building text-muted"></i> {{ livro.editora.nome }}
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="meta-label">Categoria</div>
-                        <div class="meta-value d-flex align-items-center gap-2">
-                            <i class="bi bi-tag text-muted"></i> {{ livro.categoria.nome }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <h3 class="section-title mb-3">Autores Vinculados</h3>
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for autor in autores %}
-                            <div class="author-item">
-                                <i class="bi bi-person text-muted"></i>
-                                <span>{{ autor.nome }}</span>
-                            </div>
-                        {% empty %}
-                            <p class="text-muted small mb-0">Nenhum autor associado a este livro.</p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 d-flex align-items-start justify-content-md-end border-top border-md-0 pt-4 pt-md-0">
-                {% if livro.arquivo_pdf %}
-                    <div class="w-100 bg-light p-4 rounded-3 border border-light text-center text-md-start">
-                        <h4 class="h6 fw-bold text-dark mb-2">Leitura Disponível</h4>
-                        <p class="text-muted small mb-3">Este livro possui versão digital anexada para leitura imediata.</p>
-                        <a href="{{ livro.arquivo_pdf.url }}" class="btn btn-pdf-view w-100 d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
-                            <i class="bi bi-file-earmark-pdf"></i> Visualizar PDF
-                        </a>
-                    </div>
-                {% else %}
-                    <div class="w-100 bg-light p-4 rounded-3 text-center text-muted small">
-                        <i class="bi bi-file-earmark-x d-block fs-3 mb-2 text-secondary"></i>
-                        Apenas consulta física local.
-                    </div>
-                {% endif %}
-            </div>
-
+<div class="details-wrapper">
+    <div class="container anonymity-padding pb-5">
+        
+        <div class="page-header d-flex justify-content-between align-items-center mb-4">
+            <h2 class="font-serif fw-bold mb-0 h4">Ficha da Obra</h2>
+            <a href="{% url 'livros' %}" class="btn btn-back d-inline-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left"></i> Voltar ao Catálogo
+            </a>
         </div>
+
+        <div class="details-card">
+            <div class="row g-5">
+                
+                <div class="col-md-8">
+                    <h1 class="book-title-detail h2 mb-4">{{ livro.nome }}</h1>
+                    
+                    <div class="row g-4 mb-5">
+                        <div class="col-sm-6">
+                            <div class="meta-label">Selo Editorial / Editora</div>
+                            <div class="meta-value d-flex align-items-center gap-2">
+                                <i class="bi bi-building text-muted"></i> {{ livro.editora.nome }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="meta-label">Setor Temático / Categoria</div>
+                            <div class="meta-value d-flex align-items-center gap-2">
+                                <i class="bi bi-tag text-muted"></i> {{ livro.categoria.nome }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="section-title mb-3">Autores Vinculados</h3>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for autor in autores %}
+                                <div class="author-item">
+                                    <i class="bi bi-person-fill opacity-70"></i>
+                                    <span>{{ autor.nome }}</span>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted small mb-0">Nenhum autor associado a este livro.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-start justify-content-md-end border-top border-md-0 pt-4 pt-md-0">
+                    {% if livro.arquivo_pdf %}
+                        <div class="w-100 p-4 rounded-3 text-center text-md-start" style="background-color: #faf8f5; border: 1px solid var(--border);">
+                            <h4 class="h6 fw-bold text-dark mb-2" style="font-family: 'Libre Baskerville', serif;">Leitura Digital</h4>
+                            <p class="text-muted small mb-3">Este volume possui cópia digitalizada disponível para consulta imediata.</p>
+                            <a href="{{ livro.arquivo_pdf.url }}" class="btn btn-pdf-view w-100 d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
+                                <i class="bi bi-file-earmark-pdf"></i> Acessar PDF
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="w-100 p-4 rounded-3 text-center text-muted small" style="background-color: #faf8f5; border: 1px dashed var(--border);">
+                            <i class="bi bi-file-earmark-x d-block fs-3 mb-2" style="color: var(--border);"></i>
+                            Exemplar restrito para consulta física local.
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        
     </div>
-    
 </div>
 {% endblock content %}

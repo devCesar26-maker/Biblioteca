@@ -9,60 +9,109 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     <style>
+        /* Paleta de cores idêntica à Index (Estilo Acadêmico/Editorial) */
+        :root {
+            --background: #f4efe6;
+            --foreground: #112216;
+            --primary: #053e2f;
+            --accent: #bd963a;
+            --border: #dad3c5;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: #f8fafc;
-            /* Compensação para o conteúdo não ficar escondido debaixo do menu fixo */
-            padding-top: 70px; 
+            background-color: var(--background); /* Todo o site herda o tom marfim */
+            padding-top: 75px; 
         }
         
-        /* Menu Fixo e Modernizado */
+        /* Menu Superior */
         .navbar-custom {
-            background-color: #0f172a !important; /* Azul escuro noturno profissional */
-            border-bottom: 1px solid #1e293b;
-            backdrop-filter: blur(8px); /* Efeito sutil de vidro caso queira usar opacidade futuramente */
+            background-color: var(--primary) !important; /* Verde-oliva profundo */
+            border-bottom: 1px solid rgba(189, 150, 58, 0.2);
         }
 
         .navbar-brand {
-            font-size: 1.15rem;
+            font-family: "Libre Baskerville", Georgia, serif;
+            font-size: 1.2rem;
             letter-spacing: -0.01em;
+            color: #faf8f5 !important;
         }
 
+        /* Crachá discreto para o Usuário Autenticado */
         .nav-user-text {
-            color: #94a3b8 !important;
+            color: #cbd5e1 !important;
             font-size: 0.9rem;
             font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.07);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .nav-user-text i {
+            color: var(--accent) !important; /* Ícone dourado */
+        }
+
+        /* Área de conteúdo principal destravada (Fluida) */
         main {
             flex: 1;
+            width: 100%;
+            overflow-x: hidden;
         }
 
-        /* Ajuste fino dos botões do menu */
+        /* Configuração de botões do menu */
         .navbar-nav .btn-sm {
-            padding: 0.4rem 0.85rem;
-            font-weight: 500;
-            border-radius: 6px;
+            padding: 0.45rem 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            font-family: system-ui, sans-serif;
+            font-size: 0.85rem;
         }
 
+        /* Botão Entrar (Dourado) */
         .btn-login-custom {
-            background-color: #4f46e5;
-            border-color: #4f46e5;
-            color: #ffffff !important;
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: #112216 !important;
         }
 
         .btn-login-custom:hover {
-            background-color: #4338ca;
-            border-color: #4338ca;
+            background-color: #a8832e;
+            border-color: #a8832e;
+            color: #112216 !important;
         }
 
-        /* Rodapé sutil, menos chamativo que o cabeçalho */
+        /* Botão Registrar (Vazado Claro) */
+        .btn-register-custom {
+            color: #faf8f5 !important;
+            border-color: rgba(250, 248, 245, 0.3);
+        }
+
+        .btn-register-custom:hover {
+            background-color: rgba(250, 248, 245, 0.08);
+            border-color: #faf8f5;
+        }
+
+        /* Botão Sair (Vinho Escuro/Fosco integrado) */
+        .btn-logout-custom {
+            color: #fca5a5 !important;
+            border: 1px solid rgba(252, 165, 165, 0.3) !important;
+            background-color: transparent;
+        }
+
+        .btn-logout-custom:hover {
+            background-color: #7f1d1d !important;
+            border-color: #fca5a5 !important;
+            color: #ffffff !important;
+        }
+
+        /* Rodapé integrado ao fundo marfim */
         footer {
-            background-color: #ffffff;
-            border-top: 1px solid #e2e8f0;
-            color: #64748b;
+            background-color: #eae3d5;
+            border-top: 1px solid var(--border);
+            color: #526356;
             font-size: 0.85rem;
         }
     </style>
@@ -71,7 +120,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top shadow-sm py-2.5">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'index' %}">
-                <i class="bi bi-journal-bookmark-fill text-indigo" style="color: #818cf8;"></i>
+                <i class="bi bi-journal-bookmark-fill" style="color: var(--accent);"></i>
                 <span>Sistema de Biblioteca</span>
             </a>
 
@@ -83,19 +132,19 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-lg-center gap-2 mt-3 mt-lg-0">
                     {% if user.is_authenticated %}
-                        <li class="nav-item px-2 py-1 py-lg-0">
+                        <li class="nav-item my-1 my-lg-0">
                             <span class="nav-user-text d-inline-flex align-items-center gap-1.5">
-                                <i class="bi bi-person"></i> {{ user.aluno.nome }}
+                                <i class="bi bi-person-circle"></i> {{ user.aluno.nome }}
                             </span>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-danger btn-sm w-100" href="{% url 'account_logout' %}">
+                            <a class="btn btn-logout-custom btn-sm w-100" href="{% url 'account_logout' %}">
                                 <i class="bi bi-box-arrow-right"></i> Sair
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="btn btn-outline-light btn-sm w-100" href="{% url 'account_signup' %}">
+                            <a class="btn btn-register-custom btn-sm w-100" href="{% url 'account_signup' %}">
                                 Registrar
                             </a>
                         </li>
@@ -111,7 +160,7 @@
     </nav>
 
     {% if messages %}
-    <div class="container" style="margin-top: 1rem;">
+    <div class="container" style="margin-top: 1rem; position: relative; z-index: 1050;">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
             {{ message }}
@@ -121,7 +170,7 @@
     </div>
     {% endif %}
 
-    <main class="container">
+    <main>
         {% block content %}{% endblock content %}
     </main>
 

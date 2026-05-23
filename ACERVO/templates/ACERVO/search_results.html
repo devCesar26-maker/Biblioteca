@@ -2,24 +2,46 @@
 {% load bootstrap5 %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        background-color: #f8fafc; /* Fundo padrão cinza claro moderno */
+    :root {
+        --radius: 12px;
+        --background: #f4efe6;
+        --foreground: #112216;
+        --card: #ffffff;
+        --primary: #053e2f;
+        --primary-foreground: #faf8f5;
+        --muted-foreground: #526356;
+        --accent: #bd963a;
+        --accent-foreground: #112216;
+        --border: #dad3c5;
+        --shadow-sm: 0 4px 10px rgba(17,34,22,.03);
+    }
+
+    .search-wrapper {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background-color: var(--background);
+        min-height: 100vh;
+        color: var(--foreground);
     }
 
     .search-header {
+        padding: 3rem 0 2rem 0;
+        border-bottom: 1px solid rgba(5, 62, 47, 0.1);
         margin-bottom: 2.5rem;
     }
 
-    .search-title {
-        color: #0f172a;
-        font-weight: 700;
-        font-size: 1.75rem;
-        letter-spacing: -0.025em;
+    .font-serif {
+        font-family: "Libre Baskerville", Georgia, serif;
+        color: var(--primary);
     }
 
     .search-title span {
-        color: #4f46e5; /* Destaca o termo buscado em Indigo */
+        color: var(--accent);
+        font-style: italic;
     }
 
     /* Grid responsivo e fluido */
@@ -29,33 +51,33 @@
         gap: 1.5rem;
     }
 
-    /* Card com efeito de elevação moderno */
+    /* Card com identidade institucional */
     .book-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
         padding: 1.5rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 220px;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        min-height: 230px;
+        transition: all 0.3s cubic-bezier(.25,1,.33,1);
+        box-shadow: var(--shadow-sm);
     }
 
     .book-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
-        border-color: #cbd5e1;
+        box-shadow: 0 12px 20px rgba(17,34,22,.06);
+        border-color: var(--accent);
     }
 
     .book-title {
-        color: #0f172a;
-        font-weight: 600;
-        font-size: 1.15rem;
+        color: var(--primary);
+        font-family: "Libre Baskerville", serif;
+        font-weight: 700;
+        font-size: 1.1rem;
         line-height: 1.4;
         margin-bottom: 0.5rem;
-        /* Limita o título a duas linhas para manter o grid alinhado */
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -63,41 +85,49 @@
     }
 
     .book-authors {
-        color: #64748b;
+        color: var(--muted-foreground);
         font-size: 0.875rem;
+        font-weight: 500;
         margin-bottom: 1rem;
     }
 
     .book-metadata {
         font-size: 0.825rem;
-        color: #475569;
-        border-top: 1px dashed #e2e8f0;
+        color: var(--foreground);
+        border-top: 1px dashed var(--border);
         padding-top: 0.75rem;
         margin-bottom: 1.25rem;
     }
 
-    /* Badges minimalistas */
+    /* Badge minimalista de categoria */
     .badge-category {
-        background-color: #eef2ff;
-        color: #4f46e5;
-        font-weight: 500;
-        padding: 0.25rem 0.6rem;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        display: inline-block;
-        margin-bottom: 0.5rem;
+        background-color: rgba(5, 62, 47, 0.05);
+        color: var(--primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid rgba(5, 62, 47, 0.05);
     }
 
     /* Botão elegante */
     .btn-details {
-        background-color: #ffffff;
-        border: 1px solid #cbd5e1;
-        color: #334155;
-        font-weight: 500;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        transition: all 0.2s;
+        background-color: transparent;
+        border: 1px solid rgba(5, 62, 47, 0.25);
+        color: var(--primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 4px;
+        padding: 0.55rem 1rem;
+        font-size: 0.8rem;
+        transition: all 0.2s ease-in-out;
         text-align: center;
         text-decoration: none;
         display: block;
@@ -105,100 +135,121 @@
     }
 
     .btn-details:hover {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: #ffffff;
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
     }
 
-    /* Estados Vazios (Empty States) elegantes */
+    /* Estados Vazios (Empty States) */
     .empty-state {
         text-align: center;
         padding: 4rem 2rem;
-        background: #ffffff;
-        border: 1px dashed #cbd5e1;
-        border-radius: 16px;
+        background: var(--card);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
         max-width: 500px;
-        margin: 2rem auto;
+        margin: 3rem auto;
+        box-shadow: var(--shadow-sm);
     }
 
     .empty-state-icon {
-        font-size: 3rem;
-        color: #94a3b8;
+        font-size: 2.5rem;
+        color: var(--accent);
         margin-bottom: 1.25rem;
     }
 
     .empty-state h5 {
-        color: #1e293b;
-        font-weight: 600;
+        font-family: "Libre Baskerville", serif;
+        color: var(--primary);
+        font-weight: 700;
         margin-bottom: 0.5rem;
     }
 
     .empty-state p {
-        color: #64748b;
-        font-size: 0.925rem;
+        color: var(--muted-foreground);
+        font-size: 0.9rem;
+    }
+
+    .btn-empty-action {
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .btn-empty-action:hover {
+        background-color: rgba(5, 62, 47, 0.05);
+        color: var(--primary);
     }
 </style>
 
-<div class="container mt-5">
-    {% if query %}
-        <div class="search-header">
-            <h2 class="search-title">
-                Resultados para <span>"{{ query }}"</span>
-            </h2>
-            <p class="text-muted small">Encontramos {{ resultados|length }} livro(s) correspondente(s).</p>
-        </div>
-
-        {% if resultados %}
-            <div class="books-grid">
-                {% for livro in resultados %}
-                    <div class="book-card">
-                        <div>
-                            <span class="badge-category">
-                                <i class="bi bi-tag-fill me-1"></i> {{ livro.categoria.nome }}
-                            </span>
-                            
-                            <h3 class="book-title" title="{{ livro.nome }}">{{ livro.nome }}</h3>
-                            
-                            <div class="book-authors">
-                                <i class="bi bi-person me-1"></i>
-                                {% for autor in livro.autores.all %}
-                                    {{ autor.nome }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="book-metadata">
-                                <span class="text-muted">Editora:</span> <strong class="text-dark">{{ livro.editora.nome }}</strong>
-                            </div>
-
-                            <a href="{% url 'dados_livros' livro.id %}" class="btn-details">
-                                Ver detalhes <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
+<div class="search-wrapper">
+    <div class="container pb-5">
+        {% if query %}
+            <div class="search-header">
+                <h2 class="font-serif search-title fw-bold mb-1 h3">
+                    Resultados para <span>"{{ query }}"</span>
+                </h2>
+                <p class="text-muted small mb-0">Identificamos {{ resultados|length }} registro(s) correspondente(s) no acervo.</p>
             </div>
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="bi bi-search-heart"></i>
+
+            {% if resultados %}
+                <div class="books-grid">
+                    {% for livro in resultados %}
+                        <div class="book-card">
+                            <div>
+                                <span class="badge-category">
+                                    <i class="bi bi-tag-fill"></i> {{ livro.categoria.nome }}
+                                </span>
+                                
+                                <h3 class="book-title" title="{{ livro.nome }}">{{ livro.nome }}</h3>
+                                
+                                <div class="book-authors">
+                                    <i class="bi bi-person me-1"></i>
+                                    {% for autor in livro.autores.all %}
+                                        {{ autor.nome }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="book-metadata">
+                                    <span class="text-muted">Editora:</span> <strong class="text-dark">{{ livro.editora.nome }}</strong>
+                                </div>
+
+                                <a href="{% url 'dados_livros' livro.id %}" class="btn-details">
+                                    Examinar Obra <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-                <h5>Nenhum livro encontrado</h5>
-                <p>Não encontramos títulos correspondentes a "{{ query }}". Verifique a ortografia ou tente termos mais abrangentes.</p>
-                <a href="{% url 'livros' %}" class="btn btn-sm btn-outline-primary mt-2">
-                    Ver acervo completo
-                </a>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h5>Nenhuma obra encontrada</h5>
+                    <p class="mb-4">Não localizamos títulos associados ao termo "{{ query }}". Certifique-se da ortografia ou tente palavras-chave mais amplas.</p>
+                    <a href="{% url 'livros' %}" class="btn btn-empty-action d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-collection"></i> Ver acervo completo
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state" style="margin-top: 5rem;">
+                <div class="empty-state-icon" style="color: var(--primary);">
+                    <i class="bi bi-compass"></i>
+                </div>
+                <h5>O que deseja consultar hoje?</h5>
+                <p class="mb-0">Insira o título, autor, editora ou categoria na barra de pesquisa superior para iniciar a varredura nos arquivos.</p>
             </div>
         {% endif %}
-    {% else %}
-        <div class="empty-state">
-            <div class="empty-state-icon" style="color: #4f46e5;">
-                <i class="bi bi-compass"></i>
-            </div>
-            <h5>O que você quer ler hoje?</h5>
-            <p>Digite o nome de um livro, autor, editora ou categoria na barra de pesquisa para começar a explorar o acervo.</p>
-        </div>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

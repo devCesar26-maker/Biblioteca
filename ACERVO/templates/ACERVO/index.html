@@ -28,16 +28,23 @@
     --transition: all 0.4s var(--easing);
   }
 
+  /* Força o container a esticar de ponta a ponta ignorando travas do base.html */
   .dashboard-container-fluid {
-    background-color: var(--background);
     position: relative;
     color: var(--foreground);
     font-family: "IBM Plex Sans", system-ui, sans-serif;
     line-height: 1.6;
     min-height: 100vh;
     padding-bottom: 5rem;
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    background-color: var(--background);
   }
   
+  /* Micro-textura analógica de papel */
   .dashboard-container-fluid::before {
     content: "";
     position: absolute;
@@ -47,6 +54,12 @@
     opacity: 0.15;
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3ctfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3c/svg%3e");
+    z-index: 0;
+  }
+
+  .dashboard-container-fluid > .container {
+    position: relative;
+    z-index: 1;
   }
 
   .dashboard-container-fluid h1, 
@@ -70,7 +83,7 @@
     background-color: var(--primary);
     color: var(--primary-foreground);
     border: 1px solid rgba(255,255,255,0.03);
-    padding: 3rem 1.5rem; /* Menor em telas pequenas */
+    padding: 3rem 1.5rem;
     border-radius: var(--radius);
     box-shadow: var(--shadow-hero);
   }
@@ -111,7 +124,6 @@
     font-weight: 500;
   }
 
-  /* Tamanho de fonte fluido para o título */
   .hero h2 {
     margin-top: 1.5rem;
     font-size: 2rem;
@@ -182,7 +194,7 @@
   .search-box svg {
     position: absolute;
     left: 1.25rem;
-    top: 1.3rem; /* Focado para o mobile */
+    top: 1.3rem;
     width: 1.25rem;
     height: 1.25rem;
     color: var(--muted-foreground);
@@ -309,7 +321,7 @@
     }
   }
 
-  /* ========== Grid Flexível (1 col mobile, 2 col tablet, 4 col desktop) ========== */
+  /* ========== Grid Flexível ========== */
   .category-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -453,7 +465,7 @@
     line-height: 1.5;
   }
 
-  /* Botões adaptados para cliques em telas menores */
+  /* CHAVE DA REVISÃO: Botões sutilizados com design Outline/Fantasma Editorial */
   .info-btn {
     margin-top: 1.75rem;
     display: inline-flex;
@@ -461,35 +473,43 @@
     justify-content: center;
     gap: 0.75rem;
     padding: 0.75rem 1.5rem;
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border: 1px solid transparent;
+    background-color: transparent; /* Remove bloco de cor sólida padrão */
+    color: var(--primary);
+    border: 1px solid rgba(5, 62, 47, 0.25); /* Borda suave */
     border-radius: 4px;
     font-family: "IBM Plex Sans", system-ui, sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
-    width: 100%; /* Ocupa tudo no mobile */
+    width: 100%;
   }
 
   @media (min-width: 576px) {
     .info-btn {
-      width: auto; /* Volta ao normal se couber */
+      width: auto;
       margin-top: 2.5rem;
       padding: 0.85rem 1.75rem;
     }
   }
 
+  /* Preenche suavemente com a cor sólida no hover */
   .info-btn:hover {
-    background-color: transparent;
-    color: var(--primary);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
     border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(5, 62, 47, 0.1);
   }
 
   .info-btn svg {
     width: 0.9rem;
     height: 0.9rem;
+    transition: transform 0.3s var(--easing);
+  }
+
+  /* Micro-interação: A setinha salta para frente no hover */
+  .info-btn:hover svg {
+    transform: translateX(3px);
   }
 
   /* Painel de Estatísticas Otimizado */
@@ -508,7 +528,7 @@
   .stats-grid {
     margin-top: 1.5rem;
     display: grid;
-    grid-template-columns: 1fr; /* 1 coluna no mobile para não amassar */
+    grid-template-columns: 1fr;
     gap: 1px;
     overflow: hidden;
     border: 1px solid var(--border);
@@ -518,7 +538,7 @@
 
   @media (min-width: 400px) {
     .stats-grid {
-      grid-template-columns: repeat(2, 1fr); /* 2 colunas apenas se tiver largura aceitável */
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 

@@ -2,117 +2,147 @@
 {% load bootstrap5 %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        background-color: #f8fafc;
+    :root {
+        --radius: 12px;
+        --background: #f4efe6;
+        --foreground: #112216;
+        --card: #ffffff;
+        --primary: #053e2f;
+        --primary-foreground: #faf8f5;
+        --muted-foreground: #526356;
+        --accent: #bd963a;
+        --border: #dad3c5;
+        --shadow-sm: 0 4px 10px rgba(17,34,22,.03);
+    }
+
+    .error-wrapper {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background-color: var(--background);
+        min-height: 90vh;
+        color: var(--foreground);
     }
 
     .error-container {
         max-width: 550px;
         margin: 0 auto;
-        padding: 5rem 1rem;
+        padding: 6rem 1rem;
     }
 
     .error-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        padding: 3rem 2rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        padding: 3.5rem 2.5rem;
     }
 
     .icon-wrapper {
-        width: 72px;
-        height: 72px;
-        background-color: #fef2f2;
-        color: #ef4444;
+        width: 68px;
+        height: 68px;
+        background-color: rgba(189, 150, 58, 0.08);
+        color: var(--accent);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        margin: 0 auto 1.5rem auto;
-        border: 4px solid #fee2e2;
+        font-size: 1.75rem;
+        margin: 0 auto 1.75rem auto;
+        border: 1px solid rgba(189, 150, 58, 0.2);
+    }
+
+    .font-serif {
+        font-family: "Libre Baskerville", Georgia, serif;
+        color: var(--primary);
     }
 
     .error-title {
-        color: #0f172a;
         font-weight: 700;
-        font-size: 1.5rem;
-        letter-spacing: -0.02em;
-        margin-bottom: 0.75rem;
+        letter-spacing: -0.01em;
+        margin-bottom: 1rem;
     }
 
     .error-text {
-        color: #64748b;
-        font-size: 0.975rem;
+        color: var(--foreground);
+        font-size: 0.95rem;
         line-height: 1.6;
     }
 
     .btn-primary-custom {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: #ffffff;
-        font-weight: 500;
-        border-radius: 6px;
-        padding: 0.6rem 1.25rem;
-        transition: all 0.2s;
+        background-color: var(--primary);
+        border: 1px solid var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 4px;
+        padding: 0.7rem 1.5rem;
+        transition: all 0.2s ease-in-out;
     }
 
     .btn-primary-custom:hover {
-        background-color: #4338ca;
-        border-color: #4338ca;
-        color: #ffffff;
+        background-color: transparent;
+        color: var(--primary);
     }
 
     .btn-secondary-custom {
-        color: #475569;
-        background-color: #ffffff;
-        border: 1px solid #cbd5e1;
-        font-weight: 500;
-        border-radius: 6px;
-        padding: 0.6rem 1.25rem;
-        transition: all 0.2s;
+        color: var(--primary);
+        background-color: transparent;
+        border: 1px solid rgba(5, 62, 47, 0.25);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 4px;
+        padding: 0.7rem 1.5rem;
+        transition: all 0.2s ease-in-out;
     }
 
     .btn-secondary-custom:hover {
-        background-color: #f8fafc;
-        border-color: #94a3b8;
-        color: #1e293b;
+        background-color: rgba(5, 62, 47, 0.05);
+        color: var(--primary);
+        border-color: var(--primary);
     }
 </style>
 
-<div class="container text-center">
-    <div class="error-container">
-        
-        <div class="error-card">
-            <div class="icon-wrapper">
-                <i class="bi bi-file-earmark-lock2"></i>
-            </div>
-
-            <h1 class="error-title">Acesso Expirado</h1>
+<div class="error-wrapper">
+    <div class="container text-center">
+        <div class="error-container">
             
-            <div class="error-text mb-4">
-                <p class="mb-2">
-                    O prazo de devolução deste empréstimo terminou ou o livro digital já foi devolvido ao acervo.
-                </p>
-                <p class="mb-0 small text-muted">
-                    Para continuar a leitura, você pode solicitar a renovação da sua licença ou realizar um novo empréstimo no catálogo.
-                </p>
+            <div class="error-card">
+                <div class="icon-wrapper">
+                    <i class="bi bi-file-earmark-lock2"></i>
+                </div>
+
+                <h1 class="font-serif error-title h3">Acesso Expirado</h1>
+                
+                <div class="error-text mb-4">
+                    <p class="mb-3">
+                        O prazo de devolução deste empréstimo terminou ou o livro digital já foi devidamente recolhido ao acervo.
+                    </p>
+                    <p class="mb-0 small text-muted">
+                        Para continuar a leitura, você pode solicitar a renovação da sua licença ou realizar um novo empréstimo diretamente no catálogo.
+                    </p>
+                </div>
+
+                <hr class="my-4" style="border-color: var(--border); opacity: 0.5;">
+
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                    <a href="{% url 'livros' %}" class="btn btn-primary-custom d-inline-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-collection"></i> Ver Catálogo
+                    </a>
+                    <a href="{% url 'index' %}" class="btn btn-secondary-custom d-inline-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-house"></i> Ir para o Início
+                    </a>
+                </div>
             </div>
 
-            <hr class="my-4" style="border-color: #f1f5f9;">
-
-            <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
-                <a href="{% url 'livros' %}" class="btn btn-primary-custom d-inline-flex align-items-center justify-content-center gap-2">
-                    <i class="bi bi-journal-bookmark"></i> Ver Catálogo
-                </a>
-                <a href="{% url 'index' %}" class="btn btn-secondary-custom d-inline-flex align-items-center justify-content-center gap-2">
-                    <i class="bi bi-house"></i> Ir para o Início
-                </a>
-            </div>
         </div>
-
     </div>
 </div>
 {% endblock %}
