@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-
 import os
 from pathlib import Path
 import dj_database_url
@@ -22,29 +21,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 CHAVE_SECRETA = os.getenv('CHAVE_SECRETA')
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-
-
+# CORRIGIDO: Linhas de MEDIA locais e antigas foram removidas daqui para evitar conflitos.
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-
-
-SECRET_KEY=CHAVE_SECRETA
+SECRET_KEY = CHAVE_SECRETA
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 ALLOWED_HOSTS = [
     'biblioteca-production-9d24.up.railway.app',
     'localhost',
     '127.0.0.1'
 ]
+
 CSRF_TRUSTED_ORIGINS = [
     'https://biblioteca-production-9d24.up.railway.app'
 ]
@@ -67,13 +59,14 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django.contrib.postgres', 
     'allauth.socialaccount.providers.google',
+    'storages', # Perfeito, já incluído!
 ]
+
 SITE_ID = 1
 
 # Configuração do Google
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        
         'SCOPE': [
             'profile',
             'email',
@@ -94,12 +87,9 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'BIBLIOTECA_DJANGO.urls'
-
-
 
 TEMPLATES = [
     {
@@ -120,10 +110,6 @@ WSGI_APPLICATION = 'BIBLIOTECA_DJANGO.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# Captura a variável DATABASE_URL do .env (local) ou do painel (Railway)
-
 if 'DATABASE_URL' not in os.environ:
     raise ValueError("DATABASE_URL não configurada no ambiente!")
 
@@ -132,7 +118,6 @@ DATABASES = {
 }
 DATABASES['default']['CONN_MAX_AGE'] = 600
 
-# Ajuste obrigatório para a rede do Railway não rejeitar a conexão
 if '.internal' in os.environ.get('DATABASE_URL', ''):
     DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
 else:
@@ -140,94 +125,85 @@ else:
     
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_EMAIL_REQUIRED=True
-
+ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_USERNAME_REQUIRED = False
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Login pode ser feito por username ou email
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE=True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_UNIQUE_EMAIL = True
-
-# Campos obrigatórios no signup
 
 SOCIALACCOUNT_STORE_TOKENS = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 
-# ATENÇÃO: Substitua 'seu_app' pelo nome real da pasta do seu aplicativo
 ACCOUNT_FORMS = {
     'signup': 'ACERVO.forms.CustomSignupForm',
 }
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 DATE_INPUT_FORMATS = ['%d/%m/%Y']
 
 
-
-
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+
+# Static & Media Files Cloud Storage Configuration
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Configuração estável para o WhiteNoise no Django 5.x
+# Credenciais recebidas dinamicamente do painel da Railway
+AWS_ACCESS_KEY_ID = os.getenv('SUPABASE_AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('SUPABASE_AWS_SECRET_ACCESS_KEY')
+AWS_S3_ENDPOINT_URL = os.getenv('SUPABASE_S3_ENDPOINT_URL')
+
+AWS_STORAGE_BUCKET_NAME = 'media'
+
+# Configurações essenciais para o Supabase Storage
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False 
+
+# URL pública dinâmica vinda da Railway
+MEDIA_URL = os.getenv('SUPABASE_MEDIA_URL')
+
+
+# Configuração unificada do Django 5.x para Armazenamento
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        # CORRIGIDO: Agora os uploads do usuário vão 100% para o Supabase
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
-        # Esta linha serve os arquivos de forma direta e ultra segura, sem travar o deploy
+        # Mantém o WhiteNoise servindo os arquivos de estilo CSS/JS na Railway
         "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-BOOTSTRAP5={
-    'include_jquery':True, 
+BOOTSTRAP5 = {
+    'include_jquery': True, 
 }
-
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
