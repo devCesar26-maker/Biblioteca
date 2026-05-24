@@ -178,6 +178,7 @@ AWS_SECRET_ACCESS_KEY = os.getenv('SUPABASE_AWS_SECRET_ACCESS_KEY')
 AWS_S3_ENDPOINT_URL = os.getenv('SUPABASE_S3_ENDPOINT_URL')
 
 AWS_STORAGE_BUCKET_NAME = 'media'
+AWS_S3_CUSTOM_DOMAIN = f"anzgdobvjetfufoadsds.supabase.co/storage/v1/object/public/{AWS_STORAGE_BUCKET_NAME}"
 
 # Configurações essenciais para o Supabase Storage
 AWS_S3_FILE_OVERWRITE = False
