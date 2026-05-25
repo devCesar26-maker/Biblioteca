@@ -5,20 +5,29 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 :root{
     --radius: 12px;
+
     --background: #f4efe6;
     --foreground: #112216;
+
     --card: #fffdf8;
+
     --primary: #053e2f;
     --primary-foreground: #faf8f5;
+
     --secondary: #eae3d5;
+
     --muted-foreground: #526356;
+
     --accent: #bd963a;
     --accent-foreground: #112216;
+
     --border: #dad3c5;
 
     --shadow-sm:
@@ -29,67 +38,108 @@
         0 14px 30px rgba(17,34,22,.05),
         0 24px 48px rgba(17,34,22,.06);
 
-    --transition: all .35s cubic-bezier(.25,1,.33,1);
+    --transition:
+        all .35s cubic-bezier(.25,1,.33,1);
+}
+
+/* CONTAINER MAIS AMPLO */
+.container{
+    max-width: 1680px !important;
+    padding-inline: 2rem;
 }
 
 /* BASE */
 .catalog-wrapper{
-    background: linear-gradient(to bottom, #f5f0e8 0%, #efe7d8 100%);
+    background:
+        linear-gradient(
+            to bottom,
+            #f5f0e8 0%,
+            #efe7d8 100%
+        );
+
     min-height: 100vh;
+
     padding-bottom: 5rem;
+
     color: var(--foreground);
-    font-family: "IBM Plex Sans", system-ui, sans-serif;
+
+    font-family:
+        "IBM Plex Sans",
+        system-ui,
+        sans-serif;
+
     position: relative;
 }
 
 .catalog-wrapper::before{
     content: "";
+
     position: absolute;
     inset: 0;
+
     opacity: .08;
+
     pointer-events: none;
 
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* HEADER */
 .page-header{
     padding: 3rem 0 2rem 0;
-    border-bottom: 1px solid var(--border);
+
+    border-bottom:
+        1px solid var(--border);
 }
 
 .page-title{
-    font-family: "Libre Baskerville", serif;
+    font-family:
+        "Libre Baskerville",
+        serif;
+
     color: var(--primary);
-    font-size: 2rem;
+
+    font-size: 2.2rem;
+
     letter-spacing: -0.02em;
 }
 
 .badge-count{
-    background: rgba(5,62,47,.06);
+    background:
+        rgba(5,62,47,.06);
+
     color: var(--primary);
 
     font-size: .75rem;
     font-weight: 700;
+
     text-transform: uppercase;
     letter-spacing: .08em;
 
     padding: .45rem .9rem;
 
-    border: 1px solid rgba(5,62,47,.10);
+    border:
+        1px solid rgba(5,62,47,.10);
+
     border-radius: 4px;
 }
 
 /* BOTÕES */
 .btn-primary-custom{
     background: var(--primary);
-    border: 1px solid var(--primary);
-    color: var(--primary-foreground);
+
+    border:
+        1px solid var(--primary);
+
+    color:
+        var(--primary-foreground);
 
     font-size: .82rem;
     font-weight: 600;
 
     border-radius: 4px;
+
     padding: .65rem 1.3rem;
 
     transition: var(--transition);
@@ -97,39 +147,52 @@
 
 .btn-primary-custom:hover{
     background: transparent;
+
     color: var(--primary);
+
     border-color: var(--primary);
 }
 
 .btn-secondary-custom{
     background: transparent;
-    border: 1px solid rgba(5, 62, 47, 0.25);
+
+    border:
+        1px solid rgba(5, 62, 47, 0.25);
+
     color: var(--primary);
 
     font-size: .82rem;
     font-weight: 600;
 
     border-radius: 4px;
+
     padding: .65rem 1.3rem;
 
     transition: var(--transition);
 }
 
 .btn-secondary-custom:hover{
-    background: rgba(5, 62, 47, 0.05);
+    background:
+        rgba(5, 62, 47, 0.05);
+
     border-color: var(--primary);
 }
 
-/* TITULO */
+/* TITULO DA SEÇÃO */
 .section-title{
-    font-family: "Libre Baskerville", serif;
+    font-family:
+        "Libre Baskerville",
+        serif;
+
     font-size: 1.2rem;
+
     color: var(--primary);
 }
 
 /* CAROUSEL */
 .carousel-shell{
     position: relative;
+
     margin-top: 2rem;
 }
 
@@ -140,15 +203,19 @@
 
 .carousel-scroll{
     display: flex;
-    gap: 1.5rem;
+
+    gap: 2rem;
 
     overflow-x: auto;
+
     scroll-behavior: smooth;
+
     scroll-snap-type: x mandatory;
 
-    padding: 1.5rem 0.5rem;
+    padding: 1.5rem 0;
 
     scrollbar-width: none;
+
     -webkit-overflow-scrolling: touch;
 }
 
@@ -156,21 +223,29 @@
     display: none;
 }
 
-/* CARD AJUSTADO PARA CAPAS VERTICAIS */
+/* CARDS */
 .book-card{
-    flex: 0 0 320px;
-    max-width: 320px;
-    min-width: 320px;
+    flex: 0 0 calc((100% - 4rem) / 3);
+    max-width: calc((100% - 4rem) / 3);
 
     scroll-snap-align: start;
 
-    background: linear-gradient(180deg, #fffdfa 0%, #f7f0e4 100%);
-    border: 1px solid var(--border);
+    background:
+        linear-gradient(
+            180deg,
+            #fffdfa 0%,
+            #f7f0e4 100%
+        );
+
+    border:
+        1px solid var(--border);
 
     border-radius: var(--radius);
+
     overflow: hidden;
 
     box-shadow: var(--shadow-sm);
+
     transition: var(--transition);
 
     display: flex;
@@ -179,23 +254,31 @@
 
 .book-card:hover{
     transform: translateY(-6px);
+
     box-shadow: var(--shadow-md);
+
     border-color: #cbbba1;
 }
 
-/* BOTÕES DO CARROSSEL */
+/* SETAS */
 .carousel-btn{
     position: absolute;
+
     top: 50%;
+
     transform: translateY(-50%);
 
-    width: 46px;
-    height: 46px;
+    width: 50px;
+    height: 50px;
 
     border-radius: 50%;
-    border: 1px solid var(--border);
 
-    background: rgba(255, 253, 248, 0.9);
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(255,255,255,.88);
+
     backdrop-filter: blur(4px);
 
     color: var(--primary);
@@ -207,12 +290,15 @@
     justify-content: center;
 
     transition: var(--transition);
+
     box-shadow: var(--shadow-sm);
 }
 
 .carousel-btn:hover:not(:disabled){
     background: var(--primary);
+
     color: white;
+
     border-color: var(--primary);
 }
 
@@ -222,30 +308,38 @@
 }
 
 .carousel-btn-left{
-    left: -23px;
+    left: -25px;
 }
 
 .carousel-btn-right{
-    right: -23px;
+    right: -25px;
 }
 
 /* CAPA */
 .book-cover{
     width: 100%;
-    height: 520px;
 
-    background: var(--secondary);
+    height: 620px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #f4ede0,
+            #ece2cf
+        );
 
     overflow: hidden;
+
     position: relative;
 
-    border-bottom: 1px solid rgba(218, 211, 197, 0.4);
+    border-bottom:
+        1px solid rgba(218, 211, 197, 0.4);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding: 1rem;
+    padding: 1.25rem;
 }
 
 .book-cover img{
@@ -256,13 +350,17 @@
 
     transition: transform .5s ease;
 
-    max-width: 280px;
+    filter:
+        drop-shadow(
+            0 10px 24px rgba(0,0,0,.18)
+        );
 }
 
 .book-card:hover .book-cover img{
     transform: scale(1.03);
 }
 
+/* PLACEHOLDER */
 .book-placeholder{
     width: 100%;
     height: 100%;
@@ -272,6 +370,7 @@
     justify-content: center;
 
     color: var(--muted-foreground);
+
     font-size: 3rem;
 }
 
@@ -281,13 +380,18 @@
 
     display: flex;
     flex-direction: column;
+
     flex-grow: 1;
 }
 
 .book-link{
-    font-family: "Libre Baskerville", serif;
+    font-family:
+        "Libre Baskerville",
+        serif;
+
     font-size: 1.1rem;
     font-weight: 700;
+
     line-height: 1.4;
 
     color: var(--primary);
@@ -305,24 +409,31 @@
 
 .book-id{
     display: inline-flex;
+
     width: fit-content;
 
-    background: rgba(5, 62, 47, 0.05);
+    background:
+        rgba(5, 62, 47, 0.05);
+
     color: var(--primary);
 
     font-family: monospace;
+
     font-size: .72rem;
     font-weight: 600;
 
     padding: .3rem .6rem;
 
     border-radius: 4px;
+
     margin-bottom: 1rem;
 }
 
 .book-price{
     font-size: .85rem;
+
     color: var(--muted-foreground);
+
     font-weight: 500;
 
     margin-bottom: 1.25rem;
@@ -333,9 +444,11 @@
     margin-top: auto;
 
     background-color: transparent;
+
     color: var(--accent);
 
-    border: 1px solid rgba(189, 150, 58, 0.35) !important;
+    border:
+        1px solid rgba(189,150,58,.35) !important;
 
     border-radius: 4px;
 
@@ -352,78 +465,79 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     gap: .5rem;
 }
 
 .btn-loan:hover{
     background-color: var(--accent);
-    color: var(--accent-foreground) !important;
+
+    color:
+        var(--accent-foreground) !important;
+
     border-color: var(--accent) !important;
 
-    box-shadow: 0 4px 12px rgba(189, 150, 58, 0.15);
+    box-shadow:
+        0 4px 12px rgba(189,150,58,.15);
 }
 
 .btn-loan i{
-    transition: transform 0.3s var(--transition);
+    transition:
+        transform .3s var(--transition);
 }
 
 .btn-loan:hover i{
     transform: translateX(3px);
 }
 
-/* EMPTY STATE */
+/* EMPTY */
 .empty-state{
     background: var(--card);
 
-    border: 1px dashed var(--border);
+    border:
+        1px dashed var(--border);
+
     border-radius: var(--radius);
 
     padding: 4rem 2rem;
 
     text-align: center;
+
     margin-top: 2rem;
 }
 
 .empty-state i{
     font-size: 3rem;
+
     color: #c3b8a7;
 }
 
 /* RESPONSIVO */
-@media(max-width:992px){
+@media(max-width:1200px){
 
     .book-card{
-        flex: 0 0 280px;
-        max-width: 280px;
-        min-width: 280px;
+        flex: 0 0 calc((100% - 2rem) / 2);
+        max-width: calc((100% - 2rem) / 2);
     }
 
     .book-cover{
-        height: 460px;
-    }
-
-    .carousel-btn-left{
-        left: -15px;
-    }
-
-    .carousel-btn-right{
-        right: -15px;
+        height: 560px;
     }
 }
 
 @media(max-width:768px){
 
+    .container{
+        padding-inline: 1rem;
+    }
+
     .book-card{
-        flex: 0 0 85%;
-        max-width: 85%;
+        flex: 0 0 88%;
+        max-width: 88%;
     }
 
     .book-cover{
-        height: 420px;
-    }
-
-    .carousel-scroll{
-        padding-inline: 1rem;
+        height: 500px;
     }
 
     .carousel-btn{
@@ -434,15 +548,19 @@
         font-size: 1.7rem;
     }
 }
+
 </style>
 
 <div class="catalog-wrapper">
+
     <div class="container">
 
         <div class="page-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
 
             <div>
+
                 <div class="d-flex align-items-center gap-3 mb-2">
+
                     <h2 class="page-title mb-0">
                         Catálogo de Obras
                     </h2>
@@ -450,14 +568,17 @@
                     <span class="badge-count">
                         {{ livros|length }} volumes
                     </span>
+
                 </div>
 
                 <p class="text-muted small mb-0">
                     Explore o acervo oficial e gerencie a retirada das produções literárias.
                 </p>
+
             </div>
 
             {% if user.is_superuser %}
+
             <div class="d-flex gap-2">
 
                 <a href="{% url 'new_livro_autor' %}"
@@ -465,6 +586,7 @@
 
                     <i class="bi bi-link-45deg"></i>
                     Vincular Autor
+
                 </a>
 
                 <a href="{% url 'new_livro' %}"
@@ -472,8 +594,11 @@
 
                     <i class="bi bi-plus-lg"></i>
                     Inserir Obra
+
                 </a>
+
             </div>
+
             {% endif %}
         </div>
 
@@ -482,6 +607,7 @@
         <div class="carousel-shell">
 
             <div class="d-flex align-items-center justify-content-between mb-3">
+
                 <h4 class="section-title mb-0">
                     Obras Disponíveis
                 </h4>
@@ -489,34 +615,43 @@
                 <small class="text-muted small">
                     Disponíveis para solicitação
                 </small>
+
             </div>
 
             <div class="carousel-wrapper">
 
-                <button
-                    class="carousel-btn carousel-btn-left"
-                    onclick="scrollCarousel(-1)"
-                    type="button"
-                    id="btnLeft"
-                    disabled>
+                <button class="carousel-btn carousel-btn-left"
+                        onclick="scrollCarousel(-1)"
+                        type="button"
+                        id="btnLeft"
+                        disabled>
 
                     <i class="bi bi-chevron-left"></i>
+
                 </button>
 
-                <div class="carousel-scroll" id="bookCarousel">
+                <div class="carousel-scroll"
+                     id="bookCarousel">
 
                     {% for livro in livros %}
+
                     <div class="book-card">
 
                         <div class="book-cover">
 
                             {% if livro.capa %}
+
                                 <img src="{{ livro.capa.url }}"
                                      alt="Capa de {{ livro.nome }}">
+
                             {% else %}
+
                                 <div class="book-placeholder">
+
                                     <i class="bi bi-journal-bookmark"></i>
+
                                 </div>
+
                             {% endif %}
 
                         </div>
@@ -527,6 +662,7 @@
                                class="book-link">
 
                                 {{ livro.nome }}
+
                             </a>
 
                             <span class="book-id">
@@ -534,13 +670,20 @@
                             </span>
 
                             {% if livro.valor > 0 %}
+
                             <div class="book-price">
                                 Valor de referência: R$ {{ livro.valor }}
                             </div>
+
                             {% else %}
-                            <div class="book-price" style="opacity: 0.5;">
+
+                            <div class="book-price"
+                                 style="opacity: 0.5;">
+
                                 Consulta institucional
+
                             </div>
+
                             {% endif %}
 
                             <form action="{% url 'fazer_emprestimo' livro.id %}"
@@ -553,23 +696,28 @@
                                         class="btn-loan w-100">
 
                                     Solicitar Empréstimo
+
                                     <i class="bi bi-arrow-right"></i>
+
                                 </button>
+
                             </form>
 
                         </div>
+
                     </div>
+
                     {% endfor %}
 
                 </div>
 
-                <button
-                    class="carousel-btn carousel-btn-right"
-                    onclick="scrollCarousel(1)"
-                    type="button"
-                    id="btnRight">
+                <button class="carousel-btn carousel-btn-right"
+                        onclick="scrollCarousel(1)"
+                        type="button"
+                        id="btnRight">
 
                     <i class="bi bi-chevron-right"></i>
+
                 </button>
 
             </div>
@@ -582,41 +730,69 @@
             <i class="bi bi-journal-x d-block mb-3"></i>
 
             <h4 class="mb-2"
-                style="font-family: 'Libre Baskerville', serif; color: var(--primary);">
+                style="font-family:'Libre Baskerville', serif; color: var(--primary);">
 
                 Nenhum exemplar catalogado
+
             </h4>
 
             <p class="text-muted mb-0">
                 O acervo encontra-se sem registros no momento.
             </p>
+
         </div>
 
         {% endif %}
+
     </div>
 </div>
 
 <script>
-const carousel = document.getElementById('bookCarousel');
-const btnLeft = document.getElementById('btnLeft');
-const btnRight = document.getElementById('btnRight');
+
+const carousel =
+    document.getElementById('bookCarousel');
+
+const btnLeft =
+    document.getElementById('btnLeft');
+
+const btnRight =
+    document.getElementById('btnRight');
 
 function updateButtonVisibility(){
 
-    if(!carousel || !btnLeft || !btnRight) return;
+    if(!carousel || !btnLeft || !btnRight)
+        return;
 
     if(carousel.scrollLeft <= 5){
-        btnLeft.setAttribute('disabled', 'true');
+
+        btnLeft.setAttribute(
+            'disabled',
+            'true'
+        );
+
     } else {
-        btnLeft.removeAttribute('disabled');
+
+        btnLeft.removeAttribute(
+            'disabled'
+        );
     }
 
-    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    const maxScroll =
+        carousel.scrollWidth -
+        carousel.clientWidth;
 
     if(carousel.scrollLeft >= maxScroll - 5){
-        btnRight.setAttribute('disabled', 'true');
+
+        btnRight.setAttribute(
+            'disabled',
+            'true'
+        );
+
     } else {
-        btnRight.removeAttribute('disabled');
+
+        btnRight.removeAttribute(
+            'disabled'
+        );
     }
 }
 
@@ -640,11 +816,12 @@ if(carousel){
 
 function scrollCarousel(direction){
 
-    const card = carousel.querySelector('.book-card');
+    const card =
+        carousel.querySelector('.book-card');
 
     if(!card) return;
 
-    const gap = 24;
+    const gap = 32;
 
     const scrollAmount =
         (card.offsetWidth + gap) * direction;
@@ -654,6 +831,7 @@ function scrollCarousel(direction){
         behavior: 'smooth'
     });
 }
+
 </script>
 
 {% endblock content %}
