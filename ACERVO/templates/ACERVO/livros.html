@@ -9,7 +9,6 @@
 
 <style>
 :root{
-    /* Alinhado com o raio padrão da Index */
     --radius: 12px;
     --background: #f4efe6;
     --foreground: #112216;
@@ -21,8 +20,15 @@
     --accent: #bd963a;
     --accent-foreground: #112216;
     --border: #dad3c5;
-    --shadow-sm: 0 4px 10px rgba(17,34,22,.03), 0 10px 28px rgba(17,34,22,.04);
-    --shadow-md: 0 14px 30px rgba(17,34,22,.05), 0 24px 48px rgba(17,34,22,.06);
+
+    --shadow-sm:
+        0 4px 10px rgba(17,34,22,.03),
+        0 10px 28px rgba(17,34,22,.04);
+
+    --shadow-md:
+        0 14px 30px rgba(17,34,22,.05),
+        0 24px 48px rgba(17,34,22,.06);
+
     --transition: all .35s cubic-bezier(.25,1,.33,1);
 }
 
@@ -42,6 +48,7 @@
     inset: 0;
     opacity: .08;
     pointer-events: none;
+
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -61,24 +68,30 @@
 .badge-count{
     background: rgba(5,62,47,.06);
     color: var(--primary);
+
     font-size: .75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .08em;
+
     padding: .45rem .9rem;
+
     border: 1px solid rgba(5,62,47,.10);
-    border-radius: 4px; /* Casando com o padrão quadrado/acadêmico */
+    border-radius: 4px;
 }
 
-/* ADMIN BUTTONS */
+/* BOTÕES */
 .btn-primary-custom{
     background: var(--primary);
     border: 1px solid var(--primary);
     color: var(--primary-foreground);
+
     font-size: .82rem;
     font-weight: 600;
+
     border-radius: 4px;
     padding: .65rem 1.3rem;
+
     transition: var(--transition);
 }
 
@@ -92,10 +105,13 @@
     background: transparent;
     border: 1px solid rgba(5, 62, 47, 0.25);
     color: var(--primary);
+
     font-size: .82rem;
     font-weight: 600;
+
     border-radius: 4px;
     padding: .65rem 1.3rem;
+
     transition: var(--transition);
 }
 
@@ -104,14 +120,14 @@
     border-color: var(--primary);
 }
 
-/* SECTION */
+/* TITULO */
 .section-title{
     font-family: "Libre Baskerville", serif;
     font-size: 1.2rem;
     color: var(--primary);
 }
 
-/* CAROUSEL SHELL */
+/* CAROUSEL */
 .carousel-shell{
     position: relative;
     margin-top: 2rem;
@@ -125,10 +141,13 @@
 .carousel-scroll{
     display: flex;
     gap: 1.5rem;
+
     overflow-x: auto;
     scroll-behavior: smooth;
-    scroll-snap-type: x mandatory; 
+    scroll-snap-type: x mandatory;
+
     padding: 1.5rem 0.5rem;
+
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
 }
@@ -137,17 +156,23 @@
     display: none;
 }
 
-/* LIVROS POR TELA */
+/* CARD AJUSTADO PARA CAPAS VERTICAIS */
 .book-card{
-    flex: 0 0 calc((100% - 3rem) / 3);
-    max-width: calc((100% - 3rem) / 3);
+    flex: 0 0 320px;
+    max-width: 320px;
+    min-width: 320px;
+
     scroll-snap-align: start;
+
     background: linear-gradient(180deg, #fffdfa 0%, #f7f0e4 100%);
     border: 1px solid var(--border);
+
     border-radius: var(--radius);
     overflow: hidden;
+
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
+
     display: flex;
     flex-direction: column;
 }
@@ -158,22 +183,29 @@
     border-color: #cbbba1;
 }
 
-/* SETAS DO CARROSSEL REFINADAS */
+/* BOTÕES DO CARROSSEL */
 .carousel-btn{
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+
     width: 46px;
     height: 46px;
+
     border-radius: 50%;
     border: 1px solid var(--border);
+
     background: rgba(255, 253, 248, 0.9);
     backdrop-filter: blur(4px);
+
     color: var(--primary);
+
     z-index: 10;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     transition: var(--transition);
     box-shadow: var(--shadow-sm);
 }
@@ -184,34 +216,48 @@
     border-color: var(--primary);
 }
 
-.carousel-btn:disabled {
+.carousel-btn:disabled{
     opacity: 0;
     pointer-events: none;
 }
 
-.carousel-btn-left{ left: -23px; }
-.carousel-btn-right{ right: -23px; }
+.carousel-btn-left{
+    left: -23px;
+}
+
+.carousel-btn-right{
+    right: -23px;
+}
 
 /* CAPA */
 .book-cover{
     width: 100%;
-    height: 340px;
+    height: 520px;
+
     background: var(--secondary);
+
     overflow: hidden;
     position: relative;
+
     border-bottom: 1px solid rgba(218, 211, 197, 0.4);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1rem;
 }
 
-.book-cover img {
+.book-cover img{
     width: 100%;
     height: 100%;
-    /* Muda de cover para contain: preserva 100% da imagem na tela */
-    object-fit: contain;
-    /* Mantém uma cor de fundo suave caso a capa seja estreita */
-    background-color: var(--secondary); 
-    transition: transform .5s ease;
-}
 
+    object-fit: contain;
+
+    transition: transform .5s ease;
+
+    max-width: 280px;
+}
 
 .book-card:hover .book-cover img{
     transform: scale(1.03);
@@ -220,16 +266,19 @@
 .book-placeholder{
     width: 100%;
     height: 100%;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     color: var(--muted-foreground);
     font-size: 3rem;
 }
 
-/* CONTEÚDO CARD */
+/* CONTEÚDO */
 .book-content{
     padding: 1.5rem;
+
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -240,9 +289,13 @@
     font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.4;
+
     color: var(--primary);
+
     text-decoration: none;
+
     transition: var(--transition);
+
     margin-bottom: .6rem;
 }
 
@@ -253,12 +306,16 @@
 .book-id{
     display: inline-flex;
     width: fit-content;
+
     background: rgba(5, 62, 47, 0.05);
     color: var(--primary);
+
     font-family: monospace;
     font-size: .72rem;
     font-weight: 600;
+
     padding: .3rem .6rem;
+
     border-radius: 4px;
     margin-bottom: 1rem;
 }
@@ -267,50 +324,62 @@
     font-size: .85rem;
     color: var(--muted-foreground);
     font-weight: 500;
+
     margin-bottom: 1.25rem;
 }
 
-/* CHAVE DA REVISÃO: Botão de Empréstimo sutilizado (Padrão Outline Editorial da Index) */
-.btn-loan {
+/* BOTÃO */
+.btn-loan{
     margin-top: auto;
+
     background-color: transparent;
     color: var(--accent);
+
     border: 1px solid rgba(189, 150, 58, 0.35) !important;
+
     border-radius: 4px;
+
     padding: .75rem 1rem;
+
     font-size: .8rem;
     font-weight: 600;
+
     text-transform: uppercase;
     letter-spacing: .06em;
+
     transition: var(--transition);
+
     display: flex;
     align-items: center;
     justify-content: center;
     gap: .5rem;
 }
 
-/* Preenche com ouro sólido apenas ao passar o mouse */
-.btn-loan:hover {
+.btn-loan:hover{
     background-color: var(--accent);
     color: var(--accent-foreground) !important;
     border-color: var(--accent) !important;
+
     box-shadow: 0 4px 12px rgba(189, 150, 58, 0.15);
 }
 
-.btn-loan i {
+.btn-loan i{
     transition: transform 0.3s var(--transition);
 }
 
-.btn-loan:hover i {
+.btn-loan:hover i{
     transform: translateX(3px);
 }
 
-/* EMPTY STATE CLASSICO */
+/* EMPTY STATE */
 .empty-state{
     background: var(--card);
+
     border: 1px dashed var(--border);
     border-radius: var(--radius);
+
     padding: 4rem 2rem;
+
     text-align: center;
     margin-top: 2rem;
 }
@@ -322,28 +391,45 @@
 
 /* RESPONSIVO */
 @media(max-width:992px){
+
     .book-card{
-        flex: 0 0 calc((100% - 1.5rem) / 2);
-        max-width: calc((100% - 1.5rem) / 2);
+        flex: 0 0 280px;
+        max-width: 280px;
+        min-width: 280px;
     }
-    .carousel-btn-left{ left: -15px; }
-    .carousel-btn-right{ right: -15px; }
+
+    .book-cover{
+        height: 460px;
+    }
+
+    .carousel-btn-left{
+        left: -15px;
+    }
+
+    .carousel-btn-right{
+        right: -15px;
+    }
 }
 
 @media(max-width:768px){
+
     .book-card{
         flex: 0 0 85%;
         max-width: 85%;
     }
+
+    .book-cover{
+        height: 420px;
+    }
+
     .carousel-scroll{
         padding-inline: 1rem;
     }
+
     .carousel-btn{
         display: none;
     }
-    .book-cover{
-        height: 280px;
-    }
+
     .page-title{
         font-size: 1.7rem;
     }
@@ -352,86 +438,160 @@
 
 <div class="catalog-wrapper">
     <div class="container">
-        
+
         <div class="page-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+
             <div>
                 <div class="d-flex align-items-center gap-3 mb-2">
-                    <h2 class="page-title mb-0">Catálogo de Obras</h2>
-                    <span class="badge-count">{{ livros|length }} volumes</span>
+                    <h2 class="page-title mb-0">
+                        Catálogo de Obras
+                    </h2>
+
+                    <span class="badge-count">
+                        {{ livros|length }} volumes
+                    </span>
                 </div>
-                <p class="text-muted small mb-0">Explore o acervo oficial e gerencie a retirada das produções literárias.</p>
+
+                <p class="text-muted small mb-0">
+                    Explore o acervo oficial e gerencie a retirada das produções literárias.
+                </p>
             </div>
 
             {% if user.is_superuser %}
             <div class="d-flex gap-2">
-                <a href="{% url 'new_livro_autor' %}" class="btn btn-secondary-custom d-flex align-items-center gap-2">
-                    <i class="bi bi-link-45deg"></i> Vincular Autor
+
+                <a href="{% url 'new_livro_autor' %}"
+                   class="btn btn-secondary-custom d-flex align-items-center gap-2">
+
+                    <i class="bi bi-link-45deg"></i>
+                    Vincular Autor
                 </a>
-                <a href="{% url 'new_livro' %}" class="btn btn-primary-custom d-flex align-items-center gap-2">
-                    <i class="bi bi-plus-lg"></i> Inserir Obra
+
+                <a href="{% url 'new_livro' %}"
+                   class="btn btn-primary-custom d-flex align-items-center gap-2">
+
+                    <i class="bi bi-plus-lg"></i>
+                    Inserir Obra
                 </a>
             </div>
             {% endif %}
         </div>
 
         {% if livros %}
+
         <div class="carousel-shell">
+
             <div class="d-flex align-items-center justify-content-between mb-3">
-                <h4 class="section-title mb-0">Obras Disponíveis</h4>
-                <small class="text-muted small">Disponíveis para solicitação</small>
+                <h4 class="section-title mb-0">
+                    Obras Disponíveis
+                </h4>
+
+                <small class="text-muted small">
+                    Disponíveis para solicitação
+                </small>
             </div>
 
             <div class="carousel-wrapper">
-                <button class="carousel-btn carousel-btn-left" onclick="scrollCarousel(-1)" type="button" id="btnLeft" disabled>
+
+                <button
+                    class="carousel-btn carousel-btn-left"
+                    onclick="scrollCarousel(-1)"
+                    type="button"
+                    id="btnLeft"
+                    disabled>
+
                     <i class="bi bi-chevron-left"></i>
                 </button>
 
                 <div class="carousel-scroll" id="bookCarousel">
+
                     {% for livro in livros %}
                     <div class="book-card">
+
                         <div class="book-cover">
+
                             {% if livro.capa %}
-                                <img src="{{ livro.capa.url }}" alt="Capa de {{ livro.nome }}">
+                                <img src="{{ livro.capa.url }}"
+                                     alt="Capa de {{ livro.nome }}">
                             {% else %}
                                 <div class="book-placeholder">
                                     <i class="bi bi-journal-bookmark"></i>
                                 </div>
                             {% endif %}
+
                         </div>
 
                         <div class="book-content">
-                            <a href="{% url 'dados_livros' livro.id %}" class="book-link">{{ livro.nome }}</a>
-                            <span class="book-id">REG-{{ livro.id }}</span>
+
+                            <a href="{% url 'dados_livros' livro.id %}"
+                               class="book-link">
+
+                                {{ livro.nome }}
+                            </a>
+
+                            <span class="book-id">
+                                REG-{{ livro.id }}
+                            </span>
 
                             {% if livro.valor > 0 %}
-                            <div class="book-price">Valor de referência: R$ {{ livro.valor }}</div>
+                            <div class="book-price">
+                                Valor de referência: R$ {{ livro.valor }}
+                            </div>
                             {% else %}
-                            <div class="book-price" style="opacity: 0.5;">Consulta institucional</div>
+                            <div class="book-price" style="opacity: 0.5;">
+                                Consulta institucional
+                            </div>
                             {% endif %}
 
-                            <form action="{% url 'fazer_emprestimo' livro.id %}" method="POST" class="w-100 mt-auto">
+                            <form action="{% url 'fazer_emprestimo' livro.id %}"
+                                  method="POST"
+                                  class="w-100 mt-auto">
+
                                 {% csrf_token %}
-                                <button type="submit" class="btn-loan w-100">
+
+                                <button type="submit"
+                                        class="btn-loan w-100">
+
                                     Solicitar Empréstimo
                                     <i class="bi bi-arrow-right"></i>
                                 </button>
                             </form>
+
                         </div>
                     </div>
                     {% endfor %}
+
                 </div>
 
-                <button class="carousel-btn carousel-btn-right" onclick="scrollCarousel(1)" type="button" id="btnRight">
+                <button
+                    class="carousel-btn carousel-btn-right"
+                    onclick="scrollCarousel(1)"
+                    type="button"
+                    id="btnRight">
+
                     <i class="bi bi-chevron-right"></i>
                 </button>
+
             </div>
         </div>
+
         {% else %}
+
         <div class="empty-state">
+
             <i class="bi bi-journal-x d-block mb-3"></i>
-            <h4 class="mb-2" style="font-family: 'Libre Baskerville', serif; color: var(--primary);">Nenhum exemplar catalogado</h4>
-            <p class="text-muted mb-0">O acervo encontra-se sem registros no momento.</p>
+
+            <h4 class="mb-2"
+                style="font-family: 'Libre Baskerville', serif; color: var(--primary);">
+
+                Nenhum exemplar catalogado
+            </h4>
+
+            <p class="text-muted mb-0">
+                O acervo encontra-se sem registros no momento.
+            </p>
         </div>
+
         {% endif %}
     </div>
 </div>
@@ -441,35 +601,53 @@ const carousel = document.getElementById('bookCarousel');
 const btnLeft = document.getElementById('btnLeft');
 const btnRight = document.getElementById('btnRight');
 
-function updateButtonVisibility() {
-    if (!carousel || !btnLeft || !btnRight) return;
-    
-    if (carousel.scrollLeft <= 5) {
+function updateButtonVisibility(){
+
+    if(!carousel || !btnLeft || !btnRight) return;
+
+    if(carousel.scrollLeft <= 5){
         btnLeft.setAttribute('disabled', 'true');
     } else {
         btnLeft.removeAttribute('disabled');
     }
 
     const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-    if (carousel.scrollLeft >= maxScroll - 5) {
+
+    if(carousel.scrollLeft >= maxScroll - 5){
         btnRight.setAttribute('disabled', 'true');
     } else {
         btnRight.removeAttribute('disabled');
     }
 }
 
-if (carousel) {
-    carousel.addEventListener('scroll', updateButtonVisibility);
-    window.addEventListener('resize', updateButtonVisibility);
-    window.addEventListener('DOMContentLoaded', updateButtonVisibility);
+if(carousel){
+
+    carousel.addEventListener(
+        'scroll',
+        updateButtonVisibility
+    );
+
+    window.addEventListener(
+        'resize',
+        updateButtonVisibility
+    );
+
+    window.addEventListener(
+        'DOMContentLoaded',
+        updateButtonVisibility
+    );
 }
 
 function scrollCarousel(direction){
+
     const card = carousel.querySelector('.book-card');
+
     if(!card) return;
 
     const gap = 24;
-    const scrollAmount = (card.offsetWidth + gap) * direction;
+
+    const scrollAmount =
+        (card.offsetWidth + gap) * direction;
 
     carousel.scrollBy({
         left: scrollAmount,
