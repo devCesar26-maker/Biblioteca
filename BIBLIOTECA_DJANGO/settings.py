@@ -167,39 +167,28 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static & Media Files Cloud Storage Configuration
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Credenciais recebidas dinamicamente do painel da Railway
-AWS_ACCESS_KEY_ID = os.getenv('SUPABASE_AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('SUPABASE_AWS_SECRET_ACCESS_KEY')
-AWS_S3_ENDPOINT_URL = os.getenv('SUPABASE_S3_ENDPOINT_URL')
-
-AWS_STORAGE_BUCKET_NAME = 'media'
-AWS_S3_CUSTOM_DOMAIN = f"anzgdobvjetfufoadsds.supabase.co/storage/v1/object/public/{AWS_STORAGE_BUCKET_NAME}"
-
-# Configurações essenciais para o Supabase Storage
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False 
-
-# URL pública dinâmica vinda da Railway
-MEDIA_URL = os.getenv('SUPABASE_MEDIA_URL')
-
+# Media files (uploads de usuários)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Configuração unificada do Django 5.x para Armazenamento
 STORAGES = {
     "default": {
-        # CORRIGIDO: Agora os uploads do usuário vão 100% para o Supabase
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        # Agora os uploads vão direto para a pasta local "media"
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        # Mantém o WhiteNoise servindo os arquivos de estilo CSS/JS na Railway
+        # WhiteNoise continua servindo os arquivos estáticos na Railway
         "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
