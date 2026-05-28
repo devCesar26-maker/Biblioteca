@@ -1,6 +1,6 @@
 {% extends "ACERVO/base.html" %}
 {% load bootstrap5 %}
-
+{% load static %}
 {% block content %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -641,7 +641,7 @@
 
                             {% if livro.capa %}
 
-                                <img src="{{ livro.capa.url }}"
+                                <img src="{{ livro.capa.name }}"
                                      alt="Capa de {{ livro.nome }}">
 
                             {% else %}
