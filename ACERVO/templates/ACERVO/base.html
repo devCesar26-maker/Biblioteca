@@ -1,181 +1,616 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Biblioteca</title>
+
     {% load bootstrap5 %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    {% load static %}
+
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet">
+
     <style>
-        /* Paleta de cores idêntica à Index (Estilo Acadêmico/Editorial) */
+
         :root {
+
             --background: #f4efe6;
             --foreground: #112216;
+
             --primary: #053e2f;
+            --primary-foreground: #faf8f5;
+
             --accent: #bd963a;
+
             --border: #dad3c5;
+
+            --muted: #526356;
+
+            --card: #ffffff;
+
+            --transition:
+                all .35s cubic-bezier(0.25, 1, 0.33, 1);
+
+            --shadow-sm:
+                0 2px 4px rgba(17,34,22,.03),
+                0 10px 20px rgba(17,34,22,.04);
+
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: var(--background); /* Todo o site herda o tom marfim */
-            padding-top: 75px; 
-        }
-        
-        /* Menu Superior */
-        .navbar-custom {
-            background-color: var(--primary) !important; /* Verde-oliva profundo */
-            border-bottom: 1px solid rgba(189, 150, 58, 0.2);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .navbar-brand {
-            font-family: "Libre Baskerville", Georgia, serif;
-            font-size: 1.2rem;
-            letter-spacing: -0.01em;
-            color: #faf8f5 !important;
-        }
-
-        /* Crachá discreto para o Usuário Autenticado */
-        .nav-user-text {
-            color: #cbd5e1 !important;
-            font-size: 0.9rem;
-            font-weight: 500;
-            background-color: rgba(255, 255, 255, 0.07);
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-user-text i {
-            color: var(--accent) !important; /* Ícone dourado */
-        }
-
-        /* Área de conteúdo principal destravada (Fluida) */
-        main {
-            flex: 1;
-            width: 100%;
+        html {
             overflow-x: hidden;
         }
 
-        /* Configuração de botões do menu */
-        .navbar-nav .btn-sm {
-            padding: 0.45rem 1rem;
-            font-weight: 600;
-            border-radius: 4px;
-            font-family: system-ui, sans-serif;
-            font-size: 0.85rem;
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            background:
+                var(--background);
+
+            color:
+                var(--foreground);
+
+            font-family:
+                "IBM Plex Sans",
+                sans-serif;
+
+            overflow-x: hidden;
+
+            padding-top: 82px;
         }
 
-        /* Botão Entrar (Dourado) */
-        .btn-login-custom {
-            background-color: var(--accent);
-            border-color: var(--accent);
-            color: #112216 !important;
+        h1,h2,h3,h4,h5,h6 {
+
+            font-family:
+                "Libre Baskerville",
+                serif;
         }
 
-        .btn-login-custom:hover {
-            background-color: #a8832e;
-            border-color: #a8832e;
-            color: #112216 !important;
+        a {
+            text-decoration: none;
         }
 
-        /* Botão Registrar (Vazado Claro) */
-        .btn-register-custom {
-            color: #faf8f5 !important;
-            border-color: rgba(250, 248, 245, 0.3);
+        /* NAVBAR */
+
+        .navbar-custom {
+
+            background:
+                rgba(5,62,47,.92);
+
+            backdrop-filter:
+                blur(14px);
+
+            border-bottom:
+                1px solid rgba(189,150,58,.12);
+
+            padding:
+                .9rem 0;
+
+            transition:
+                var(--transition);
         }
 
-        .btn-register-custom:hover {
-            background-color: rgba(250, 248, 245, 0.08);
-            border-color: #faf8f5;
+        .navbar-container {
+
+            width: 100%;
+
+            max-width: 1450px;
+
+            margin: auto;
+
+            padding:
+                0 1.5rem;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
         }
 
-        /* Botão Sair (Vinho Escuro/Fosco integrado) */
-        .btn-logout-custom {
-            color: #fca5a5 !important;
-            border: 1px solid rgba(252, 165, 165, 0.3) !important;
-            background-color: transparent;
+        .navbar-brand-custom {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: .9rem;
+
+            color:
+                var(--primary-foreground);
+
+            font-size:
+                1.15rem;
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                -.02em;
         }
 
-        .btn-logout-custom:hover {
-            background-color: #7f1d1d !important;
-            border-color: #fca5a5 !important;
-            color: #ffffff !important;
+        .brand-icon {
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                rgba(189,150,58,.12);
+
+            color:
+                var(--accent);
+
+            font-size:
+                1.1rem;
         }
 
-        /* Rodapé integrado ao fundo marfim */
+        .navbar-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: .8rem;
+        }
+
+        .user-badge {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: .6rem;
+
+            padding:
+                .7rem 1rem;
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            color:
+                #dbe4dc;
+
+            font-size:
+                .88rem;
+
+            font-weight:
+                500;
+        }
+
+        .user-badge i {
+
+            color:
+                var(--accent);
+        }
+
+        .btn-custom {
+
+            height: 42px;
+
+            border-radius:
+                12px;
+
+            padding:
+                0 1.3rem;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: .55rem;
+
+            font-size:
+                .86rem;
+
+            font-weight:
+                600;
+
+            transition:
+                var(--transition);
+
+            border:
+                1px solid transparent;
+        }
+
+        .btn-login {
+
+            background:
+                var(--accent);
+
+            color:
+                #112216;
+        }
+
+        .btn-login:hover {
+
+            background:
+                #a8832e;
+
+            color:
+                #112216;
+        }
+
+        .btn-register {
+
+            border:
+                1px solid rgba(255,255,255,.15);
+
+            color:
+                white;
+
+            background:
+                transparent;
+        }
+
+        .btn-register:hover {
+
+            background:
+                rgba(255,255,255,.08);
+
+            color:
+                white;
+        }
+
+        .btn-logout {
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            background:
+                transparent;
+
+            color:
+                #f3d5d5;
+        }
+
+        .btn-logout:hover {
+
+            background:
+                rgba(127,29,29,.9);
+
+            color:
+                white;
+        }
+
+        /* ALERTS */
+
+        .alerts-wrapper {
+
+            width: 100%;
+
+            max-width: 1450px;
+
+            margin:
+                1.2rem auto 0;
+
+            padding:
+                0 1.5rem;
+
+            position: relative;
+
+            z-index: 1200;
+        }
+
+        .alert {
+
+            border: none;
+
+            border-radius:
+                16px;
+
+            box-shadow:
+                var(--shadow-sm);
+        }
+
+        /* MAIN */
+
+        main {
+
+            flex: 1;
+
+            width: 100%;
+
+            overflow-x: hidden;
+        }
+
+        /* FOOTER */
+
         footer {
-            background-color: #eae3d5;
-            border-top: 1px solid var(--border);
-            color: #526356;
-            font-size: 0.85rem;
+
+            margin-top: auto;
+
+            background:
+                #eae3d5;
+
+            border-top:
+                1px solid var(--border);
+
+            padding:
+                1.2rem;
+
+            text-align: center;
+
+            color:
+                var(--muted);
+
+            font-size:
+                .85rem;
         }
+
+        /* MOBILE */
+
+        .mobile-toggle {
+
+            width: 44px;
+            height: 44px;
+
+            border: none;
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(255,255,255,.08);
+
+            color:
+                white;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size:
+                1.1rem;
+        }
+
+        @media(max-width: 992px){
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .navbar-actions {
+
+                position: fixed;
+
+                top: 82px;
+                left: 0;
+
+                width: 100%;
+
+                background:
+                    rgba(5,62,47,.98);
+
+                border-top:
+                    1px solid rgba(255,255,255,.06);
+
+                padding:
+                    1.2rem;
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                transform:
+                    translateY(-120%);
+
+                opacity: 0;
+
+                visibility: hidden;
+
+                transition:
+                    var(--transition);
+            }
+
+            .navbar-actions.active {
+
+                transform:
+                    translateY(0);
+
+                opacity: 1;
+
+                visibility: visible;
+            }
+
+            .btn-custom,
+            .user-badge {
+
+                width: 100%;
+
+                justify-content: center;
+            }
+
+            .navbar-brand-custom span {
+
+                font-size:
+                    1rem;
+            }
+
+        }
+
     </style>
+
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top shadow-sm py-2.5">
-        <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'index' %}">
-                <i class="bi bi-journal-bookmark-fill" style="color: var(--accent);"></i>
-                <span>Sistema de Biblioteca</span>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar-custom fixed-top">
+
+        <div class="navbar-container">
+
+            <a href="{% url 'index' %}"
+               class="navbar-brand-custom">
+
+                <div class="brand-icon">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                </div>
+
+                <span>
+                    Sistema de Biblioteca
+                </span>
+
             </a>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button class="mobile-toggle"
+                    id="mobileToggle">
+
+                <i class="bi bi-list"></i>
+
             </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav align-items-lg-center gap-2 mt-3 mt-lg-0">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item my-1 my-lg-0">
-                            <span class="nav-user-text d-inline-flex align-items-center gap-1.5">
-                                <i class="bi bi-person-circle"></i> {{ user.aluno.nome }}
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-logout-custom btn-sm w-100" href="{% url 'account_logout' %}">
-                                <i class="bi bi-box-arrow-right"></i> Sair
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="btn btn-register-custom btn-sm w-100" href="{% url 'account_signup' %}">
-                                Registrar
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-login-custom btn-sm w-100" href="{% url 'account_login' %}">
-                                Entrar
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
+            <div class="navbar-actions"
+                 id="navbarActions">
+
+                {% if user.is_authenticated %}
+
+                    <div class="user-badge">
+
+                        <i class="bi bi-person-circle"></i>
+
+                        <span>
+                            {{ user.aluno.nome }}
+                        </span>
+
+                    </div>
+
+                    <a href="{% url 'account_logout' %}"
+                       class="btn-custom btn-logout">
+
+                        <i class="bi bi-box-arrow-right"></i>
+
+                        <span>Sair</span>
+
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'account_signup' %}"
+                       class="btn-custom btn-register">
+
+                        Registrar
+
+                    </a>
+
+                    <a href="{% url 'account_login' %}"
+                       class="btn-custom btn-login">
+
+                        Entrar
+
+                    </a>
+
+                {% endif %}
+
             </div>
+
         </div>
+
     </nav>
 
+    <!-- ALERTS -->
+
     {% if messages %}
-    <div class="container" style="margin-top: 1rem; position: relative; z-index: 1050;">
+
+    <div class="alerts-wrapper">
+
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
         {% endfor %}
+
     </div>
+
     {% endif %}
 
+    <!-- CONTENT -->
+
     <main>
-        {% block content %}{% endblock content %}
+
+        {% block content %}
+        {% endblock content %}
+
     </main>
 
-    <footer class="text-center py-3 mt-auto">
-        <p class="mb-0">© 2026 Sistema de Biblioteca • Todos os direitos reservados.</p>
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p class="mb-0">
+            © 2026 Sistema de Biblioteca • Todos os direitos reservados.
+        </p>
+
     </footer>
+
+    <script>
+
+        const toggle =
+            document.getElementById("mobileToggle");
+
+        const navbar =
+            document.getElementById("navbarActions");
+
+        toggle.addEventListener("click", () => {
+
+            navbar.classList.toggle("active");
+
+        });
+
+    </script>
+
 </body>
 </html>

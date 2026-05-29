@@ -1,10 +1,16 @@
 from django.contrib import admin
-from .models import Aluno, Autor, Categoria, Editora, Emprestimo, Livro, LivroAutor
+from django.apps import apps
+from unfold.admin import ModelAdmin 
 
-admin.site.register(Aluno)
-admin.site.register(Autor)
-admin.site.register(Categoria)
-admin.site.register(Editora)
-admin.site.register(Emprestimo)
-admin.site.register(Livro)
-admin.site.register(LivroAutor)
+# 1. Sua classe base do Unfold para modernizar o visual
+class BaseAdmin(ModelAdmin):
+    pass
+
+# 2. Pega as configurações apenas do seu app ACERVO
+app_config = apps.get_app_config('ACERVO')
+
+# 3. Registra de forma automatizada apenas os SEUS modelos
+for model in app_config.get_models():
+    # Isso evita registrar tabelas intermediárias automáticas (como as de ManyToMany), se houverem
+    if not model._meta.auto_created:
+        admin.site.register(model, BaseAdmin)

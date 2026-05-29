@@ -2,695 +2,829 @@
 {% load bootstrap5 %}
 
 {% block content %}
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
   :root {
-    --radius: 12px;
+
     --background: #f4efe6;
     --foreground: #112216;
+
     --card: #ffffff;
+
     --primary: #053e2f;
     --primary-foreground: #faf8f5;
+
     --secondary: #eae3d5;
+
     --muted-foreground: #526356;
+
     --accent: #bd963a;
     --accent-foreground: #112216;
+
     --border: #dad3c5;
-    
-    --shadow-sm: 0 2px 4px rgba(17, 34, 22, 0.02), 0 4px 12px rgba(17, 34, 22, 0.03);
-    --shadow-md: 0 8px 16px rgba(17, 34, 22, 0.04), 0 16px 32px rgba(17, 34, 22, 0.04);
-    --shadow-hero: 0 20px 40px rgba(5, 62, 47, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
-    
-    --easing: cubic-bezier(0.25, 1, 0.33, 1);
-    --transition: all 0.4s var(--easing);
+
+    --shadow-sm:
+      0 2px 4px rgba(17, 34, 22, 0.02),
+      0 4px 12px rgba(17, 34, 22, 0.03);
+
+    --shadow-md:
+      0 8px 16px rgba(17, 34, 22, 0.04),
+      0 16px 32px rgba(17, 34, 22, 0.04);
+
+    --transition:
+      all .35s cubic-bezier(0.25, 1, 0.33, 1);
+
   }
 
-  /* Força o container a esticar de ponta a ponta ignorando travas do base.html */
-  .dashboard-container-fluid {
-    position: relative;
-    color: var(--foreground);
-    font-family: "IBM Plex Sans", system-ui, sans-serif;
-    line-height: 1.6;
-    min-height: 100vh;
-    padding-bottom: 5rem;
+  body {
+    background: var(--background);
+  }
+
+  h1,h2,h3,h4 {
+    font-family: "Libre Baskerville", serif;
+  }
+
+  .dashboard-wrapper {
+
     width: 100vw;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    background-color: var(--background);
-  }
-  
-  /* Micro-textura analógica de papel */
-  .dashboard-container-fluid::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.15;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3ctfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3c/svg%3e");
-    z-index: 0;
-  }
 
-  .dashboard-container-fluid > .container {
-    position: relative;
-    z-index: 1;
-  }
+    margin-left: calc(-50vw + 50%);
 
-  .dashboard-container-fluid h1, 
-  .dashboard-container-fluid h2, 
-  .dashboard-container-fluid h3, 
-  .dashboard-container-fluid h4, 
-  .dashboard-container-fluid .font-serif {
-    font-family: "Libre Baskerville", Georgia, serif;
-    letter-spacing: -0.02em;
-  }
+    min-height: 100vh;
 
-  .dashboard-container-fluid a {
-    text-decoration: none;
-    color: inherit;
-  }
+    background: var(--background);
 
-  /* ========== Hero Responsivo ========== */
-  .hero {
-    position: relative;
     overflow: hidden;
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border: 1px solid rgba(255,255,255,0.03);
-    padding: 3rem 1.5rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-hero);
+
+    position: relative;
   }
 
-  @media (min-width: 768px) {
-    .hero {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
-    }
-  }
+  .dashboard-wrapper::before {
 
-  .hero::before {
     content: "";
+
     position: absolute;
+
     inset: 0;
-    opacity: 0.12;
-    background-image: radial-gradient(circle at 1px 1px, #f4efe6 1px, transparent 0);
-    background-size: 28px 28px;
+
+    opacity: .10;
+
     pointer-events: none;
+
+    background-image:
+      radial-gradient(
+        circle at 1px 1px,
+        rgba(5,62,47,.10) 1px,
+        transparent 0
+      );
+
+    background-size: 24px 24px;
   }
 
-  .hero-inner {
+  .dashboard-wrapper * {
     position: relative;
-    max-width: 700px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .hero-label {
-    display: inline-block;
-    border-top: 1px solid rgba(189, 150, 58, 0.4);
-    border-bottom: 1px solid rgba(189, 150, 58, 0.4);
-    padding: 0.35rem 1.25rem;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.35em;
-    color: var(--accent);
-    font-weight: 500;
-  }
-
-  .hero h2 {
-    margin-top: 1.5rem;
-    font-size: 2rem;
-    line-height: 1.2;
-    font-weight: 400;
-  }
-
-  @media (min-width: 768px) {
-    .hero h2 {
-      font-size: 3.25rem;
-      line-height: 1.15;
-    }
-  }
-
-  .hero h2 em {
-    color: var(--accent);
-    font-style: italic;
-    font-weight: 400;
-  }
-
-  .hero p {
-    margin-top: 1.25rem;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: rgba(250, 248, 245, 0.8);
-  }
-
-  @media (min-width: 768px) {
-    .hero p {
-      font-size: 1.05rem;
-      margin-top: 1.5rem;
-    }
-  }
-
-  /* ========== Barra de Busca Otimizada para Mobile ========== */
-  .search-box {
-    position: relative;
-    margin-top: 2rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    transition: var(--transition);
-  }
-
-  @media (min-width: 768px) {
-    .search-box {
-      margin-top: 3rem;
-    }
-  }
-
-  .search-box form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  @media (min-width: 576px) {
-    .search-box form {
-      flex-direction: row;
-      gap: 0;
-      position: relative;
-    }
-  }
-
-  .search-box svg {
-    position: absolute;
-    left: 1.25rem;
-    top: 1.3rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    color: var(--muted-foreground);
-    pointer-events: none;
-    transition: var(--transition);
     z-index: 2;
   }
 
-  @media (min-width: 576px) {
-    .search-box svg {
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
+  /* HERO */
 
-  .search-input {
+  .hero {
+
+    position: relative;
+
     width: 100%;
-    height: 3.5rem;
-    padding-left: 3.25rem;
-    padding-right: 1.25rem;
-    font-size: 1rem;
-    color: var(--foreground);
-    background-color: var(--card);
-    border: 1px solid transparent;
-    border-radius: 6px;
-    box-shadow: 0 10px 25px -5px rgba(5, 62, 47, 0.15);
-    outline: none;
-    transition: var(--transition);
-  }
 
-  @media (min-width: 576px) {
-    .search-input {
-      height: 4.25rem;
-      padding-left: 3.75rem;
-      padding-right: 9rem;
-      box-shadow: 0 20px 40px -15px rgba(5, 62, 47, 0.25);
-    }
-  }
+    min-height: 720px;
 
-  .search-input::placeholder {
-    color: #8fa093;
-  }
+    overflow: hidden;
 
-  .search-box:focus-within .search-input {
-    border-color: var(--accent);
-  }
-
-  @media (min-width: 576px) {
-    .search-box:focus-within .search-input {
-      box-shadow: 0 25px 50px -12px rgba(5, 62, 47, 0.35);
-      transform: scale(1.01);
-    }
-  }
-
-  .search-btn {
-    width: 100%;
-    height: 3.25rem;
-    background-color: var(--accent);
-    color: var(--accent-foreground);
-    border: none;
-    border-radius: 6px;
-    font-family: "IBM Plex Sans", system-ui, sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-  }
-
-  @media (min-width: 576px) {
-    .search-btn {
-      position: absolute;
-      right: 0.625rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: auto;
-      height: 3rem;
-      padding: 0 1.75rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-  }
-
-  .search-btn:hover {
-    background-color: #a8832e;
-  }
-
-  /* ========== Seções Dinâmicas ========== */
-  .main-content {
-    padding-top: 3rem;
-  }
-
-  @media (min-width: 768px) {
-    .main-content {
-      padding-top: 5rem;
-    }
-  }
-
-  .section-header {
-    margin-bottom: 1.75rem;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1rem;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 2rem;
+
+    background-image:
+      url("/static/background/biblioteca.jpg");
+
+    background-size: cover;
+    background-position: center;
   }
 
-  .section-label {
-    font-size: 0.65rem;
+  .hero-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(5,62,47,.48),
+        rgba(5,62,47,.74)
+      );
+  }
+
+  .hero-content {
+
+    max-width: 920px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+  }
+
+  .hero-subtitle {
+
+    font-size: .75rem;
+
     text-transform: uppercase;
-    letter-spacing: 0.25em;
-    color: var(--muted-foreground);
+
+    letter-spacing: .30em;
+
+    color: var(--accent);
+
+    margin-bottom: 1rem;
+
     font-weight: 600;
   }
 
-  .section-title {
-    margin-top: 0.25rem;
-    font-size: 1.35rem;
-    color: var(--primary);
+  .hero h1 {
+
+    color: white;
+
+    font-size: 2.7rem;
+
+    line-height: 1.08;
+
+    margin-bottom: 1.5rem;
   }
 
-  @media (min-width: 768px) {
-    .section-title {
-      font-size: 1.65rem;
+  @media(min-width: 992px){
+
+    .hero h1 {
+      font-size: 5.4rem;
     }
+
   }
 
-  /* ========== Grid Flexível ========== */
-  .category-grid {
+  .hero h1 em {
+
+    color: var(--accent);
+
+    font-style: italic;
+  }
+
+  .hero p {
+
+    color: rgba(255,255,255,.84);
+
+    max-width: 720px;
+
+    font-size: 1.05rem;
+
+    line-height: 1.7;
+
+    margin-bottom: 2.5rem;
+  }
+
+  /* SEARCH */
+
+  .search-area {
+
+    position: relative;
+
+    width: 100%;
+
+    max-width: 760px;
+  }
+
+  .search-icon {
+
+    position: absolute;
+
+    left: 28px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 22px;
+    height: 22px;
+
+    color: #6e8174;
+
+    z-index: 5;
+  }
+
+  .search-area input {
+
+    width: 100%;
+
+    height: 78px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    padding: 0 210px 0 74px;
+
+    outline: none;
+
+    font-size: 1rem;
+
+    box-shadow:
+      0 25px 50px rgba(0,0,0,.18);
+  }
+
+  .search-area button {
+
+    position: absolute;
+
+    top: 9px;
+    right: 9px;
+
+    height: 60px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 0 2rem;
+
+    background: var(--accent);
+
+    color: var(--foreground);
+
+    font-weight: 600;
+
+    transition: var(--transition);
+  }
+
+  .search-area button:hover {
+
+    background: #a8832e;
+  }
+
+  /* CONTENT */
+
+  .content-grid {
+
+    width: 100%;
+
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+
+    gap: 2rem;
+
+    padding:
+      3rem
+      2rem
+      5rem;
+  }
+
+  @media(min-width: 1200px){
+
+    .content-grid {
+
+      grid-template-columns:
+        320px
+        1fr;
+
+      align-items: start;
+    }
+
+  }
+
+  /* SIDEBAR */
+
+  .sidebar {
+
+    background: white;
+
+    border-radius: 24px;
+
+    border: 1px solid var(--border);
+
+    padding: 2rem;
+
+    box-shadow: var(--shadow-sm);
+
+    position: sticky;
+
+    top: 2rem;
+  }
+
+  .sidebar-title {
+
+    color: var(--primary);
+
+    font-size: 1.5rem;
+
+    margin-bottom: 1.8rem;
+  }
+
+  .sidebar-links {
+
+    display: flex;
+
+    flex-direction: column;
+
     gap: 1rem;
   }
 
-  @media (min-width: 576px) {
-    .category-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+  .sidebar-link {
 
-  @media (min-width: 992px) {
-    .category-grid { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .category-card {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1.5rem;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+
+    align-items: center;
+
+    gap: 1rem;
+
+    padding: 1rem;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    color: var(--foreground);
+
     transition: var(--transition);
-    height: 100%;
+
+    border: 1px solid transparent;
   }
 
-  @media (min-width: 768px) {
-    .category-card {
-      padding: 2rem;
-    }
+  .sidebar-link:hover {
+
+    background:
+      rgba(5,62,47,.03);
+
+    border-color:
+      rgba(5,62,47,.08);
+
+    transform:
+      translateX(4px);
   }
 
-  .category-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-  }
+  .sidebar-icon {
 
-  .category-icon {
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 46px;
+    height: 46px;
+
+    border-radius: 12px;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
-    background-color: rgba(5, 62, 47, 0.04);
-    color: var(--primary);
-    border-radius: 6px;
-    transition: var(--transition);
+
+    background:
+      rgba(5,62,47,.05);
+
+    font-size: 1.1rem;
   }
 
-  .category-card:hover .category-icon {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
+  .sidebar-link strong {
+
+    display: block;
+
+    font-size: .95rem;
   }
 
-  .category-icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
+  .sidebar-link span {
 
-  .category-card h4 {
-    margin-top: 1.25rem;
-    font-size: 1.15rem;
-    color: var(--primary);
-  }
+    font-size: .78rem;
 
-  .category-card p {
-    margin-top: 0.35rem;
-    font-size: 0.85rem;
     color: var(--muted-foreground);
   }
 
-  /* ========== Blocos de Informação de Gestão ========== */
-  .info-grid {
-    margin-top: 3rem;
+  /* PANELS */
+
+  .main-panels {
+
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: 1fr;
+
+    gap: 2rem;
   }
 
-  @media (min-width: 992px) {
-    .info-grid { 
-      margin-top: 5rem;
-      grid-template-columns: 1fr 1fr; 
-      gap: 2rem;
-    }
-  }
+  .panel {
 
-  .info-card {
-    background-color: var(--card);
+    background: white;
+
+    border-radius: 24px;
+
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
+
+    padding: 2.2rem;
+
     box-shadow: var(--shadow-sm);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: var(--transition);
   }
 
-  @media (min-width: 768px) {
-    .info-card {
-      padding: 2.5rem;
-    }
-  }
-  
-  .info-card:hover {
-    box-shadow: var(--shadow-md);
-    border-color: rgba(189, 150, 58, 0.3);
-  }
+  .panel-label {
 
-  .info-card-icon {
-    width: 2.75rem;
-    height: 2.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border-radius: 6px;
-  }
+    font-size: .72rem;
 
-  .info-card h3 {
-    margin-top: 1.25rem;
-    font-size: 1.35rem;
-    color: var(--primary);
-  }
-
-  @media (min-width: 768px) {
-    .info-card h3 {
-      margin-top: 1.75rem;
-      font-size: 1.6rem;
-    }
-  }
-
-  .info-card p {
-    margin-top: 0.75rem;
-    font-size: 0.9rem;
-    color: var(--muted-foreground);
-    line-height: 1.5;
-  }
-
-  /* CHAVE DA REVISÃO: Botões sutilizados com design Outline/Fantasma Editorial */
-  .info-btn {
-    margin-top: 1.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    background-color: transparent; /* Remove bloco de cor sólida padrão */
-    color: var(--primary);
-    border: 1px solid rgba(5, 62, 47, 0.25); /* Borda suave */
-    border-radius: 4px;
-    font-family: "IBM Plex Sans", system-ui, sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    width: 100%;
-  }
-
-  @media (min-width: 576px) {
-    .info-btn {
-      width: auto;
-      margin-top: 2.5rem;
-      padding: 0.85rem 1.75rem;
-    }
-  }
-
-  /* Preenche suavemente com a cor sólida no hover */
-  .info-btn:hover {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(5, 62, 47, 0.1);
-  }
-
-  .info-btn svg {
-    width: 0.9rem;
-    height: 0.9rem;
-    transition: transform 0.3s var(--easing);
-  }
-
-  /* Micro-interação: A setinha salta para frente no hover */
-  .info-btn:hover svg {
-    transform: translateX(3px);
-  }
-
-  /* Painel de Estatísticas Otimizado */
-  .stats-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .stats-header svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    color: var(--accent);
-  }
-
-  .stats-grid {
-    margin-top: 1.5rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background-color: var(--border);
-  }
-
-  @media (min-width: 400px) {
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .stat-item {
-    background-color: var(--card);
-    padding: 1.25rem;
-    transition: var(--transition);
-  }
-
-  .stat-value {
-    font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 1.35rem;
-    color: var(--primary);
-    font-weight: 700;
-  }
-
-  @media (min-width: 768px) {
-    .stat-value {
-      font-size: 1.75rem;
-    }
-  }
-
-  .stat-label {
-    margin-top: 0.25rem;
-    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+
+    letter-spacing: .25em;
+
     color: var(--muted-foreground);
-    font-weight: 500;
+
+    margin-bottom: .7rem;
   }
+
+  .panel-title {
+
+    font-size: 1.9rem;
+
+    color: var(--primary);
+
+    margin-bottom: 2rem;
+  }
+
+  .mini-grid {
+
+    display: grid;
+
+    gap: 1rem;
+
+    grid-template-columns:
+      repeat(auto-fit,minmax(220px,1fr));
+  }
+
+  .mini-card {
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 1.5rem;
+
+    transition: var(--transition);
+  }
+
+  .mini-card:hover {
+
+    transform:
+      translateY(-5px);
+
+    box-shadow: var(--shadow-md);
+  }
+
+  .mini-card h4 {
+
+    color: var(--primary);
+
+    margin-bottom: .8rem;
+
+    font-size: 1.15rem;
+  }
+
+  .mini-card p {
+
+    color: var(--muted-foreground);
+
+    font-size: .92rem;
+
+    line-height: 1.6;
+  }
+
+  /* BUTTON */
+
+  .outline-btn {
+
+    margin-top: 2rem;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+      .95rem
+      1.6rem;
+
+    border-radius: 12px;
+
+    border:
+      1px solid rgba(5,62,47,.15);
+
+    text-decoration: none;
+
+    color: var(--primary);
+
+    font-weight: 600;
+
+    transition: var(--transition);
+  }
+
+  .outline-btn:hover {
+
+    background: var(--primary);
+
+    color: white;
+  }
+
+  /* MOBILE */
+
+  @media(max-width: 768px){
+
+    .hero {
+
+      min-height: 620px;
+
+      padding: 1.5rem;
+    }
+
+    .hero h1 {
+
+      font-size: 2.2rem;
+    }
+
+    .search-area input {
+
+      height: 70px;
+
+      padding:
+        0
+        1.2rem
+        0
+        65px;
+    }
+
+    .search-area button {
+
+      position: relative;
+
+      width: 100%;
+
+      margin-top: 1rem;
+
+      right: 0;
+      top: 0;
+
+      height: 56px;
+    }
+
+    .content-grid {
+
+      padding:
+        2rem
+        1rem
+        4rem;
+    }
+
+    .sidebar {
+
+      position: relative;
+
+      top: 0;
+    }
+
+  }
+
 </style>
 
-<div class="dashboard-container-fluid">
-  <div class="container pt-3 pt-md-5 px-3 px-sm-0">
-    
-    <section class="hero">
-      <div class="container-fluid p-0">
-        <div class="hero-inner">
-          <span class="hero-label">Consulta ao Acervo</span>
-          <h2>O conhecimento começa <br><em>por uma boa busca.</em></h2>
-          <p>Pesquise livros, autores, categorias e editoras em todo o acervo institucional.</p>
-          
-          <div class="search-box">
-            <form method="get" action="{% url 'search' %}">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              <input type="search" name="q" class="search-input" placeholder="Livro, autor, categoria...">
-              <button type="submit" class="search-btn">Pesquisar</button>
-            </form>
-          </div>
-        </div>
+<div class="dashboard-wrapper">
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+
+      <div class="hero-subtitle">
+        Biblioteca Institucional
       </div>
-    </section>
 
-    <main class="main-content">
+      <h1>
+        Explore o acervo <br>
+        com uma experiência <em>mais organizada.</em>
+      </h1>
 
-      <section>
-        <div class="section-header">
+      <p>
+        Pesquise livros, autores, editoras e categorias através de uma navegação moderna, rápida e intuitiva.
+      </p>
+
+      <form method="get"
+            action="{% url 'search' %}"
+            class="search-area">
+
+        <svg class="search-icon"
+             xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+
+          <circle cx="11" cy="11" r="8"></circle>
+
+          <path d="m21 21-4.3-4.3"></path>
+
+        </svg>
+
+        <input type="search"
+               name="q"
+               placeholder="Pesquise livros, autores ou categorias...">
+
+        <button type="submit">
+          Pesquisar
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+  <!-- CONTENT -->
+
+  <section class="content-grid">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <h3 class="sidebar-title">
+        Navegação
+      </h3>
+
+      <div class="sidebar-links">
+
+        <a href="{% url 'livros' %}" class="sidebar-link">
+
+          <div class="sidebar-icon">📚</div>
+
           <div>
-            <p class="section-label">Navegação</p>
-            <h3 class="section-title">Explore o acervo</h3>
+            <strong>Livros</strong>
+            <span>Acervo completo</span>
           </div>
-          <span class="section-count d-none d-sm-block">4 áreas de consulta</span>
+
+        </a>
+
+        <a href="{% url 'autores' %}" class="sidebar-link">
+
+          <div class="sidebar-icon">✍️</div>
+
+          <div>
+            <strong>Autores</strong>
+            <span>Índice biográfico</span>
+          </div>
+
+        </a>
+
+        <a href="{% url 'categorias' %}" class="sidebar-link">
+
+          <div class="sidebar-icon">🏷️</div>
+
+          <div>
+            <strong>Categorias</strong>
+            <span>Classificação temática</span>
+          </div>
+
+        </a>
+
+        <a href="{% url 'editoras' %}" class="sidebar-link">
+
+          <div class="sidebar-icon">🏢</div>
+
+          <div>
+            <strong>Editoras</strong>
+            <span>Selos editoriais</span>
+          </div>
+
+        </a>
+
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <div class="main-panels">
+
+      <section class="panel">
+
+        <div class="panel-label">
+          Área do usuário
         </div>
 
-        <div class="category-grid">
-          <a href="{% url 'livros' %}" class="category-card">
-            <div>
-              <div class="category-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
-              </div>
-              <h4>Livros</h4>
-              <p>Acervo completo de obras</p>
-            </div>
-          </a>
+        <h3 class="panel-title">
+          Gestão de Empréstimos
+        </h3>
 
-          <a href="{% url 'autores' %}" class="category-card">
-            <div>
-              <div class="category-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <h4>Autores</h4>
-              <p>Índice biográfico</p>
-            </div>
-          </a>
+        <div class="mini-grid">
 
-          <a href="{% url 'categorias' %}" class="category-card">
-            <div>
-              <div class="category-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
-              </div>
-              <h4>Categorias</h4>
-              <p>Classificação temática</p>
-            </div>
-          </a>
+          <div class="mini-card">
 
-          <a href="{% url 'editoras' %}" class="category-card">
-            <div>
-              <div class="category-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M12 6a4 4 0 0 1 4 4v7a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a4 4 0 0 1 4-4z"/><path d="M9 22v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
-              </div>
-              <h4>Editoras</h4>
-              <p>Selos e publicadoras</p>
-            </div>
-          </a>
+            <h4>Histórico</h4>
+
+            <p>
+              Consulte todos os livros retirados anteriormente.
+            </p>
+
+          </div>
+
+          <div class="mini-card">
+
+            <h4>Renovações</h4>
+
+            <p>
+              Gerencie prazos e acompanhe devoluções pendentes.
+            </p>
+
+          </div>
+
+          <div class="mini-card">
+
+            <h4>Controle</h4>
+
+            <p>
+              Acompanhe movimentações do seu perfil acadêmico.
+            </p>
+
+          </div>
+
         </div>
+
+        <a href="{% url 'meus_emprestimos' %}"
+           class="outline-btn">
+
+          Acessar Empréstimos
+
+        </a>
+
       </section>
 
-      <section class="info-grid">
-        <div class="info-card">
-          <div>
-            <div class="info-card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-            </div>
-            <h3>Meus Empréstimos</h3>
-            <p>Acompanhe todos os livros que você já retirou, datas de devolução, renovações disponíveis e realize a gestão das suas leituras.</p>
-          </div>
-          <a href="{% url 'meus_emprestimos' %}" class="info-btn">
-            Visualizar Histórico
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
+      <section class="panel">
+
+        <div class="panel-label">
+          Dashboard
         </div>
 
-        <div class="info-card">
-          <div>
-            <div class="stats-header">
-              <div>
-                <p class="section-label">Painel</p>
-                <h3>Visão Geral do Acervo</h3>
-              </div>
-            </div>
-            <p class="text-muted mb-2">Acompanhe o desempenho, métricas globais e estatísticas operacionais do sistema.</p>
-            
-            <div class="stats-grid">
-              <div class="stat-item">
-                <div class="stat-value">Acervo</div>
-                <div class="stat-label">Catálogo Completo</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">Métricas</div>
-                <div class="stat-label">Gráficos Ativos</div>
-              </div>
-            </div>
+        <h3 class="panel-title">
+          Painel Administrativo
+        </h3>
+
+        <div class="mini-grid">
+
+          <div class="mini-card">
+
+            <h4>Estatísticas</h4>
+
+            <p>
+              Visualize métricas globais do acervo institucional.
+            </p>
+
           </div>
-          <a href="{% url 'dashboard' %}" class="info-btn">
-            Acessar Painel
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
+
+          <div class="mini-card">
+
+            <h4>Gráficos</h4>
+
+            <p>
+              Analise crescimento e movimentações do sistema.
+            </p>
+
+          </div>
+
+          <div class="mini-card">
+
+            <h4>Relatórios</h4>
+
+            <p>
+              Acompanhe indicadores operacionais em tempo real.
+            </p>
+
+          </div>
+
         </div>
+
+        <a href="{% url 'dashboard' %}"
+           class="outline-btn">
+
+          Abrir Dashboard
+
+        </a>
+
       </section>
-      
-    </main>
 
-  </div>
+    </div>
+
+  </section>
+
 </div>
+
 {% endblock content %}

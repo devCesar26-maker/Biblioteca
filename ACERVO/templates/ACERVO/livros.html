@@ -314,42 +314,33 @@
 .carousel-btn-right{
     right: -25px;
 }
-
 /* CAPA */
-.book-cover{
+.book-cover {
     width: 100%;
-
-    height: 620px;
-
+    height: 620px; 
     background:
         linear-gradient(
             to bottom,
             #f4ede0,
             #ece2cf
         );
-
     overflow: hidden;
-
     position: relative;
-
     border-bottom:
         1px solid rgba(218, 211, 197, 0.4);
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 1.25rem;
+    
+    padding: 0; 
 }
 
-.book-cover img{
+.book-cover img {
     width: 100%;
     height: 100%;
-
-    object-fit: contain;
+    object-fit: fill; 
 
     transition: transform .5s ease;
-
     filter:
         drop-shadow(
             0 10px 24px rgba(0,0,0,.18)
@@ -641,9 +632,7 @@
 
                             {% if livro.capa %}
 
-                                <img src="{{ static livro.capa.name }}"
-                                     alt="Capa de {{ livro.nome }}">
-
+                               <img src="{% static livro.capa %}" alt="Capa de {{ livro.nome }}">
                             {% else %}
 
                                 <div class="book-placeholder">

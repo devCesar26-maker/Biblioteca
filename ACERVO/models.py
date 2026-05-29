@@ -37,7 +37,7 @@ class Livro(models.Model):
     editora = models.ForeignKey(Editora, on_delete=models.CASCADE)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     autores = models.ManyToManyField(Autor, through='LivroAutor')
-    capa = models.ImageField(upload_to='capas_livros/', blank=True, null=True)
+    capa = models.CharField(max_length=70, blank=True, null=True)
     valor = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     arquivo_pdf = models.FileField(upload_to='pdfs/', blank=True, null=True)
 

@@ -182,7 +182,7 @@ def fazer_emprestimo(request, livro_id):
     
     if not aluno:
         messages.error(request, "Você precisa ser um aluno cadastrado para realizar empréstimos.")
-        return redirect('livros') # Altere para o nome da sua rota de catálogo
+        return redirect('livros')
 
     # 2. Verifica se já existe um empréstimo ativo para este livro
     emprestimo_ativo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).exists()
@@ -220,7 +220,7 @@ def renovar_emprestimo(request, livro_id):
             hoje=timezone.localdate()
             intervalo=(hoje-emprestimo.data_emprestimo).days
             if hoje > emprestimo.data_devolucao:
-                messages.error(request, "❌ Não é possível renovar um livro que já está atrasado.")
+                messages.error(request, "Não é possível renovar um livro que já está atrasado.")
                 return redirect('meus_emprestimos')
             if intervalo<=5:
                 messages.warning(request, f"Você fez um empréstimo desse livro há {intervalo} dia(s), não poderá renovar agora")
@@ -237,7 +237,7 @@ def renovar_emprestimo(request, livro_id):
         else:
             messages.error(
                 request,
-                f"❌ Você já atingiu o limite máximo de {Emprestimo.MAXIMO_RENOVACOES} renovações para este livro."
+                f"Você já atingiu o limite máximo de {Emprestimo.MAXIMO_RENOVACOES} renovações para este livro."
             )
     else:
         messages.error(request, "Você não possui um empréstimo ativo deste livro para renovar.")
