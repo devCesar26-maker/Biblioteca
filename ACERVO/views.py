@@ -217,23 +217,48 @@ def renovar_emprestimo(request, livro_id):
 
     if emprestimo:
         if emprestimo.renovacoes < Emprestimo.MAXIMO_RENOVACOES:
-            hoje=timezone.localdate()
-            intervalo=(hoje-emprestimo.data_emprestimo).days
+            hoje = timezone.localdate()
+            
+            # 1. VALIDAÇÃO DE ATRASO
             if hoje > emprestimo.data_devolucao:
                 messages.error(request, "Não é possível renovar um livro que já está atrasado.")
                 return redirect('meus_emprestimos')
-            if intervalo<=5:
-                messages.warning(request, f"Você fez um empréstimo desse livro há {intervalo} dia(s), não poderá renovar agora")
-            else: 
-                emprestimo.data_devolucao += timedelta(days=7)
-                emprestimo.valor = (emprestimo.valor or 0) + livro.valor
-                emprestimo.renovacoes += 1
-                emprestimo.save()
-                messages.success(
-                    request,
-                    f"O empréstimo do livro '{livro.nome}' foi renovado por mais 7 dias! "
-                    f"({emprestimo.renovacoes}/{Emprestimo.MAXIMO_RENOVACOES})"
-                )
+            
+            # 2. CÁLCULO DOS INTERVALOS DE TRAVA (5 DIAS)
+            if emprestimo.renovacoes == 0:
+                # Primeira renovação: calcula a partir da data de empréstimo original
+                intervalo = (hoje - emprestimo.data_emprestimo).days
+                if intervalo <= 5:
+                    messages.warning(
+                        request, 
+                        f"Você fez o empréstimo desse livro há {intervalo} dia(s). Só poderá renovar após 5 dias."
+                    )
+                    return redirect('meus_emprestimos')
+            else:
+                # Renovações seguintes: descobrimos a data teórica da última renovação
+                # Subtraímos 7 dias da devolução atual para achar o início do período atual
+                data_base = emprestimo.data_ultima_renovacao if emprestimo.renovacoes > 0 else emprestimo.data_emprestimo
+                intervalo_two = (hoje - data_base).days
+                
+                if intervalo_two <= 5:
+                    messages.warning(
+                        request, 
+                        f"Você já renovou este livro há {intervalo_two} dia(s). É necessário aguardar pelo menos 5 dias para renovar novamente."
+                    )
+                    return redirect('meus_emprestimos')
+
+            # 3. SE PASSOU NAS VALIDAÇÕES, EXECUTA A RENOVAÇÃO
+            emprestimo.data_devolucao += timedelta(days=7)
+            emprestimo.valor = (emprestimo.valor or 0) + livro.valor
+            emprestimo.renovacoes += 1
+            emprestimo.data_ultima_renovacao = hoje
+            emprestimo.save()
+            
+            messages.success(
+                request,
+                f"O empréstimo do livro '{livro.nome}' foi renovado por mais 7 dias! "
+                f"({emprestimo.renovacoes}/{Emprestimo.MAXIMO_RENOVACOES})"
+            )
         else:
             messages.error(
                 request,
@@ -243,7 +268,6 @@ def renovar_emprestimo(request, livro_id):
         messages.error(request, "Você não possui um empréstimo ativo deste livro para renovar.")
 
     return redirect('meus_emprestimos')
-
 
 @login_required
 @licenca_valida

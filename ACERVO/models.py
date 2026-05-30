@@ -49,6 +49,7 @@ class Emprestimo(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     data_emprestimo = models.DateField()
     data_devolucao = models.DateField()
+    data_ultima_renovacao = models.DateField(null=True, blank=True)
     
     # Alterado para DecimalField para combinar perfeitamente com o valor do Livro
     valor = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
