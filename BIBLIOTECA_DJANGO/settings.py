@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django.contrib.postgres', 
     'allauth.socialaccount.providers.google',
-    'storages', # Perfeito, já incluído!
 ]
 
 SITE_ID = 1
