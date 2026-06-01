@@ -198,13 +198,12 @@ BOOTSTRAP5 = {
     'include_jquery': True, 
 }
 
-# Configuração do Anymail com o MailerLite
 ANYMAIL = {
-    "MAILERLITE_API_KEY": os.environ.get("MAILERLITE_API_KEY"),
+    "BREVO_API_KEY": os.environ.get("BREVO_API_KEY"),
 }
 
-# Define o MailerLite como o motor de e-mails do seu Django
-EMAIL_BACKEND = "anymail.backends.mailerlite.EmailBackend"
+# Define a Brevo como o motor de e-mail do seu Django
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 
-# O remetente oficial do sistema (use o seu e-mail do cadastro)
+# O seu Gmail cadastrado na Brevo
 DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
