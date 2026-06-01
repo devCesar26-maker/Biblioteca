@@ -409,13 +409,13 @@ def enviar_email(destinatario, assunto, mensagem):
     email = EmailMessage(
         subject=assunto,
         body=html_conteudo,
-        from_email="Sistema Biblioteca <bibliotecadjango105@gmail.com>",
+        # AJUSTE 1: Alterado para o e-mail cadastrado no MailerLite
+        from_email="Sistema Biblioteca <dev.cesar26@gmail.com>",
         to=[destinatario],
-        reply_to=["bibliotecadjango105@gmail.com"],
+        # AJUSTE 2: Alterado o reply_to para o mesmo e-mail para manter a consistência
+        reply_to=["dev.cesar26@gmail.com"],
     )
     
     email.content_subtype = "html" 
     email.send(fail_silently=False)
-
-
 

@@ -198,12 +198,13 @@ BOOTSTRAP5 = {
     'include_jquery': True, 
 }
 
+# Configuração do Anymail com o MailerLite
+ANYMAIL = {
+    "MAILERLITE_API_KEY": os.environ.get("MAILERLITE_API_KEY"),
+}
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST="smtp.gmail.com"
-EMAIL_PORT=465
-EMAIL_USE_SSL=True
-EMAIL_HOST_USER="bibliotecadjango105@gmail.com"
-EMAIL_HOST_PASSWORD = os.environ['APP_PASSWORD']
-DEFAULT_FROM_EMAIL = "Sistema Biblioteca <bibliotecadjango105@gmail.com>"
+# Define o MailerLite como o motor de e-mails do seu Django
+EMAIL_BACKEND = "anymail.backends.mailerlite.EmailBackend"
 
+# O remetente oficial do sistema (use o seu e-mail do cadastro)
+DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
