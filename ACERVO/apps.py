@@ -4,3 +4,5 @@ class AcervoConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'ACERVO'
 
+    def ready(self):
+        import ACERVO.signals

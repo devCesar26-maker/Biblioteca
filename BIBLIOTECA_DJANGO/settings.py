@@ -31,6 +31,8 @@ SECRET_KEY = CHAVE_SECRETA
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
 ALLOWED_HOSTS = [
     'biblioteca-production-9d24.up.railway.app',
     'localhost',
@@ -196,4 +198,13 @@ BOOTSTRAP5 = {
     'include_jquery': True, 
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+APP_PASSWORD=os.getenv('APP_PASSWORD')
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER="bibliotecadjango105@gmail.com"
+EMAIL_HOST_PASSWORD=os.getenv('APP_PASSWORD')
+DEFAULT_FROM_EMAIL = "Sistema Biblioteca <bibliotecadjango105@gmail.com>"
+

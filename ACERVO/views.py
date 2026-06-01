@@ -9,7 +9,8 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.db.models import Count
-
+from django.core.mail import EmailMessage
+from django.utils.html import strip_tags
 
 # Decorador para barrar acesso de não-superusuários
 def superuser_required(view_func):
@@ -385,3 +386,36 @@ def deletar_autor(request, autor_id):
     autor = get_object_or_404(Autor, id=autor_id)
     autor.delete()
     return redirect('autores')
+
+
+def enviar_email(destinatario, assunto, mensagem):
+    # 1. Fazemos o replace FORA da f-string para evitar o erro de sintaxe
+    mensagem_html = mensagem.replace('\n', '<br>')
+    
+    # 2. Agora criamos o HTML usando a nova variável sem barras dentro das chaves
+    html_conteudo = f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                <h2 style="color: #2C3E50; border-bottom: 2px solid #2C3E50; padding-bottom: 10px;">Biblioteca do Python</h2>
+                <p style="font-size: 16px;">{mensagem_html}</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 12px; color: #7f8c8d;">Este é um e-mail automático do sistema. Por favor, não responda a esta mensagem.</p>
+            </div>
+        </body>
+    </html>
+    """
+    
+    email = EmailMessage(
+        subject=assunto,
+        body=html_conteudo,
+        from_email="Sistema Biblioteca <bibliotecadjango105@gmail.com>",
+        to=[destinatario],
+        reply_to=["bibliotecadjango105@gmail.com"],
+    )
+    
+    email.content_subtype = "html" 
+    email.send(fail_silently=False)
+
+
+
