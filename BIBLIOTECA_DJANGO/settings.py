@@ -198,14 +198,13 @@ BOOTSTRAP5 = {
     'include_jquery': True, 
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp-relay.brevo.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "ad37eb001@smtp-brevo.com"
+#Configuração correta via API (bula o bloqueio de portas do Railway)
+ANYMAIL = {
+    "BREVO_API_KEY": os.environ.get("BREVO_API_KEY"),
+}
 
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 
-EMAIL_HOST_PASSWORD = os.environ.get("BREVO_API_KEY")
-
+# O seu e-mail do Gmail cadastrado na Brevo
 DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
