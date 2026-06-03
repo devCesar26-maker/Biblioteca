@@ -81,6 +81,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware', 
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -208,3 +209,24 @@ EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 
 # O seu e-mail do Gmail cadastrado na Brevo
 DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
+
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+
+# Regra geral (bloqueia o resto por padrão)
+CSP_DEFAULT_SRC = ("'self'",)
+
+# Permite scripts do seu site E do CDN do Bootstrap
+CSP_SCRIPT_SRC = ("'self'", "https://cdn.jsdelivr.net")
+
+# Permite estilos do seu site, do Bootstrap e do Google Fonts
+CSP_STYLE_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com")
+
+# Permite que as fontes venham do domínio do Google Fonts
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
+
+# Permite imagens do seu site (se as capas dos livros estiverem vindo de outro lugar, coloque a URL aqui)
+CSP_IMG_SRC = ("'self'", "data:")
+
+CSP_FRAME_SRC = ("'self'", "https://accounts.google.com")
+CSP_CONNECT_SRC = ("'self'", "https://accounts.google.com")
