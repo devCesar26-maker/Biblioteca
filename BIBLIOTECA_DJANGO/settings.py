@@ -213,6 +213,14 @@ DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
 
+# Ativa o cabeçalho HSTS (Strict-Transport-Security) para obrigar o navegador a usar HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 ano
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Redireciona qualquer requisição HTTP comum para HTTPS automaticamente
+SECURE_SSL_REDIRECT = True
+
 # Regra geral (bloqueia o resto por padrão)
 CSP_DEFAULT_SRC = ("'self'",)
 
