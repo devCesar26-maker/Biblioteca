@@ -139,7 +139,7 @@
     margin-bottom: 2.5rem;
   }
 
-  /* SEARCH (CORRIGIDO) */
+  /* SEARCH (COMPUTADOR) */
   .search-area {
     position: relative;
     width: 100%;
@@ -149,14 +149,14 @@
 
   .search-icon {
     position: absolute;
-    left: 24px; /* Fixado estritamente à esquerda dentro do input */
+    left: 24px;
     top: 50%;
     transform: translateY(-50%);
     width: 22px;
     height: 22px;
     color: #6e8174;
     z-index: 5;
-    pointer-events: none; /* Garante que clicar na lupa foca o input */
+    pointer-events: none;
   }
 
   .search-area input {
@@ -164,8 +164,6 @@
     height: 78px;
     border: none;
     border-radius: 16px;
-    /* Ajustado: 64px na esquerda deixa espaço perfeito para a lupa; 
-       180px na direita previne que o texto digitado passe por baixo do botão */
     padding: 0 180px 0 64px; 
     outline: none;
     font-size: 1rem;
@@ -346,7 +344,7 @@
     color: white;
   }
 
-  /* MOBILE */
+  /* MOBILE (CORRIGIDO PARA O TELEMÓVEL) */
   @media(max-width: 768px){
     .hero {
       min-height: 620px;
@@ -355,10 +353,20 @@
     .hero h1 {
       font-size: 2.2rem;
     }
+    
+    /* Força o alinhamento correto da lupa no telemóvel */
+    .search-icon {
+      left: 20px;
+      top: 35px; /* Alinha verticalmente baseado na altura reduzida do input */
+    }
+
     .search-area input {
       height: 70px;
-      padding: 0 1.2rem 0 54px; /* Ajustado proporção mobile */
+      /* No telemóvel o botão vai para baixo, então tiramos o padding 
+         da direita (18px) e mantemos o da esquerda (54px) para proteger a lupa */
+      padding: 0 18px 0 54px; 
     }
+    
     .search-area button {
       position: relative;
       width: 100%;
