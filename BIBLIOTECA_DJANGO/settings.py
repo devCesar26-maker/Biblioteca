@@ -214,30 +214,30 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
 
-
+# Segurança de Transporte (HTTPS/SSL)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 SECURE_SSL_REDIRECT = True
 
+# Mecanismo HSTS (Forçar HTTPS por 1 ano)
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# Regra geral (bloqueia o resto por padrão)
+# Cabeçalhos de Proteção do Navegador
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_REFERRER_POLICY = "same-origin"
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Diretivas Restritas do Content Security Policy (CSP)
 CSP_DEFAULT_SRC = ("'self'",)
-
-# Permite scripts do site e do CDN do Bootstrap
 CSP_SCRIPT_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://apis.google.com", "https://accounts.google.com")
-
-# Permite estilos do site, do Bootstrap e do Google Fonts
 CSP_STYLE_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com")
-
-# Permite que as fontes venham do domínio do Google Fonts
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
-
-# Permite imagens do site
 CSP_IMG_SRC = ("'self'", "data:", "https://lh3.googleusercontent.com", "https://*.googleusercontent.com")
-
 CSP_FRAME_SRC = ("'self'", "https://accounts.google.com")
 CSP_CONNECT_SRC = ("'self'", "https://accounts.google.com")
+CSP_FRAME_ANCESTORS = ("'self'",)
