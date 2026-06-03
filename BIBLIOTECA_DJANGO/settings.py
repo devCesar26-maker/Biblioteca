@@ -212,15 +212,17 @@ DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
 
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
-# Ativa o cabeçalho HSTS (Strict-Transport-Security) para obrigar o navegador a usar HTTPS
-SECURE_HSTS_SECONDS = 31536000  # 1 ano
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# ESTA É A LINHA QUE ESTAVA FALTANDO PARA A RAILWAY:
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Redireciona qualquer requisição HTTP comum para HTTPS automaticamente
 SECURE_SSL_REDIRECT = True
 
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 # Regra geral (bloqueia o resto por padrão)
 CSP_DEFAULT_SRC = ("'self'",)
 
