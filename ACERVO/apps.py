@@ -6,15 +6,17 @@ class AcervoConfig(AppConfig):
     name = 'ACERVO'
 
     def ready(self):
+        # 1. Mantém seus signals normais
         import ACERVO.signals
 
-
-        #Inicializador do APScheduler
+        # 2. Inicializador do APScheduler com proteção para migrações
         import os
-
-        if os.environ.get('RUN_MAIN')=='true' or not settings.DEBUG:
-            from . import updater
-            updater.start()
-
-
-
+        if os.environ.get('RUN_MAIN') == 'true' or not settings.DEBUG:
+            from django.db.utils import ProgrammingError, OperationalError
+            try:
+                from . import updater
+                updater.start()
+            except (ProgrammingError, OperationalError):
+                # Se as tabelas do APScheduler ainda não existirem no banco,
+                # ele ignora o erro de forma segura para permitir que o 'migrate' termine.
+                print("APScheduler: Tabelas não encontradas no banco de dados. Pulando inicialização provisoriamente.")
