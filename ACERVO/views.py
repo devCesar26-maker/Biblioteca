@@ -12,6 +12,39 @@ from django.db.models import Count
 from django.core.mail import EmailMessage
 from django.utils.html import strip_tags
 
+#Função para enviar emails
+def enviar_email(destinatario, assunto, mensagem):
+    # 1. Fazemos o replace FORA da f-string para evitar o erro de sintaxe
+    mensagem_html = mensagem.replace('\n', '<br>')
+    
+    # 2. Agora criamos o HTML usando a nova variável sem barras dentro das chaves
+    html_conteudo = f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                <h2 style="color: #2C3E50; border-bottom: 2px solid #2C3E50; padding-bottom: 10px;">Biblioteca do Python</h2>
+                <p style="font-size: 16px;">{mensagem_html}</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 12px; color: #7f8c8d;">Este é um e-mail automático do sistema. Por favor, não responda a esta mensagem.</p>
+            </div>
+        </body>
+    </html>
+    """
+    
+    email = EmailMessage(
+        subject=assunto,
+        body=html_conteudo,
+        # AJUSTE 1: Alterado para o e-mail cadastrado no MailerLite
+        from_email="Sistema Biblioteca <dev.cesar26@gmail.com>",
+        to=[destinatario],
+        # AJUSTE 2: Alterado o reply_to para o mesmo e-mail para manter a consistência
+        reply_to=["dev.cesar26@gmail.com"],
+    )
+    
+    email.content_subtype = "html" 
+    email.send(fail_silently=False)
+
+
 # Decorador para barrar acesso de não-superusuários
 def superuser_required(view_func):
     @wraps(view_func)
@@ -174,16 +207,11 @@ def meus_emprestimos(request):
     context = {'emprestimos': emprestimos, 'hoje': hoje}
     return render(request, "ACERVO/meus_emprestimos.html", context)
 
-
 @login_required
 def fazer_emprestimo(request, livro_id):
     # 1. Busca o livro e o aluno logado
     livro = get_object_or_404(Livro, id=livro_id)
     aluno = Aluno.objects.filter(user=request.user).first()
-    
-    if not aluno:
-        messages.error(request, "Você precisa ser um aluno cadastrado para realizar empréstimos.")
-        return redirect('livros')
 
     # 2. Verifica se já existe um empréstimo ativo para este livro
     emprestimo_ativo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).exists()
@@ -192,28 +220,49 @@ def fazer_emprestimo(request, livro_id):
         messages.error(request, "Você já tem um empréstimo ativo com esse livro.")
         return redirect('meus_emprestimos')
 
-    # 3. Cria o empréstimo diretamente ao receber o POST (sem formulário)
+    # 3. Cria o empréstimo diretamente ao receber o POST
     if request.method == 'POST':
         hoje = timezone.localdate()
+        prazo_limite = hoje + timedelta(days=7)
         
         Emprestimo.objects.create(
             aluno=aluno,
             livro=livro,
             valor=livro.valor,
             data_emprestimo=hoje,
-            data_devolucao=hoje + timedelta(days=7),
+            data_devolucao=prazo_limite,
             devolvido=False
         )
+        try:
+            email_destino = request.user.email
+            nome_aluno = request.user.first_name if request.user.first_name else request.user.username
+            titulo_livro = livro.nome
+            data_formatada = prazo_limite.strftime('%d/%m/%Y')
+
+            assunto = f"Empréstimo Confirmado: {titulo_livro}"
+            mensagem = (
+                f"Olá, {nome_aluno}!\n\n"
+                f"Confirmamos o empréstimo do livro '{titulo_livro}' em nosso sistema.\n"
+                f"A data limite para a devolução é: {data_formatada}.\n\n"
+                f"Aproveite a sua leitura!"
+            )
+
+            enviar_email(email_destino, assunto, mensagem)
+            
+        except Exception as e:
+            print(f"Erro ao enviar e-mail pós-empréstimo: {e}")
 
         messages.success(request, f"Empréstimo do '{livro.nome}' realizado com sucesso!")
         return redirect('meus_emprestimos')
-        
-    # Se tentarem acessar a URL por GET, apenas redireciona de volta
+
     return redirect('livros')
+
+
 @login_required
 def renovar_emprestimo(request, livro_id):
     aluno = Aluno.objects.filter(user=request.user).first()
     livro = get_object_or_404(Livro, id=livro_id)
+    # Buscamos o empréstimo ativo
     emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).first()
 
     if emprestimo:
@@ -226,34 +275,45 @@ def renovar_emprestimo(request, livro_id):
                 return redirect('meus_emprestimos')
             
             # 2. CÁLCULO DOS INTERVALOS DE TRAVA (5 DIAS)
-            if emprestimo.renovacoes == 0:
-                # Primeira renovação: calcula a partir da data de empréstimo original
-                intervalo = (hoje - emprestimo.data_emprestimo).days
-                if intervalo <= 5:
-                    messages.warning(
-                        request, 
-                        f"Você fez o empréstimo desse livro há {intervalo} dia(s). Só poderá renovar após 5 dias."
-                    )
-                    return redirect('meus_emprestimos')
-            else:
-                # Renovações seguintes: descobrimos a data teórica da última renovação
-                # Subtraímos 7 dias da devolução atual para achar o início do período atual
-                data_base = emprestimo.data_ultima_renovacao if emprestimo.renovacoes > 0 else emprestimo.data_emprestimo
-                intervalo_two = (hoje - data_base).days
-                
-                if intervalo_two <= 5:
-                    messages.warning(
-                        request, 
-                        f"Você já renovou este livro há {intervalo_two} dia(s). É necessário aguardar pelo menos 5 dias para renovar novamente."
-                    )
-                    return redirect('meus_emprestimos')
+            # Se nunca renovou, a data base é o empréstimo. Se já renovou, usa a data da última renovação.
+            data_base = emprestimo.data_ultima_renovacao if emprestimo.data_ultima_renovacao else emprestimo.data_emprestimo
+            intervalo = (hoje - data_base).days
+            
+            if intervalo <= 5:
+                messages.warning(
+                    request, 
+                    f"Você realizou a última movimentação neste livro há {intervalo} dia(s). "
+                    f"É necessário aguardar pelo menos 5 dias para solicitar uma renovação."
+                )
+                return redirect('meus_emprestimos')
 
             # 3. SE PASSOU NAS VALIDAÇÕES, EXECUTA A RENOVAÇÃO
             emprestimo.data_devolucao += timedelta(days=7)
             emprestimo.valor = (emprestimo.valor or 0) + livro.valor
             emprestimo.renovacoes += 1
             emprestimo.data_ultima_renovacao = hoje
+            prazo_limite = emprestimo.data_devolucao
             emprestimo.save()
+
+            # 4. ENVIO DO E-MAIL DE CONFIRMAÇÃO DE RENOVAÇÃO
+            try:
+                email_destino = request.user.email
+                nome_aluno = request.user.first_name if request.user.first_name else request.user.username
+                titulo_livro = livro.nome
+                data_formatada = prazo_limite.strftime('%d/%m/%Y')
+
+                assunto = f"Empréstimo Renovado: {titulo_livro}"
+                mensagem = (
+                    f"Olá, {nome_aluno}!\n\n"
+                    f"Confirmamos a renovação do empréstimo do livro '{titulo_livro}' em nosso sistema.\n"
+                    f"A data limite para a nova devolução é: {data_formatada}.\n\n"
+                    f"Aproveite a sua leitura!"
+                )
+
+                enviar_email(email_destino, assunto, mensagem)
+                
+            except Exception as e:
+                print(f"Erro ao enviar e-mail pós-renovação: {e}")
             
             messages.success(
                 request,
@@ -387,35 +447,4 @@ def deletar_autor(request, autor_id):
     autor.delete()
     return redirect('autores')
 
-
-def enviar_email(destinatario, assunto, mensagem):
-    # 1. Fazemos o replace FORA da f-string para evitar o erro de sintaxe
-    mensagem_html = mensagem.replace('\n', '<br>')
-    
-    # 2. Agora criamos o HTML usando a nova variável sem barras dentro das chaves
-    html_conteudo = f"""
-    <html>
-        <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-                <h2 style="color: #2C3E50; border-bottom: 2px solid #2C3E50; padding-bottom: 10px;">Biblioteca do Python</h2>
-                <p style="font-size: 16px;">{mensagem_html}</p>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-                <p style="font-size: 12px; color: #7f8c8d;">Este é um e-mail automático do sistema. Por favor, não responda a esta mensagem.</p>
-            </div>
-        </body>
-    </html>
-    """
-    
-    email = EmailMessage(
-        subject=assunto,
-        body=html_conteudo,
-        # AJUSTE 1: Alterado para o e-mail cadastrado no MailerLite
-        from_email="Sistema Biblioteca <dev.cesar26@gmail.com>",
-        to=[destinatario],
-        # AJUSTE 2: Alterado o reply_to para o mesmo e-mail para manter a consistência
-        reply_to=["dev.cesar26@gmail.com"],
-    )
-    
-    email.content_subtype = "html" 
-    email.send(fail_silently=False)
 

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django.contrib.postgres', 
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 ]
 
 SITE_ID = 1
@@ -165,7 +166,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'pt-br'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
@@ -241,3 +242,6 @@ CSP_IMG_SRC = ("'self'", "data:", "https://lh3.googleusercontent.com", "https://
 CSP_FRAME_SRC = ("'self'", "https://accounts.google.com")
 CSP_CONNECT_SRC = ("'self'", "https://accounts.google.com")
 CSP_FRAME_ANCESTORS = ("'self'",)
+
+#Define o formato de data para varrer o banco
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, r"

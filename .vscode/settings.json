@@ -1,0 +1,8 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/SITE/bin/python",
+    "python.analysis.exclude": [
+        "**/BIBLIOTECA/**",
+        "**/SITE/**",
+        "**/__pycache__/**"
+    ]
+}
