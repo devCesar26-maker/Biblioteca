@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
         'ALLOWED_HOSTS',
-        'biblioteca-production-9d24.up.railway.app,localhost,127.0.0.1'
+        'biblioteca-c1ca.onrender.com/'
     ).split(',')
     if host.strip()
 ]
