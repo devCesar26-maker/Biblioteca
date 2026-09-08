@@ -24,7 +24,7 @@ def enviar_email(destinatario, assunto, mensagem):
     <html>
         <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
             <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-                <h2 style="color: #2C3E50; border-bottom: 2px solid #2C3E50; padding-bottom: 10px;">Biblioteca do Python</h2>
+                <h2 style="color: #053e2f; border-bottom: 2px solid #bd963a; padding-bottom: 10px;">Biblioteca do Python</h2>
                 <p style="font-size: 16px;">{mensagem_html}</p>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
                 <p style="font-size: 12px; color: #7f8c8d;">Este é um e-mail automático do sistema. Por favor, não responda a esta mensagem.</p>

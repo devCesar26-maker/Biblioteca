@@ -5,10 +5,6 @@
 
 {% block content %}
 <style>
-    body {
-        background-color: #f8fafc; /* Fundo cinza bem claro e moderno */
-    }
-
     .login-container {
         min-height: 85vh;
         display: flex;
@@ -18,10 +14,10 @@
     }
 
     .login-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        background: var(--card);
+        border: 1px solid var(--border);
         border-radius: 16px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 10px 25px -5px rgba(17, 34, 22, 0.05), 0 8px 10px -6px rgba(17, 34, 22, 0.04);
         width: 100%;
         max-width: 420px;
         overflow: hidden;
@@ -31,13 +27,20 @@
     .login-header {
         padding: 2.5rem 2rem 1.5rem 2rem;
         text-align: center;
+        background: linear-gradient(to bottom, rgba(189, 150, 58, 0.06), transparent);
     }
 
     .login-header h2 {
-        color: #0f172a;
+        color: var(--primary);
         font-weight: 700;
         font-size: 1.75rem;
-        letter-spacing: -0.025em;
+        letter-spacing: -0.01em;
+    }
+
+    .login-icon {
+        color: var(--accent);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
     }
 
     .login-body {
@@ -51,9 +54,11 @@
 
     .login-body label {
         display: block;
-        color: #475569;
-        font-weight: 500;
-        font-size: 0.875rem;
+        color: var(--muted-foreground);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
         margin-bottom: 0.375rem;
     }
 
@@ -62,52 +67,54 @@
     .login-body input[type="password"] {
         display: block;
         width: 100%;
-        padding: 0.6rem 0.75rem;
+        padding: 0.65rem 0.85rem;
         font-size: 0.95rem;
         font-weight: 400;
         line-height: 1.5;
-        color: #1e293b;
-        background-color: #ffffff;
-        border: 1px solid #cbd5e1;
+        color: var(--foreground);
+        background-color: #faf8f5;
+        border: 1px solid var(--border);
         border-radius: 8px;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
 
     .login-body input:focus {
-        border-color: #4f46e5;
+        border-color: var(--primary);
         outline: 0;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        background-color: var(--card);
+        box-shadow: 0 0 0 4px rgba(5, 62, 47, 0.08);
     }
 
     /* Checkbox de "Lembrar-me" se o allauth injetar */
     .login-body input[type="checkbox"] {
         border-radius: 4px;
-        border-color: #cbd5e1;
+        border-color: var(--border);
         margin-right: 0.5rem;
+        accent-color: var(--primary);
     }
 
     /* Botões */
     .btn-custom-primary {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: #ffffff;
-        font-weight: 500;
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
         border-radius: 8px;
-        padding: 0.7rem 1rem;
+        padding: 0.75rem 1rem;
         font-size: 0.95rem;
         transition: all 0.2s;
     }
 
     .btn-custom-primary:hover {
-        background-color: #4338ca;
-        border-color: #4338ca;
-        color: #ffffff;
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-foreground);
     }
 
     .btn-google {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-        color: #334155;
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        color: var(--foreground);
         font-weight: 500;
         border-radius: 8px;
         padding: 0.7rem 1rem;
@@ -120,16 +127,16 @@
     }
 
     .btn-google:hover {
-        background-color: #f8fafc;
-        border-color: #cbd5e1;
-        color: #0f172a;
+        background-color: #faf8f5;
+        border-color: var(--border);
+        color: var(--primary);
     }
 
     .divider {
         display: flex;
         align-items: center;
         text-align: center;
-        color: #94a3b8;
+        color: var(--muted);
         font-size: 0.85rem;
         margin: 1.75rem 0;
     }
@@ -137,27 +144,27 @@
     .divider::before, .divider::after {
         content: '';
         flex: 1;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--border);
     }
     
     .divider:not(:empty)::before { margin-right: .75rem; }
     .divider:not(:empty)::after { margin-left: .75rem; }
 
     .login-footer {
-        background-color: #f8fafc;
-        border-top: 1px solid #e2e8f0;
+        background-color: #faf8f5;
+        border-top: 1px solid var(--border);
         padding: 1.25rem 2rem;
         text-align: center;
     }
 
     .link-accent {
-        color: #4f46e5;
+        color: var(--primary);
         text-decoration: none;
         font-weight: 600;
     }
 
     .link-accent:hover {
-        color: #4338ca;
+        color: var(--accent);
         text-decoration: underline;
     }
 </style>
@@ -166,17 +173,17 @@
     <div class="login-card">
         
         <div class="login-header">
-            <div class="mb-2 text-primary" style="font-size: 2rem;">
-                <i class="bi bi-journal-bookmark-fill" style="color: #4f46e5;"></i>
+            <div class="login-icon">
+                <i class="bi bi-journal-bookmark-fill"></i>
             </div>
             <h2>Acesse sua Conta</h2>
-            <p class="text-muted small mb-0">Bem-vindo de volta! Por favor, insira seus dados.</p>
+            <p class="text-muted small mb-0">Bem-vindo de volta! Que bom ter você por aqui.</p>
         </div>
 
         <div class="login-body">
             
             {% if form.non_field_errors %}
-                <div class="alert alert-danger p-2 small mb-3 rounded-3" role="alert">
+                <div class="alert p-2 small mb-3 rounded-3" role="alert" style="background-color: #fdf2f2; border: 1px solid #f5c6cb; color: #721c24;">
                     {% for error in form.non_field_errors %}
                         <i class="bi bi-exclamation-circle-fill me-1"></i> {{ error }}
                     {% endfor %}
@@ -215,7 +222,7 @@
         </div>
 
         <div class="login-footer text-muted small">
-            Não possui uma conta? 
+            Ainda não possui uma conta? 
             <a href="{% url 'account_signup' %}" class="link-accent">Registre-se aqui</a>
         </div>
     </div>

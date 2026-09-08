@@ -30,24 +30,28 @@
     <style>
 
         :root {
-            --background: #fcfbf9; /* Warm Ivory */
-            --foreground: #0f172a; /* Deep Slate/Navy */
-
-            --primary: #1e293b; /* Midnight Blue */
-            --primary-foreground: #f8fafc;
-
-            --accent: #c4a460; /* Soft Gold */
-            --accent-hover: #e3cc91;
-
-            --border: #e2dfd8;
-            --muted: #64748b;
+            /* Paleta Biblioteca — pergaminho quente, verde-floresta e dourado */
+            --background: #f4efe6;         /* Pergaminho / marfim quente */
+            --foreground: #112216;         /* Verde-quase-preto (texto) */
             --card: #ffffff;
 
-            --transition: all .4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --primary: #053e2f;            /* Verde-floresta profundo */
+            --primary-foreground: #faf8f5; /* Creme-claro */
 
-            --shadow-sm: 0 4px 12px rgba(30, 41, 59, 0.04), 0 2px 4px rgba(30, 41, 59, 0.02);
-            --shadow-md: 0 12px 32px rgba(30, 41, 59, 0.06), 0 4px 8px rgba(30, 41, 59, 0.03);
-            --shadow-lg: 0 24px 48px rgba(30, 41, 59, 0.08);
+            --accent: #bd963a;             /* Dourado / latão */
+            --accent-hover: #a8832e;       /* Dourado queimado */
+            --accent-foreground: #112216;
+
+            --border: #dad3c5;             /* Areia */
+            --muted: #526356;              /* Verde-sálvia (texto secundário) */
+            --muted-foreground: #526356;
+            --radius: 12px;
+
+            --transition: all .3s cubic-bezier(0.25, 1, 0.33, 1);
+
+            --shadow-sm: 0 2px 4px rgba(17, 34, 22, 0.02), 0 4px 12px rgba(17, 34, 22, 0.03);
+            --shadow-md: 0 10px 24px rgba(17, 34, 22, 0.05), 0 4px 8px rgba(17, 34, 22, 0.03);
+            --shadow-lg: 0 20px 44px rgba(17, 34, 22, 0.08);
         }
 
         * {
@@ -80,9 +84,9 @@
             text-decoration: none;
         }
 
-        /* NAVBAR (GLASSMORPHISM PREMIUM) */
+        /* NAVBAR (VERDE-FLORESTA TRANSLÚCIDO) */
         .navbar-custom {
-            background: rgba(30, 41, 59, 0.85); /* Midnight Blue Translucent */
+            background: rgba(5, 62, 47, 0.92); /* Verde-floresta translúcido */
             backdrop-filter: blur(18px) saturate(180%);
             -webkit-backdrop-filter: blur(18px) saturate(180%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -122,15 +126,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(196, 164, 96, 0.15); /* Accent Glow */
+            background: rgba(189, 150, 58, 0.16); /* Brilho dourado suave */
             color: var(--accent);
             font-size: 1.2rem;
-            box-shadow: inset 0 0 0 1px rgba(196, 164, 96, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(189, 150, 58, 0.25);
             transition: var(--transition);
         }
         
         .navbar-brand-custom:hover .brand-icon {
-            background: rgba(196, 164, 96, 0.25);
+            background: rgba(189, 150, 58, 0.28);
             transform: scale(1.05);
         }
 
@@ -148,7 +152,7 @@
             border-radius: 50px; /* Pill shape for premium feel */
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #f1f5f9;
+            color: #faf8f5;
             font-size: 0.9rem;
             font-weight: 500;
         }
@@ -174,14 +178,14 @@
 
         .btn-login {
             background: var(--accent);
-            color: #0f172a;
-            box-shadow: 0 4px 14px rgba(196, 164, 96, 0.25);
+            color: var(--accent-foreground);
+            box-shadow: 0 4px 14px rgba(189, 150, 58, 0.25);
         }
 
         .btn-login:hover {
             background: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(196, 164, 96, 0.35);
+            box-shadow: 0 6px 20px rgba(189, 150, 58, 0.35);
         }
 
         .btn-register {
@@ -199,7 +203,7 @@
         .btn-logout {
             border: 1px solid rgba(255, 255, 255, 0.12);
             background: transparent;
-            color: #e2e8f0;
+            color: #faf8f5;
         }
 
         .btn-logout:hover {
@@ -235,15 +239,19 @@
             overflow-x: hidden;
         }
 
-        /* FOOTER */
+        /* FOOTER (COLOPHON VERDE) */
         footer {
             margin-top: auto;
-            background: #ffffff;
-            border-top: 1px solid var(--border);
+            background: var(--primary);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding: 2rem 1.5rem;
             text-align: center;
-            color: var(--muted);
+            color: rgba(250, 248, 245, 0.75);
             font-size: 0.9rem;
+        }
+
+        footer p {
+            color: rgba(250, 248, 245, 0.75);
         }
 
         /* MOBILE TOGGLE */
@@ -275,7 +283,7 @@
                 top: 82px;
                 left: 0;
                 width: 100%;
-                background: rgba(30, 41, 59, 0.98);
+                background: rgba(5, 62, 47, 0.97);
                 backdrop-filter: blur(20px);
                 border-top: 1px solid rgba(255, 255, 255, 0.06);
                 padding: 1.5rem;

@@ -1,12 +1,148 @@
 {% extends "ACERVO/base.html" %}
+{% load django_bootstrap5 %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2>{{ livro.nome }}</h2>
-    <div id="viewer" style="border:1px solid #ccc; text-align:center; display:flex; justify-content:center;"></div>
-    <div class="mt-2 text-center">
-        <button id="prev">Anterior</button>
-        <span id="page_num"></span> / <span id="page_count"></span>
-        <button id="next">Próxima</button>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .reader-wrapper {
+        background-color: var(--background);
+        min-height: 100vh;
+        color: var(--foreground);
+        padding-bottom: 5rem;
+    }
+
+    .page-header {
+        padding: 2.5rem 0 1.5rem 0;
+        border-bottom: 1px solid rgba(5, 62, 47, 0.1);
+    }
+
+    .font-serif {
+        font-family: "Libre Baskerville", Georgia, serif;
+        color: var(--primary);
+    }
+
+    .btn-back {
+        color: var(--primary);
+        background-color: transparent;
+        border: 1px solid rgba(5, 62, 47, 0.2);
+        font-weight: 600;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.2s ease-in-out;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-back:hover {
+        background-color: rgba(5, 62, 47, 0.05);
+        color: var(--primary);
+    }
+
+    .reader-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(17, 34, 22, 0.03);
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    #viewer {
+        background: #faf8f5;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+
+    #viewer canvas {
+        max-width: 100%;
+        box-shadow: 0 8px 24px rgba(17, 34, 22, 0.12);
+        background: white;
+    }
+
+    .reader-controls {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-page {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--primary);
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-page:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .page-indicator {
+        font-family: "Libre Baskerville", serif;
+        color: var(--primary);
+        font-weight: 700;
+        background: rgba(5, 62, 47, 0.05);
+        border: 1px solid rgba(5, 62, 47, 0.1);
+        border-radius: 50px;
+        padding: 0.45rem 1.2rem;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="reader-wrapper">
+    <div class="container">
+
+        <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-2">
+            <div>
+                <h2 class="font-serif fw-bold mb-1 h4">{{ livro.nome }}</h2>
+                <p class="text-muted small mb-0">Leitura digital do exemplar em seu poder.</p>
+            </div>
+            <a href="{% url 'meus_emprestimos' %}" class="btn-back">
+                <i class="bi bi-arrow-left"></i> Meus Empréstimos
+            </a>
+        </div>
+
+        <div class="reader-card">
+            <div id="viewer"></div>
+            <div class="reader-controls">
+                <button id="prev" class="btn-page" title="Página anterior" aria-label="Página anterior">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <span class="page-indicator">
+                    <span id="page_num"></span> / <span id="page_count"></span>
+                </span>
+                <button id="next" class="btn-page" title="Próxima página" aria-label="Próxima página">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -89,7 +225,7 @@
         renderPage(pageNum);
     }).catch(function(error) {
         console.error("Erro ao carregar PDF:", error);
-        document.getElementById('viewer').innerHTML = "<p style='color:red'>Não foi possível carregar o PDF.</p>";
+        document.getElementById('viewer').innerHTML = "<p style='color:#b0413e'>Não foi possível carregar o PDF.</p>";
     });
 
     document.getElementById('prev').addEventListener('click', onPrevPage);

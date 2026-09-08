@@ -35,13 +35,19 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
-# Hosts permitidos, separados por vírgula no ambiente (ex.: ALLOWED_HOSTS=dominio.com,localhost)
+# Hosts permitidos por ambiente de execução.
+#   • Desenvolvimento (DEBUG=True)  → somente endereços locais (localhost / 127.0.0.1).
+#   • Produção (DEBUG=False)        → somente o domínio público do Render.
+# A variável de ambiente ALLOWED_HOSTS (hosts separados por vírgula) sobrescreve a
+# lista padrão quando definida — útil para deploys que precisem liberar domínios extras.
+if DEBUG:
+    HOSTS_PADRAO = 'localhost,127.0.0.1,127.0.0.1:8000,localhost:8000'
+else:
+    HOSTS_PADRAO = 'biblioteca-c1ca.onrender.com'
+
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv(
-        'ALLOWED_HOSTS',
-        'biblioteca-c1ca.onrender.com'
-    ).split(',')
+    for host in os.getenv('ALLOWED_HOSTS', HOSTS_PADRAO).split(',')
     if host.strip()
 ]
 
@@ -49,7 +55,7 @@ CSRF_TRUSTED_ORIGINS = [
     origem.strip()
     for origem in os.getenv(
         'CSRF_TRUSTED_ORIGINS',
-        'https://biblioteca-production-9d24.up.railway.app'
+        'https://biblioteca-c1ca.onrender.com'
     ).split(',')
     if origem.strip()
 ]
