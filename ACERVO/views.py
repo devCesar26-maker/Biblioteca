@@ -1,16 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Autor, Categoria, Editora, Livro, Aluno, Emprestimo
-from .forms import AutorForm, CategoriaForm, EditoraForm, LivroForm, LivroAutorForm
-from django.http import Http404
-from django.contrib.auth.decorators import login_required, permission_required
-from datetime import date, timedelta
 from functools import wraps
-from django.utils import timezone
+from datetime import timedelta
+
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from django.db.models import Count
 from django.core.mail import EmailMessage
-from django.utils.html import strip_tags
+from django.db.models import Count
+from django.http import Http404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+
+from .forms import AutorForm, CategoriaForm, EditoraForm, LivroForm, LivroAutorForm
+from .models import Autor, Categoria, Editora, Livro, Aluno, Emprestimo
 
 #Função para enviar emails
 def enviar_email(destinatario, assunto, mensagem):
@@ -34,11 +36,9 @@ def enviar_email(destinatario, assunto, mensagem):
     email = EmailMessage(
         subject=assunto,
         body=html_conteudo,
-        # AJUSTE 1: Alterado para o e-mail cadastrado no MailerLite
-        from_email="Sistema Biblioteca <dev.cesar26@gmail.com>",
+        from_email=settings.DEFAULT_FROM_EMAIL,
         to=[destinatario],
-        # AJUSTE 2: Alterado o reply_to para o mesmo e-mail para manter a consistência
-        reply_to=["dev.cesar26@gmail.com"],
+        reply_to=[settings.EMAIL_REPLY_TO],
     )
     
     email.content_subtype = "html" 
@@ -171,7 +171,24 @@ def new_livro(request):
 def data_livro(request, livro_id):
     livro = get_object_or_404(Livro, id=livro_id)
     autores = livro.autores.all()
-    context = {'livro': livro, 'autores': autores}
+
+    # Libera o PDF apenas se o usuário tiver um empréstimo ativo e dentro do prazo
+    emprestimo_ativo = None
+    aluno = Aluno.objects.filter(user=request.user).first()
+    if aluno:
+        emprestimo_ativo = Emprestimo.objects.filter(
+            aluno=aluno, livro=livro, devolvido=False
+        ).first()
+    pode_ler_pdf = (
+        emprestimo_ativo is not None
+        and timezone.localdate() <= emprestimo_ativo.data_devolucao
+    )
+
+    context = {
+        'livro': livro,
+        'autores': autores,
+        'pode_ler_pdf': pode_ler_pdf,
+    }
     return render(request, "ACERVO/dados_livros.html", context)
 
 
@@ -212,6 +229,14 @@ def fazer_emprestimo(request, livro_id):
     # 1. Busca o livro e o aluno logado
     livro = get_object_or_404(Livro, id=livro_id)
     aluno = Aluno.objects.filter(user=request.user).first()
+
+    # 1.1. Usuário sem cadastro de aluno não pode retirar livros
+    if not aluno:
+        messages.error(
+            request,
+            "Seu perfil não possui cadastro de aluno. Contate a biblioteca para regularizar."
+        )
+        return redirect('livros')
 
     # 2. Verifica se já existe um empréstimo ativo para este livro
     emprestimo_ativo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).exists()
@@ -333,15 +358,19 @@ def renovar_emprestimo(request, livro_id):
 @login_required
 @licenca_valida
 def visualizar_pdf(request, livro_id):
-    aluno = Aluno.objects.filter(user=request.user).first()
-        
     livro = get_object_or_404(Livro, id=livro_id)
-    emprestimo = Emprestimo.objects.filter(aluno=aluno, livro=livro, devolvido=False).first()
-    
+    emprestimo = Emprestimo.objects.filter(
+        aluno__user=request.user, livro=livro, devolvido=False
+    ).first()
+
     if not emprestimo:
         messages.error(request, "Você precisa ter um empréstimo ativo para visualizar este livro.")
         return redirect('meus_emprestimos')
-        
+
+    if not livro.arquivo_pdf:
+        messages.error(request, "Este livro não possui cópia digital disponível.")
+        return redirect('meus_emprestimos')
+
     return render(request, "ACERVO/visualizar_pdf.html", {'livro': livro, 'emprestimo': emprestimo})
 
 

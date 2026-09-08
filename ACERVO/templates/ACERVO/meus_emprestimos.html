@@ -4,7 +4,7 @@
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2 family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
     :root {
@@ -185,11 +185,16 @@
                                 <div>
                                     <h4 class="book-title">{{ e.livro.nome }}</h4>
                                     <div class="d-flex flex-wrap align-items-center gap-3 text-muted small">
-                                        <span><i class="bi bi-calendar3 me-1"></i> Devolução: {{ e.data_devolucao }}</span>
+                                        <span><i class="bi bi-calendar3 me-1"></i> Devolução: {{ e.data_devolucao|date:"d/m/Y" }}</span>
                                         {% if e.devolvido %}
                                             <span class="status-badge status-done"><i class="bi bi-check-circle-fill"></i> Devolvido</span>
                                         {% else %}
                                             <span class="status-badge status-open"><i class="bi bi-clock-fill"></i> Em aberto</span>
+                                            {% if e.atrasado %}
+                                                <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill me-1"></i>{{ e.dias_excesso }} dia(s) de atraso</span>
+                                            {% else %}
+                                                <span><i class="bi bi-hourglass-split me-1"></i>{{ e.dias_restantes }} dia(s) restantes</span>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </div>

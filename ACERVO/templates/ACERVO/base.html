@@ -30,28 +30,24 @@
     <style>
 
         :root {
+            --background: #fcfbf9; /* Warm Ivory */
+            --foreground: #0f172a; /* Deep Slate/Navy */
 
-            --background: #f4efe6;
-            --foreground: #112216;
+            --primary: #1e293b; /* Midnight Blue */
+            --primary-foreground: #f8fafc;
 
-            --primary: #053e2f;
-            --primary-foreground: #faf8f5;
+            --accent: #c4a460; /* Soft Gold */
+            --accent-hover: #e3cc91;
 
-            --accent: #bd963a;
-
-            --border: #dad3c5;
-
-            --muted: #526356;
-
+            --border: #e2dfd8;
+            --muted: #64748b;
             --card: #ffffff;
 
-            --transition:
-                all .35s cubic-bezier(0.25, 1, 0.33, 1);
+            --transition: all .4s cubic-bezier(0.2, 0.8, 0.2, 1);
 
-            --shadow-sm:
-                0 2px 4px rgba(17,34,22,.03),
-                0 10px 20px rgba(17,34,22,.04);
-
+            --shadow-sm: 0 4px 12px rgba(30, 41, 59, 0.04), 0 2px 4px rgba(30, 41, 59, 0.02);
+            --shadow-md: 0 12px 32px rgba(30, 41, 59, 0.06), 0 4px 8px rgba(30, 41, 59, 0.03);
+            --shadow-lg: 0 24px 48px rgba(30, 41, 59, 0.08);
         }
 
         * {
@@ -65,410 +61,247 @@
         }
 
         body {
-
             min-height: 100vh;
-
             display: flex;
-
             flex-direction: column;
-
-            background:
-                var(--background);
-
-            color:
-                var(--foreground);
-
-            font-family:
-                "IBM Plex Sans",
-                sans-serif;
-
+            background: var(--background);
+            color: var(--foreground);
+            font-family: "IBM Plex Sans", sans-serif;
             overflow-x: hidden;
-
             padding-top: 82px;
         }
 
         h1,h2,h3,h4,h5,h6 {
-
-            font-family:
-                "Libre Baskerville",
-                serif;
+            font-family: "Libre Baskerville", serif;
+            color: var(--primary);
         }
 
         a {
             text-decoration: none;
         }
 
-        /* NAVBAR */
-
+        /* NAVBAR (GLASSMORPHISM PREMIUM) */
         .navbar-custom {
-
-            background:
-                rgba(5,62,47,.92);
-
-            backdrop-filter:
-                blur(14px);
-
-            border-bottom:
-                1px solid rgba(189,150,58,.12);
-
-            padding:
-                .9rem 0;
-
-            transition:
-                var(--transition);
+            background: rgba(30, 41, 59, 0.85); /* Midnight Blue Translucent */
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem 0;
+            transition: var(--transition);
         }
 
         .navbar-container {
-
             width: 100%;
-
-            max-width: 1450px;
-
+            max-width: 1500px;
             margin: auto;
-
-            padding:
-                0 1.5rem;
-
+            padding: 0 2rem;
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
         }
 
         .navbar-brand-custom {
-
             display: flex;
-
             align-items: center;
+            gap: 1rem;
+            color: var(--primary-foreground);
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            transition: var(--transition);
+        }
 
-            gap: .9rem;
-
-            color:
-                var(--primary-foreground);
-
-            font-size:
-                1.15rem;
-
-            font-weight:
-                700;
-
-            letter-spacing:
-                -.02em;
+        .navbar-brand-custom:hover {
+            color: var(--accent);
         }
 
         .brand-icon {
-
-            width: 42px;
-            height: 42px;
-
-            border-radius: 12px;
-
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             display: flex;
-
             align-items: center;
             justify-content: center;
-
-            background:
-                rgba(189,150,58,.12);
-
-            color:
-                var(--accent);
-
-            font-size:
-                1.1rem;
+            background: rgba(196, 164, 96, 0.15); /* Accent Glow */
+            color: var(--accent);
+            font-size: 1.2rem;
+            box-shadow: inset 0 0 0 1px rgba(196, 164, 96, 0.2);
+            transition: var(--transition);
+        }
+        
+        .navbar-brand-custom:hover .brand-icon {
+            background: rgba(196, 164, 96, 0.25);
+            transform: scale(1.05);
         }
 
         .navbar-actions {
-
             display: flex;
-
             align-items: center;
-
-            gap: .8rem;
+            gap: 1rem;
         }
 
         .user-badge {
-
             display: flex;
-
             align-items: center;
-
-            gap: .6rem;
-
-            padding:
-                .7rem 1rem;
-
-            border-radius:
-                12px;
-
-            background:
-                rgba(255,255,255,.06);
-
-            border:
-                1px solid rgba(255,255,255,.08);
-
-            color:
-                #dbe4dc;
-
-            font-size:
-                .88rem;
-
-            font-weight:
-                500;
+            gap: 0.75rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 50px; /* Pill shape for premium feel */
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1f5f9;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .user-badge i {
-
-            color:
-                var(--accent);
+            color: var(--accent);
         }
 
         .btn-custom {
-
-            height: 42px;
-
-            border-radius:
-                12px;
-
-            padding:
-                0 1.3rem;
-
+            height: 44px;
+            border-radius: 50px;
+            padding: 0 1.5rem;
             display: inline-flex;
-
             align-items: center;
             justify-content: center;
-
-            gap: .55rem;
-
-            font-size:
-                .86rem;
-
-            font-weight:
-                600;
-
-            transition:
-                var(--transition);
-
-            border:
-                1px solid transparent;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            cursor: pointer;
         }
 
         .btn-login {
-
-            background:
-                var(--accent);
-
-            color:
-                #112216;
+            background: var(--accent);
+            color: #0f172a;
+            box-shadow: 0 4px 14px rgba(196, 164, 96, 0.25);
         }
 
         .btn-login:hover {
-
-            background:
-                #a8832e;
-
-            color:
-                #112216;
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 164, 96, 0.35);
         }
 
         .btn-register {
-
-            border:
-                1px solid rgba(255,255,255,.15);
-
-            color:
-                white;
-
-            background:
-                transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            background: transparent;
         }
 
         .btn-register:hover {
-
-            background:
-                rgba(255,255,255,.08);
-
-            color:
-                white;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .btn-logout {
-
-            border:
-                1px solid rgba(255,255,255,.12);
-
-            background:
-                transparent;
-
-            color:
-                #f3d5d5;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: transparent;
+            color: #e2e8f0;
         }
 
         .btn-logout:hover {
-
-            background:
-                rgba(127,29,29,.9);
-
-            color:
-                white;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
         /* ALERTS */
-
         .alerts-wrapper {
-
             width: 100%;
-
-            max-width: 1450px;
-
-            margin:
-                1.2rem auto 0;
-
-            padding:
-                0 1.5rem;
-
+            max-width: 1500px;
+            margin: 1.5rem auto 0;
+            padding: 0 2rem;
             position: relative;
-
             z-index: 1200;
         }
 
         .alert {
-
             border: none;
-
-            border-radius:
-                16px;
-
-            box-shadow:
-                var(--shadow-sm);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            font-weight: 500;
+            background-color: white;
+            color: var(--foreground);
+            border-left: 4px solid var(--accent);
         }
 
         /* MAIN */
-
         main {
-
             flex: 1;
-
             width: 100%;
-
             overflow-x: hidden;
         }
 
         /* FOOTER */
-
         footer {
-
             margin-top: auto;
-
-            background:
-                #eae3d5;
-
-            border-top:
-                1px solid var(--border);
-
-            padding:
-                1.2rem;
-
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            padding: 2rem 1.5rem;
             text-align: center;
-
-            color:
-                var(--muted);
-
-            font-size:
-                .85rem;
+            color: var(--muted);
+            font-size: 0.9rem;
         }
 
-        /* MOBILE */
-
+        /* MOBILE TOGGLE */
         .mobile-toggle {
-
             width: 44px;
             height: 44px;
-
             border: none;
-
-            border-radius:
-                12px;
-
-            background:
-                rgba(255,255,255,.08);
-
-            color:
-                white;
-
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
             display: none;
-
             align-items: center;
             justify-content: center;
-
-            font-size:
-                1.1rem;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .mobile-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         @media(max-width: 992px){
-
             .mobile-toggle {
                 display: flex;
             }
 
             .navbar-actions {
-
                 position: fixed;
-
                 top: 82px;
                 left: 0;
-
                 width: 100%;
-
-                background:
-                    rgba(5,62,47,.98);
-
-                border-top:
-                    1px solid rgba(255,255,255,.06);
-
-                padding:
-                    1.2rem;
-
+                background: rgba(30, 41, 59, 0.98);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+                padding: 1.5rem;
                 flex-direction: column;
-
                 align-items: stretch;
-
-                transform:
-                    translateY(-120%);
-
+                transform: translateY(-120%);
                 opacity: 0;
-
                 visibility: hidden;
-
-                transition:
-                    var(--transition);
+                transition: var(--transition);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             }
 
             .navbar-actions.active {
-
-                transform:
-                    translateY(0);
-
+                transform: translateY(0);
                 opacity: 1;
-
                 visibility: visible;
             }
 
-            .btn-custom,
-            .user-badge {
-
+            .btn-custom, .user-badge {
                 width: 100%;
-
                 justify-content: center;
             }
 
             .navbar-brand-custom span {
-
-                font-size:
-                    1rem;
+                font-size: 1.1rem;
             }
-
         }
 
     </style>
@@ -513,7 +346,7 @@
                         <i class="bi bi-person-circle"></i>
 
                         <span>
-                            {{ user.aluno.nome }}
+                            {{ user.aluno.nome|default:user.username }}
                         </span>
 
                     </div>

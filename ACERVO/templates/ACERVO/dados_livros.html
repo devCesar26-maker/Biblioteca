@@ -178,10 +178,17 @@
                     {% if livro.arquivo_pdf %}
                         <div class="w-100 p-4 rounded-3 text-center text-md-start" style="background-color: #faf8f5; border: 1px solid var(--border);">
                             <h4 class="h6 fw-bold text-dark mb-2" style="font-family: 'Libre Baskerville', serif;">Leitura Digital</h4>
-                            <p class="text-muted small mb-3">Este volume possui cópia digitalizada disponível para consulta imediata.</p>
-                            <a href="{{ livro.arquivo_pdf.url }}" class="btn btn-pdf-view w-100 d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
-                                <i class="bi bi-file-earmark-pdf"></i> Acessar PDF
-                            </a>
+                            {% if pode_ler_pdf %}
+                                <p class="text-muted small mb-3">Este volume possui cópia digitalizada disponível para consulta imediata.</p>
+                                <a href="{% url 'visualizar_pdf' livro.id %}" class="btn btn-pdf-view w-100 d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
+                                    <i class="bi bi-file-earmark-pdf"></i> Acessar PDF
+                                </a>
+                            {% else %}
+                                <p class="text-muted small mb-3">A leitura digital é liberada após a retirada do exemplar e vale enquanto o empréstimo estiver ativo.</p>
+                                <span class="btn btn-pdf-view w-100 d-inline-flex align-items-center justify-content-center gap-2 shadow-sm" style="opacity: .55; cursor: not-allowed;">
+                                    <i class="bi bi-lock-fill"></i> Disponível após retirada
+                                </span>
+                            {% endif %}
                         </div>
                     {% else %}
                         <div class="w-100 p-4 rounded-3 text-center text-muted small" style="background-color: #faf8f5; border: 1px dashed var(--border);">

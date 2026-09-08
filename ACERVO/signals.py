@@ -3,11 +3,10 @@ from allauth.account.signals import user_signed_up
 
 
 @receiver(user_signed_up)
-
 def enviar_email_boas_vindas_allauth(request, user, **kwargs):
     from .views import enviar_email
     destinatario = user.email
-    
+
     # Valida se o usuário preencheu o campo de e-mail no formulário do allauth
     if destinatario:
         assunto = f"[Biblioteca] Bem-vindo(a) à plataforma, {user.username}!"
@@ -19,6 +18,6 @@ def enviar_email_boas_vindas_allauth(request, user, **kwargs):
             "Atenciosamente,\n"
             "Equipe de Suporte Técnico da Biblioteca"
         )
-        
+
         # Executa a função do seu arquivo views.py
         enviar_email(destinatario, assunto, mensagem)

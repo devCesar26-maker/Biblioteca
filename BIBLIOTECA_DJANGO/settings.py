@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+
 import dj_database_url
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 CHAVE_SECRETA = os.getenv('CHAVE_SECRETA')
-
-# CORRIGIDO: Linhas de MEDIA locais e antigas foram removidas daqui para evitar conflitos.
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+if not CHAVE_SECRETA:
+    raise ImproperlyConfigured(
+        "A variável de ambiente CHAVE_SECRETA não foi configurada. "
+        "Copie o .env.example para .env e preencha os valores."
+    )
 
 SECRET_KEY = CHAVE_SECRETA
 
@@ -33,14 +35,23 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
+# Hosts permitidos, separados por vírgula no ambiente (ex.: ALLOWED_HOSTS=dominio.com,localhost)
 ALLOWED_HOSTS = [
-    'biblioteca-production-9d24.up.railway.app',
-    'localhost',
-    '127.0.0.1'
+    host.strip()
+    for host in os.getenv(
+        'ALLOWED_HOSTS',
+        'biblioteca-production-9d24.up.railway.app,localhost,127.0.0.1'
+    ).split(',')
+    if host.strip()
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://biblioteca-production-9d24.up.railway.app'
+    origem.strip()
+    for origem in os.getenv(
+        'CSRF_TRUSTED_ORIGINS',
+        'https://biblioteca-production-9d24.up.railway.app'
+    ).split(',')
+    if origem.strip()
 ]
 
 
@@ -122,22 +133,26 @@ DATABASES = {
 }
 DATABASES['default']['CONN_MAX_AGE'] = 600
 
-if '.internal' in os.environ.get('DATABASE_URL', ''):
-    DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
-else:
-    DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
+# Opções de SSL apenas para PostgreSQL (sslmode não existe no SQLite)
+if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
+    if '.internal' in os.environ.get('DATABASE_URL', ''):
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
+    else:
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'prefer'}
     
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_EMAIL_REQUIRED = True
 
-ACCOUNT_USERNAME_REQUIRED = False
+# Campos exibidos no cadastro: e-mail (obrigatório) e senha digitada duas vezes.
+# Substitui as opções legadas ACCOUNT_EMAIL_REQUIRED, ACCOUNT_USERNAME_REQUIRED e
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE, que foram descontinuadas no allauth 65+.
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
+# Login pode ser feito com e-mail ou nome de usuário
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_UNIQUE_EMAIL = True
 
 SOCIALACCOUNT_STORE_TOKENS = True
@@ -208,8 +223,9 @@ ANYMAIL = {
 
 EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 
-# O seu e-mail do Gmail cadastrado na Brevo
-DEFAULT_FROM_EMAIL = "Sistema Biblioteca <dev.cesar26@gmail.com>"
+# Remetente e destinatário de resposta usados nos e-mails (configuráveis via .env)
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', "Sistema Biblioteca <dev.cesar26@gmail.com>")
+EMAIL_REPLY_TO = os.getenv('EMAIL_REPLY_TO', 'dev.cesar26@gmail.com')
 
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
@@ -235,7 +251,13 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Diretivas Restritas do Content Security Policy (CSP)
 CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://apis.google.com", "https://accounts.google.com")
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "https://cdn.jsdelivr.net",
+    "https://cdnjs.cloudflare.com",  # PDF.js do visualizador de livros
+    "https://apis.google.com",
+    "https://accounts.google.com",
+)
 CSP_STYLE_SRC = ("'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com")
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 CSP_IMG_SRC = ("'self'", "data:", "https://lh3.googleusercontent.com", "https://*.googleusercontent.com")

@@ -10,26 +10,7 @@
 
 <style>
 
-  :root {
-    --background: #f4efe6;
-    --foreground: #112216;
-    --card: #ffffff;
-    --primary: #053e2f;
-    --primary-foreground: #faf8f5;
-    --secondary: #eae3d5;
-    --muted-foreground: #526356;
-    --accent: #bd963a;
-    --accent-foreground: #112216;
-    --border: #dad3c5;
-    --shadow-sm:
-      0 2px 4px rgba(17, 34, 22, 0.02),
-      0 4px 12px rgba(17, 34, 22, 0.03);
-    --shadow-md:
-      0 8px 16px rgba(17, 34, 22, 0.04),
-      0 16px 32px rgba(17, 34, 22, 0.04);
-    --transition:
-      all .35s cubic-bezier(0.25, 1, 0.33, 1);
-  }
+  /* Inherits variables from base.html */
 
   body {
     background: var(--background);
@@ -52,15 +33,15 @@
     content: "";
     position: absolute;
     inset: 0;
-    opacity: .10;
+    opacity: .04;
     pointer-events: none;
     background-image:
       radial-gradient(
         circle at 1px 1px,
-        rgba(5,62,47,.10) 1px,
+        rgba(30, 41, 59, 1) 1px, /* Midnight blue dots */
         transparent 0
       );
-    background-size: 24px 24px;
+    background-size: 28px 28px;
   }
 
   .dashboard-wrapper * {
@@ -91,9 +72,10 @@
     background:
       linear-gradient(
         to bottom,
-        rgba(5,62,47,.48),
-        rgba(5,62,47,.74)
+        rgba(15, 23, 42, 0.65), /* Slate 900 */
+        rgba(15, 23, 42, 0.88)
       );
+    backdrop-filter: blur(2px);
   }
 
   .hero-content {
@@ -105,19 +87,20 @@
   }
 
   .hero-subtitle {
-    font-size: .75rem;
+    font-size: .8rem;
     text-transform: uppercase;
-    letter-spacing: .30em;
+    letter-spacing: .35em;
     color: var(--accent);
-    margin-bottom: 1rem;
-    font-weight: 600;
+    margin-bottom: 1.2rem;
+    font-weight: 700;
   }
 
   .hero h1 {
     color: white;
-    font-size: 2.7rem;
-    line-height: 1.08;
+    font-size: 2.8rem;
+    line-height: 1.1;
     margin-bottom: 1.5rem;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
 
   @media(min-width: 992px){
@@ -132,11 +115,11 @@
   }
 
   .hero p {
-    color: rgba(255,255,255,.84);
+    color: rgba(248, 250, 252, 0.85); /* Slate 50 */
     max-width: 720px;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
   }
 
   /* SEARCH (COMPUTADOR) */
@@ -149,44 +132,54 @@
 
   .search-icon {
     position: absolute;
-    left: 24px;
+    left: 26px;
     top: 50%;
     transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
-    color: #6e8174;
+    width: 24px;
+    height: 24px;
+    color: #94a3b8; /* Slate 400 */
     z-index: 5;
     pointer-events: none;
   }
 
   .search-area input {
     width: 100%;
-    height: 78px;
-    border: none;
-    border-radius: 16px;
-    padding: 0 180px 0 64px; 
+    height: 80px;
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 20px;
+    padding: 0 180px 0 68px; 
     outline: none;
-    font-size: 1rem;
-    box-shadow: 0 25px 50px rgba(0,0,0,.18);
+    font-size: 1.05rem;
+    box-shadow: 0 25px 50px rgba(0,0,0,.25);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+  }
+
+  .search-area input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 25px 50px rgba(196, 164, 96,.2);
   }
 
   .search-area button {
     position: absolute;
-    top: 9px;
-    right: 9px;
+    top: 10px;
+    right: 10px;
     height: 60px;
     border: none;
-    border-radius: 12px;
-    padding: 0 2rem;
-    background: var(--accent);
-    color: var(--foreground);
+    border-radius: 14px;
+    padding: 0 2.2rem;
+    background: var(--primary);
+    color: white;
     font-weight: 600;
+    font-size: 1rem;
     transition: var(--transition);
     z-index: 4;
   }
 
   .search-area button:hover {
-    background: #a8832e;
+    background: var(--accent);
+    color: var(--primary);
   }
 
   /* CONTENT */
@@ -195,12 +188,15 @@
     display: grid;
     gap: 2rem;
     padding: 3rem 2rem 5rem;
+    max-width: 1500px;
+    margin: auto;
   }
 
   @media(min-width: 1200px){
     .content-grid {
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 340px 1fr;
       align-items: start;
+      margin-top: -80px; /* Overlaps hero slightly */
     }
   }
 
@@ -209,130 +205,138 @@
     background: white;
     border-radius: 24px;
     border: 1px solid var(--border);
-    padding: 2rem;
-    box-shadow: var(--shadow-sm);
+    padding: 2.2rem;
+    box-shadow: var(--shadow-lg);
     position: sticky;
-    top: 2rem;
+    top: 100px;
   }
 
   .sidebar-title {
     color: var(--primary);
-    font-size: 1.5rem;
-    margin-bottom: 1.8rem;
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
   }
 
   .sidebar-links {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.2rem;
   }
 
   .sidebar-link {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: 14px;
+    gap: 1.2rem;
+    padding: 1.2rem;
+    border-radius: 16px;
     text-decoration: none;
     color: var(--foreground);
     transition: var(--transition);
     border: 1px solid transparent;
+    background: var(--background);
   }
 
   .sidebar-link:hover {
-    background: rgba(5,62,47,.03);
-    border-color: rgba(5,62,47,.08);
-    transform: translateX(4px);
+    background: white;
+    border-color: var(--accent);
+    transform: translateX(6px);
+    box-shadow: var(--shadow-md);
   }
 
   .sidebar-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(5,62,47,.05);
-    font-size: 1.1rem;
+    background: rgba(196, 164, 96, 0.15); /* Accent tint */
+    color: var(--accent);
+    font-size: 1.3rem;
   }
 
   .sidebar-link strong {
     display: block;
-    font-size: .95rem;
+    font-size: 1rem;
+    color: var(--primary);
   }
 
   .sidebar-link span {
-    font-size: .78rem;
-    color: var(--muted-foreground);
+    font-size: .8rem;
+    color: var(--muted);
   }
 
   /* PANELS */
   .main-panels {
     display: grid;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .panel {
     background: white;
     border-radius: 24px;
     border: 1px solid var(--border);
-    padding: 2.2rem;
-    box-shadow: var(--shadow-sm);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
   }
 
   .panel-label {
-    font-size: .72rem;
+    font-size: .75rem;
     text-transform: uppercase;
     letter-spacing: .25em;
-    color: var(--muted-foreground);
-    margin-bottom: .7rem;
+    color: var(--accent);
+    margin-bottom: .8rem;
+    font-weight: 700;
   }
 
   .panel-title {
-    font-size: 1.9rem;
+    font-size: 2rem;
     color: var(--primary);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
   }
 
   .mini-grid {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
   }
 
   .mini-card {
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 1.5rem;
+    border-radius: 20px;
+    padding: 1.8rem;
     transition: var(--transition);
+    background: var(--background);
   }
 
   .mini-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+    background: white;
   }
 
   .mini-card h4 {
     color: var(--primary);
     margin-bottom: .8rem;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
   }
 
   .mini-card p {
-    color: var(--muted-foreground);
-    font-size: .92rem;
+    color: var(--muted);
+    font-size: .95rem;
     line-height: 1.6;
   }
 
   /* BUTTON */
   .outline-btn {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: .95rem 1.6rem;
-    border-radius: 12px;
-    border: 1px solid rgba(5,62,47,.15);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    border: 2px solid var(--primary);
     text-decoration: none;
     color: var(--primary);
     font-weight: 600;
@@ -342,9 +346,10 @@
   .outline-btn:hover {
     background: var(--primary);
     color: white;
+    box-shadow: var(--shadow-md);
   }
 
-  /* MOBILE (CORRIGIDO PARA O TELEMÓVEL) */
+  /* MOBILE */
   @media(max-width: 768px){
     .hero {
       min-height: 620px;
@@ -354,16 +359,13 @@
       font-size: 2.2rem;
     }
     
-    /* Força o alinhamento correto da lupa no telemóvel */
     .search-icon {
       left: 20px;
-      top: 35px; /* Alinha verticalmente baseado na altura reduzida do input */
+      top: 35px;
     }
 
     .search-area input {
       height: 70px;
-      /* No telemóvel o botão vai para baixo, então tiramos o padding 
-         da direita (18px) e mantemos o da esquerda (54px) para proteger a lupa */
       padding: 0 18px 0 54px; 
     }
     

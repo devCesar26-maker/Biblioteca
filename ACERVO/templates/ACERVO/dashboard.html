@@ -5,18 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    :root {
-        --radius: 12px;
-        --background: #f4efe6;
-        --foreground: #112216;
-        --card: #ffffff;
-        --primary: #053e2f;
-        --primary-foreground: #faf8f5;
-        --muted-foreground: #526356;
-        --accent: #bd963a;
-        --border: #dad3c5;
-        --shadow-sm: 0 4px 10px rgba(17,34,22,.03);
-    }
+    /* Inherits variables from base.html */
 
     .dashboard-wrapper {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
@@ -27,7 +16,7 @@
 
     .page-header {
         padding: 3rem 0 2rem 0;
-        border-bottom: 1px solid rgba(5, 62, 47, 0.1);
+        border-bottom: 1px solid var(--border);
     }
 
     .font-serif {
@@ -36,75 +25,79 @@
     }
 
     .stat-card {
-        background: var(--card);
+        background: white;
         border: 1px solid var(--border);
-        border-radius: var(--radius);
+        border-radius: 20px;
         box-shadow: var(--shadow-sm);
-        padding: 1.75rem;
-        transition: transform 0.2s, box-shadow 0.2s;
+        padding: 2rem;
+        transition: var(--transition);
     }
 
     .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(17,34,22,.05);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--accent);
     }
 
     .stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 6px;
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.35rem;
-        border: 1px solid rgba(5, 62, 47, 0.08);
+        font-size: 1.6rem;
     }
 
     .icon-books {
-        background-color: rgba(5, 62, 47, 0.04);
+        background-color: rgba(30, 41, 59, 0.08); /* Primary tint */
         color: var(--primary);
+        border: 1px solid rgba(30, 41, 59, 0.15);
     }
 
     .icon-loans {
-        background-color: rgba(189, 150, 58, 0.06);
+        background-color: rgba(196, 164, 96, 0.12); /* Accent tint */
         color: var(--accent);
-        border-color: rgba(189, 150, 58, 0.15);
+        border: 1px solid rgba(196, 164, 96, 0.25);
     }
 
     .stat-title {
-        color: var(--muted-foreground);
-        font-size: 0.75rem;
+        color: var(--muted);
+        font-size: 0.8rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.1em;
     }
 
     .stat-value {
         color: var(--primary);
         font-family: "Libre Baskerville", serif;
-        font-size: 2rem;
+        font-size: 2.4rem;
         font-weight: 700;
+        line-height: 1.1;
+        margin-top: 0.2rem;
     }
 
     .chart-card {
-        background: var(--card);
+        background: white;
         border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-sm);
+        border-radius: 24px;
+        box-shadow: var(--shadow-md);
         padding: 2.5rem;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
     }
 
     .chart-title {
         font-family: "Libre Baskerville", serif;
         color: var(--primary);
         font-weight: 700;
+        font-size: 1.4rem;
     }
 
     .chart-container {
         position: relative;
         width: 100%;
-        max-height: 380px; 
+        max-height: 420px; 
     }
 </style>
 
@@ -168,9 +161,9 @@
                 datasets: [{
                     label: 'Quantidade de Empréstimos',
                     data: [{% for c in emprestimos_por_categoria %}{{ c.total }},{% endfor %}],
-                    backgroundColor: '#053e2f', // Verde oliva profundo institucional
-                    hoverBackgroundColor: '#bd963a', // Transiciona para o dourado ao passar o mouse
-                    borderRadius: 4,
+                    backgroundColor: '#1e293b', /* Midnight Blue */
+                    hoverBackgroundColor: '#c4a460', /* Soft Gold */
+                    borderRadius: 6,
                     borderSkipped: false
                 }]
             },
@@ -188,7 +181,7 @@
                             display: false
                         },
                         ticks: {
-                            color: '#526356',
+                            color: '#64748b', /* Muted */
                             font: { 
                                 family: '"IBM Plex Sans", sans-serif',
                                 weight: '500',
@@ -199,10 +192,10 @@
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: '#eaddca' // Linhas discretas combinando com o fundo marfim
+                            color: '#e2dfd8' /* Border line */
                         },
                         ticks: {
-                            color: '#526356',
+                            color: '#64748b', /* Muted */
                             stepSize: 1,
                             font: {
                                 family: '"IBM Plex Sans", sans-serif'
